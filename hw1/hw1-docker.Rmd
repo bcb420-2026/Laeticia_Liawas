@@ -1,0 +1,43 @@
+---
+title: "hw1-docker"
+output: html_document
+---
+An Rmd file creating through a docker image of Rstudio (bcb420-laeticia-image).
+
+1. create a 5 by 10 matrix of random integers
+2. define column names as cond1, cond2, cond3, cond4, cond5, ctrl1, ctrl2, ctrl3, ctrl4, ctrl5
+3. define row names as gene1, gene2, gene3 ...
+4. compute the fold change for each gene.
+
+```{r}
+# initialise 5 x 10 random integers
+rand_int <- sample(40, 50, replace = TRUE)
+
+# create matrix from the random ints
+gen_exp <- matrix(data = rand_int, nrow = 5, ncol = 10)
+
+# define vector of column names
+col_names <- c("cond1", "cond2", "cond3", 
+               "cond4", "cond5", "ctrl1", 
+               "ctrl2", "ctrl3", "ctrl4", "ctrl5")
+
+# rename cols 
+colnames(gen_exp) <- col_names
+
+# define row names
+row_names <- c("gene1", "gene2", "gene3", "gene4", "gene5")
+
+# rename rows
+rownames(gen_exp) <- row_names
+
+# create a new df for fold changes
+foldchange <- data.frame(row.names = row_names)
+
+for (i in 1:5) {
+  foldchange[paste0("cond", i)] <- gen_exp[,i] / gen_exp[,i+5]
+}
+  
+gen_exp
+foldchange
+```
+
