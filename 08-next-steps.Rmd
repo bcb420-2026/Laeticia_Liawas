@@ -1,0 +1,9 @@
+
+# Next week / Next steps
+
+- Download one candidate series and its supplementary counts
+- Document everything (session info, package versions)
+
+```{r}
+sessionInfo()
+```

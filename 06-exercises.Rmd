@@ -1,0 +1,19 @@
+
+# Exercises: Inspect Specific GEO Series
+
+In this exercise, you'll retrieve metadata for the following GEO Series and answer:
+
+**GSE IDs:** "GSE201427","GSE166530","GSE162183","GSE186458"
+
+**Questions per GSE**
+
+  1. **What type of data is it?  Describe it.** (platform technology; e.g., high-throughput sequencing, array)
+  1. **What disease or model is it using?** (infer from series title/summary/platform organism)
+  1. **How many samples are there? What type of data is associated with the record?** 
+  1. **How many control and how many disease?** 
+  1.  **Can you find out any information about the GEO dataset - GSE264108. Why or Why not?
+  
+
+> Hint: Sample labels are not standardized. Use robust keyword detection (e.g., `control|normal|healthy|wild[- ]?type` vs. `tumou?r|cancer|patient|disease|mutant|treated`). Inspect a few GSM rows if the automatic inference is uncertain.
+
+
