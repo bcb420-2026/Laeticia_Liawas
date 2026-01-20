@@ -1,0 +1,15 @@
+
+bookdown::gitbook:
+  css: style.css
+  toc_depth: 2
+  config:
+    toc:
+      collapse: subsection
+      before: |
+        <li><a href="./">GEOmetadb Tutorial</a></li>
+  includes:
+    in_header: header.html
+bookdown::pdf_book:
+  toc: true
+  number_sections: true
+  keep_tex: false

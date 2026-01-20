@@ -1,0 +1,14 @@
+
+# Overview
+
+- Where can I find expression data?
+- Tools for mining the data — **GEOmetadb**
+- What GEO data types exist (GSE/GSM/GPL/GDS)?
+- How to shortlist a dataset of interest
+
+The main public repository we’ll use is the **Gene Expression Omnibus (GEO)**. Visit: <https://www.ncbi.nlm.nih.gov/geo/>.
+
+```{r, echo=FALSE}
+# (Optional) show an image if available in your project
+# knitr::include_graphics("images/geo_website_Dec2022.png")
+```

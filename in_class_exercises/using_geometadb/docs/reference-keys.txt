@@ -1,0 +1,17 @@
+overview
+geo-datatypes
+setting-up-geometadb
+install-packages
+get-the-sqlite-database
+connect-to-the-database
+explore-tables-and-fields
+exploring-platforms-gpl
+restrict-to-human
+finding-datasets-of-interest
+rna-seq-series-by-platform-technology
+add-organism-and-recency-filters
+add-a-topic-keyword-e.g.-ovarian
+heuristic-require-a-counts-like-supplementary-file
+require-a-minimum-number-of-samples-per-series
+exercises-inspect-specific-geo-series
+next-week-next-steps

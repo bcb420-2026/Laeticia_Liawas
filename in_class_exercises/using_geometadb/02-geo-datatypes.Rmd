@@ -1,0 +1,15 @@
+
+# GEO Datatypes
+
+GEO organizes data into several related entities:
+
+- **GSE — Series**: links related samples and describes the study; may include archives of raw/processed files.
+- **GSM — Sample**: per‑sample description and data; each GSM belongs to exactly one platform (GPL).
+- **GPL — Platform**: array/sequencer description; many GSMs can map to a single GPL.
+- **GDS — Dataset**: curated collections of comparable samples on the same platform with uniform processing.
+
+See the GEO overview: <https://www.ncbi.nlm.nih.gov/geo/info/overview.html>
+
+```{r, echo=FALSE}
+# knitr::include_graphics("https://www.ncbi.nlm.nih.gov/geo/img/geo_overview.jpg")
+```

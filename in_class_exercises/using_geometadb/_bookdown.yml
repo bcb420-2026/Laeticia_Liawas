@@ -1,0 +1,14 @@
+book_filename: geometadb-tutorial
+output_dir: "docs"
+language:
+  ui:
+    chapter_name: "Chapter "
+rmd_files:
+  - index.Rmd
+  - 01-overview.Rmd
+  - 02-geo-datatypes.Rmd
+  - 03-setup-geometadb.Rmd
+  - 04-exploring-platforms.Rmd
+  - 05-finding-datasets.Rmd
+  - 06-exercises.Rmd
+  - 08-next-steps.Rmd

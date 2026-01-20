@@ -1,0 +1,30 @@
+
+---
+title: "Finding Expression Data with GEOmetadb"
+author: "Ruth Isserlin"
+date: "`r format(Sys.Date())`"
+site: bookdown::bookdown_site
+documentclass: book
+description: |
+  A hands-on tutorial that shows how to explore GEO metadata with GEOmetadb,
+  ask reproducible questions in SQL from R, and shortlist RNA-seq series.
+---
+
+# Welcome {-}
+
+This book is a tutorial-style rewrite of a lecture on *where to find expression data* and
+*how to mine GEO metadata with the `GEOmetadb` package*. It is designed for
+fourth-year bioinformatics students and focuses on reproducible code that you
+can run as-is.
+
+If you're new to **bookdown**, install it with:
+
+```r
+install.packages("bookdown")
+```
+
+Then build this book by running in R:
+
+```r
+bookdown::render_book(".")
+```

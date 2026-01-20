@@ -1,0 +1,45 @@
+
+# Setting up `GEOmetadb`
+
+`GEOmetadb` provides a SQLite mirror of GEO metadata that you can query from R.
+It mirrors GEO as-is (no curation). Download the current SQLite file once and reuse it.
+
+## Install packages
+
+```{r}
+if (!requireNamespace("BiocManager", quietly = TRUE))
+  install.packages("BiocManager")
+if (!requireNamespace("GEOmetadb", quietly = TRUE))
+  BiocManager::install("GEOmetadb")
+if (!requireNamespace("DBI", quietly = TRUE))
+  install.packages("DBI")
+if (!requireNamespace("RSQLite", quietly = TRUE))
+  install.packages("RSQLite")
+if (!requireNamespace("dplyr", quietly = TRUE))
+  install.packages("dplyr")
+if (!requireNamespace("ggplot2", quietly = TRUE))
+  install.packages("ggplot2")
+```
+
+## Get the SQLite database
+
+```{r}
+library(GEOmetadb)
+if (!file.exists('GEOmetadb.sqlite')) getSQLiteFile()
+file.info('GEOmetadb.sqlite')
+```
+
+## Connect to the database
+
+```{r}
+library(DBI)
+library(RSQLite)
+con <- dbConnect(SQLite(), 'GEOmetadb.sqlite')
+```
+
+## Explore tables and fields
+
+```{r}
+dbListTables(con)
+dbListFields(con, 'gse')
+```
