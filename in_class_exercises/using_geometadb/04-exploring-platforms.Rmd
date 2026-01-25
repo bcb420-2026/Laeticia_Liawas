@@ -5,10 +5,10 @@ How many platforms exist, and what technologies do they use?
 
 ```{r}
 num_platforms <- dbGetQuery(con, 'select count(*) as n from gpl')
-num_platforms
+sprintf("number of platforms: %s", num_platforms$n)
 
 uniq_tech <- dbGetQuery(con, 'select distinct technology from gpl')
-NROW(uniq_tech)
+sprintf("number of technologies: %s", NROW(uniq_tech))
 
 num_uniq_tech <- dbGetQuery(con, 'select technology, count(*) as Num_Platforms from gpl group by technology')
 # Quick plot

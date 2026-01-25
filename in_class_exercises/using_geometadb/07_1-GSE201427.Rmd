@@ -1,0 +1,74 @@
+
+# Exercises: Inspect GSE201427
+
+## Q1
+
+The following query did not seem to yield any rows.
+```{r}
+gse1_num <- "GSE201427"
+
+sql <- paste(
+  "SELECT DISTINCT gpl.technology",
+  "FROM gse JOIN gse_gpl ON gse_gpl.gse = gse.gse",
+  "JOIN gpl ON gse_gpl.gpl = gpl.gpl",
+  "WHERE gse_gpl.gse ='", gse1_num, "'")
+
+dbGetQuery(con, sql)
+```
+
+However, this shows that there is a GPL accession associated to this GSE, but it is not in the 'gpl' table.
+```{r}
+sql <- paste0(
+  "SELECT * ",
+  "FROM gse_gpl ",
+  "WHERE gse_gpl.gse ='", gse1_num, "'")
+dbGetQuery(con, sql)
+dbGetQuery(con, "select count(*) from gpl where gpl = 'GPL20301'")
+```
+From the [GEO website](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GPL20301), using the GPL Accession GPL20301 as retrieved from the query above, the platform technology of this GSE seems to be **'high-throughput sequencing'**, titled "Illumina HiSeq 4000 (Homo sapiens)".
+
+## Q2
+
+```{r}
+sql <- paste0(
+  "SELECT title, summary ",
+  "FROM gse ",
+  "WHERE gse = '", gse1_num, "'")
+gse1 <- dbGetQuery(con, sql)
+gse1$title
+gse1$summary
+```
+From the title, summary and platform organism, we can infer that the study uses primary patient-derived cancer cells.
+
+## Q3 
+
+From the query below, we can see that there are 8 samples.
+```{r}
+# Get samples (GSM)
+sql <- paste0("SELECT * ",
+              "FROM gse JOIN gse_gsm ON gse_gsm.gse = gse.gse ",
+              "JOIN gsm ON gse_gsm.gsm = gsm.gsm ",
+              "WHERE gse.gse = '", gse1_num, "'")
+gse1 <- dbGetQuery(con, sql)
+dim(gse1)
+```
+
+For each sample, the following information is associated with its record.
+```{r}
+dbListFields(con, "gsm")
+```
+
+## Q4
+
+```{r}
+# Controls
+# Choosing LIKE keyword by looking through a few of the sample titles:
+
+sql <- paste0("SELECT COUNT(*)",
+              "FROM gse JOIN gse_gsm ON gse_gsm.gse = gse.gse ",
+              "JOIN gsm ON gse_gsm.gsm = gsm.gsm ",
+              "WHERE gse.gse = '", gse1_num, "'",
+              "AND gsm.title LIKE '%ctrl%'")
+dbGetQuery(con, sql)
+```
+There are 5 control samples. Thus we can infer that there are 3 disease samples.

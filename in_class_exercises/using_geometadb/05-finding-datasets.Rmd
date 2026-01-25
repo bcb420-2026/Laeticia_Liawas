@@ -5,6 +5,8 @@ Goal: RNA-seq, human, recent (last ~3 years), and with sufficient samples.
 
 ## RNA-seq series by platform technology
 
+Select distinct sets of series (GSE) and platforms (GPL) where the technology is "high-throughput sequencing", after mapping series to the platforms it involves.
+
 ```{r}
 sql <- paste(
   "SELECT DISTINCT gse.title, gse.gse, gpl.title",
@@ -17,6 +19,8 @@ dim(rs)
 ```
 
 ## Add organism and recency filters
+
+Edited query to also select series for recency and for "Homo sapiens".
 
 ```{r}
 sql <- paste(
@@ -32,6 +36,8 @@ dim(rs)
 ```
 
 ## Add a topic keyword (e.g., ovarian)
+
+Edited query to also select for a topic.
 
 ```{r}
 sql <- paste(
@@ -74,6 +80,8 @@ head(shortened, 10)
 ```
 
 ## Require a minimum number of samples per series
+Count the number of samples in the series, select the ones that have enough.
+(THIS CHUNK TAKES REALLY LONG???)
 
 ```{r}
 num_series <- dbGetQuery(con, paste(

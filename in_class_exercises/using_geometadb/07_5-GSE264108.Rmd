@@ -1,0 +1,25 @@
+---
+title: "06_5-GSE264108"
+output: html_document
+---
+
+# Exercises: Inspect GSE264108
+
+ 5. **Can you find out any information about the GEO dataset - GSE264108. Why or Why not?
+ 
+```{r}
+gse5_num <- "GSE264108"
+
+sql <- paste0(
+  "SELECT * ",
+  "FROM gse ",
+  "WHERE gse ='", gse5_num, "'")
+
+dbGetQuery(con, sql)
+```
+
+The query above did not yield any rows. This could be because the GSE Accession number points to an entry that is too new, and is not currently recorded in the version of the GEO database that we have downloaded locally (i.e., in `GEOmetadb.sqlite`).
+
+In fact, the same could be said for the GPL accessions from previous exercises (GPL24676, GPL20301). They may both point to entries that are too new and are not included in the version of the database that is locally stored. 
+
+Additionally, the [GEO omnibus](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi) indicates that the series GSE264108 was first submitted on Apr 16, 2024. Last update date also seems to be Jan 25, 2025 (as reference, time of writing this is Jan 25, 2025). Because it is very recent, this GSE could not be queried by `geometadb` because it is too recent.

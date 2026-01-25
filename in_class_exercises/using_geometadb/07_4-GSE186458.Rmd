@@ -1,0 +1,74 @@
+# Exercises: Inspect GSE186458
+
+## Q1
+
+The following query did not seem to yield any rows.
+```{r}
+gse4_num <- "GSE186458"
+
+sql <- paste(
+  "SELECT DISTINCT gpl.technology",
+  "FROM gse JOIN gse_gpl ON gse_gpl.gse = gse.gse",
+  "JOIN gpl ON gse_gpl.gpl = gpl.gpl",
+  "WHERE gse_gpl.gse ='", gse4_num, "'")
+
+dbGetQuery(con, sql)
+```
+
+However, this shows that there is a GPL accession associated to this GSE, but it is not in the 'gpl' table.
+```{r}
+sql <- paste0(
+  "SELECT * ",
+  "FROM gse_gpl ",
+  "WHERE gse_gpl.gse ='", gse4_num, "'")
+dbGetQuery(con, sql)
+dbGetQuery(con, "select count(*) from gpl where gpl = 'GPL24676'")
+```
+From the [GEO website](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GPL24676), using the GPL Accession GPL24676 as retrieved from the query above, the platform technology of this GSE seems to be **'high-throughput sequencing'**, titled "Illumina NovaSeq 6000 (Homo sapiens)".
+
+## Q2
+
+```{r}
+sql <- paste0(
+  "SELECT title, summary ",
+  "FROM gse ",
+  "WHERE gse = '", gse4_num, "'")
+gse4 <- dbGetQuery(con, sql)
+gse4$title
+gse4$summary
+```
+From the title, summary and platform organism, we can infer that the study uses many different cell types as a model, and there doesn't seem to be any 'disease' being interrogated here.
+
+## Q3 
+
+From the query below, we can see that there are 253 samples.
+```{r}
+# Get samples (GSM)
+sql <- paste0("SELECT * ",
+              "FROM gse JOIN gse_gsm ON gse_gsm.gse = gse.gse ",
+              "JOIN gsm ON gse_gsm.gsm = gsm.gsm ",
+              "WHERE gse.gse = '", gse4_num, "'")
+gse4 <- dbGetQuery(con, sql)
+dim(gse4)
+```
+
+For each sample, the following information is associated with its record.
+```{r}
+dbListFields(con, "gsm")
+```
+
+## Q4
+
+Because of the nature of this study, there are no 'controls' or 'disease' samples. However, we can look at the cell types in this study:
+```{r}
+# Controls
+
+sql <- paste0("SELECT DISTINCT SUBSTR(gsm.title, 1, INSTR(gsm.title, '-') - 1) ",
+              "AS 'Cell types' ",
+              "FROM gse JOIN gse_gsm ON gse_gsm.gse = gse.gse ",
+              "JOIN gsm ON gse_gsm.gsm = gsm.gsm ",
+              "WHERE gse.gse = '", gse4_num, "'")
+dbGetQuery(con, sql)
+```
+The study encompasses 37 cell types in total.
+

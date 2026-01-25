@@ -12,3 +12,4 @@ The main public repository we’ll use is the **Gene Expression Omnibus (GEO)**.
 # (Optional) show an image if available in your project
 # knitr::include_graphics("images/geo_website_Dec2022.png")
 ```
+

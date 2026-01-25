@@ -4,12 +4,12 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 6 Exercises: Inspect Specific GEO Series | 06_5-GSE264108</title>
+  <title>Chapter 8 Exercises: Inspect GSE166530 | 06_5-GSE264108</title>
   <meta name="description" content="<p>A hands-on tutorial that shows how to explore GEO metadata with GEOmetadb,
 ask reproducible questions in SQL from R, and shortlist RNA-seq series.</p>" />
   <meta name="generator" content="bookdown 0.46 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 6 Exercises: Inspect Specific GEO Series | 06_5-GSE264108" />
+  <meta property="og:title" content="Chapter 8 Exercises: Inspect GSE166530 | 06_5-GSE264108" />
   <meta property="og:type" content="book" />
   
   <meta property="og:description" content="<p>A hands-on tutorial that shows how to explore GEO metadata with GEOmetadb,
@@ -17,7 +17,7 @@ ask reproducible questions in SQL from R, and shortlist RNA-seq series.</p>" />
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 6 Exercises: Inspect Specific GEO Series | 06_5-GSE264108" />
+  <meta name="twitter:title" content="Chapter 8 Exercises: Inspect GSE166530 | 06_5-GSE264108" />
   
   <meta name="twitter:description" content="<p>A hands-on tutorial that shows how to explore GEO metadata with GEOmetadb,
 ask reproducible questions in SQL from R, and shortlist RNA-seq series.</p>" />
@@ -33,8 +33,8 @@ ask reproducible questions in SQL from R, and shortlist RNA-seq series.</p>" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="finding-datasets-of-interest.html"/>
-<link rel="next" href="exercises-inspect-gse201427.html"/>
+<link rel="prev" href="exercises-inspect-gse201427.html"/>
+<link rel="next" href="exercises-inspect-gse162183.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -215,30 +215,97 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="exercises-inspect-specific-geo-series" class="section level1 hasAnchor" number="6">
-<h1><span class="header-section-number">Chapter 6</span> Exercises: Inspect Specific GEO Series<a href="exercises-inspect-specific-geo-series.html#exercises-inspect-specific-geo-series" class="anchor-section" aria-label="Anchor link to header"></a></h1>
-<p>In this exercise, you’ll retrieve metadata for the following GEO Series and answer:</p>
-<p><strong>GSE IDs:</strong> “GSE201427”,“GSE166530”,“GSE162183”,“GSE186458”</p>
-<p><strong>Questions per GSE</strong></p>
-<ol style="list-style-type: decimal">
-<li><strong>What type of data is it? Describe it.</strong> (platform technology; e.g., high-throughput sequencing, array)</li>
-<li><strong>What disease or model is it using?</strong> (infer from series title/summary/platform organism)</li>
-<li><strong>How many samples are there? What type of data is associated with the record?</strong></li>
-<li><strong>How many control and how many disease?</strong></li>
-<li>**Can you find out any information about the GEO dataset - GSE264108. Why or Why not?</li>
-</ol>
-<blockquote>
-<p>Hint: Sample labels are not standardized. Use robust keyword detection (e.g., <code>control|normal|healthy|wild[- ]?type</code> vs. <code>tumou?r|cancer|patient|disease|mutant|treated</code>). Inspect a few GSM rows if the automatic inference is uncertain.</p>
-</blockquote>
+<div id="exercises-inspect-gse166530" class="section level1 hasAnchor" number="8">
+<h1><span class="header-section-number">Chapter 8</span> Exercises: Inspect GSE166530<a href="exercises-inspect-gse166530.html#exercises-inspect-gse166530" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>Will be done based on 06_1.</p>
+<div id="q1-1" class="section level2 hasAnchor" number="8.1">
+<h2><span class="header-section-number">8.1</span> Q1<a href="exercises-inspect-gse166530.html#q1-1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>The following query did not seem to yield any rows.</p>
+<div class="sourceCode" id="cb64"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb64-1"><a href="exercises-inspect-gse166530.html#cb64-1" tabindex="-1"></a>gse2_num <span class="ot">&lt;-</span> <span class="st">&quot;GSE166530&quot;</span></span>
+<span id="cb64-2"><a href="exercises-inspect-gse166530.html#cb64-2" tabindex="-1"></a></span>
+<span id="cb64-3"><a href="exercises-inspect-gse166530.html#cb64-3" tabindex="-1"></a>sql <span class="ot">&lt;-</span> <span class="fu">paste</span>(</span>
+<span id="cb64-4"><a href="exercises-inspect-gse166530.html#cb64-4" tabindex="-1"></a>  <span class="st">&quot;SELECT DISTINCT gpl.technology&quot;</span>,</span>
+<span id="cb64-5"><a href="exercises-inspect-gse166530.html#cb64-5" tabindex="-1"></a>  <span class="st">&quot;FROM gse JOIN gse_gpl ON gse_gpl.gse = gse.gse&quot;</span>,</span>
+<span id="cb64-6"><a href="exercises-inspect-gse166530.html#cb64-6" tabindex="-1"></a>  <span class="st">&quot;JOIN gpl ON gse_gpl.gpl = gpl.gpl&quot;</span>,</span>
+<span id="cb64-7"><a href="exercises-inspect-gse166530.html#cb64-7" tabindex="-1"></a>  <span class="st">&quot;WHERE gse_gpl.gse =&#39;&quot;</span>, gse2_num, <span class="st">&quot;&#39;&quot;</span>)</span>
+<span id="cb64-8"><a href="exercises-inspect-gse166530.html#cb64-8" tabindex="-1"></a></span>
+<span id="cb64-9"><a href="exercises-inspect-gse166530.html#cb64-9" tabindex="-1"></a><span class="fu">dbGetQuery</span>(con, sql)</span></code></pre></div>
+<pre><code>## [1] technology
+## &lt;0 rows&gt; (or 0-length row.names)</code></pre>
+<p>However, this shows that there is a GPL accession associated to this GSE, but it is not in the ‘gpl’ table.</p>
+<div class="sourceCode" id="cb66"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb66-1"><a href="exercises-inspect-gse166530.html#cb66-1" tabindex="-1"></a>sql <span class="ot">&lt;-</span> <span class="fu">paste0</span>(</span>
+<span id="cb66-2"><a href="exercises-inspect-gse166530.html#cb66-2" tabindex="-1"></a>  <span class="st">&quot;SELECT * &quot;</span>,</span>
+<span id="cb66-3"><a href="exercises-inspect-gse166530.html#cb66-3" tabindex="-1"></a>  <span class="st">&quot;FROM gse_gpl &quot;</span>,</span>
+<span id="cb66-4"><a href="exercises-inspect-gse166530.html#cb66-4" tabindex="-1"></a>  <span class="st">&quot;WHERE gse_gpl.gse =&#39;&quot;</span>, gse2_num, <span class="st">&quot;&#39;&quot;</span>)</span>
+<span id="cb66-5"><a href="exercises-inspect-gse166530.html#cb66-5" tabindex="-1"></a><span class="fu">dbGetQuery</span>(con, sql)</span></code></pre></div>
+<pre><code>##         gse      gpl
+## 1 GSE166530 GPL24676</code></pre>
+<div class="sourceCode" id="cb68"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb68-1"><a href="exercises-inspect-gse166530.html#cb68-1" tabindex="-1"></a><span class="fu">dbGetQuery</span>(con, <span class="st">&quot;select count(*) from gpl where gpl = &#39;GPL24676&#39;&quot;</span>)</span></code></pre></div>
+<pre><code>##   count(*)
+## 1        0</code></pre>
+<p>From the <a href="https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi">GEO website</a>, using the GPL Accession GPL24676 as retrieved from the query above, the platform technology of this GSE seems to be <strong>‘high-throughput sequencing’</strong>, titled “Illumina NovaSeq 6000 (Homo sapiens)”.</p>
+</div>
+<div id="q2-1" class="section level2 hasAnchor" number="8.2">
+<h2><span class="header-section-number">8.2</span> Q2<a href="exercises-inspect-gse166530.html#q2-1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="sourceCode" id="cb70"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb70-1"><a href="exercises-inspect-gse166530.html#cb70-1" tabindex="-1"></a>sql <span class="ot">&lt;-</span> <span class="fu">paste0</span>(</span>
+<span id="cb70-2"><a href="exercises-inspect-gse166530.html#cb70-2" tabindex="-1"></a>  <span class="st">&quot;SELECT title, summary &quot;</span>,</span>
+<span id="cb70-3"><a href="exercises-inspect-gse166530.html#cb70-3" tabindex="-1"></a>  <span class="st">&quot;FROM gse &quot;</span>,</span>
+<span id="cb70-4"><a href="exercises-inspect-gse166530.html#cb70-4" tabindex="-1"></a>  <span class="st">&quot;WHERE gse = &#39;&quot;</span>, gse2_num, <span class="st">&quot;&#39;&quot;</span>)</span>
+<span id="cb70-5"><a href="exercises-inspect-gse166530.html#cb70-5" tabindex="-1"></a>gse2 <span class="ot">&lt;-</span> <span class="fu">dbGetQuery</span>(con, sql)</span>
+<span id="cb70-6"><a href="exercises-inspect-gse166530.html#cb70-6" tabindex="-1"></a>gse2<span class="sc">$</span>title</span></code></pre></div>
+<pre><code>## [1] &quot;Deciphering the host transcriptional response to SARS-CoV-2 infection&quot;</code></pre>
+<div class="sourceCode" id="cb72"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb72-1"><a href="exercises-inspect-gse166530.html#cb72-1" tabindex="-1"></a>gse2<span class="sc">$</span>summary</span></code></pre></div>
+<pre><code>## [1] &quot;SARS-CoV-2 is a beta coronavirus causing COVID-19 which first emerged in Wuhan, China and was later declared a pandemic by the World Health Organization. Since then the economical, health and human cost has been enormous for the world. However, little work has been done to understand the transcriptional changes brought about by the virus in human hosts. We have compared COVID-19 positive samples with negative samples from Indian patients to better understand the host response.. We find many genes related to immune response  up-regulated in the COVID-19 patients. Many of these are the usual response genes against the viral infection but type I interferon appears to be a  key immune response activated against SARS-CoV-2. A large number of the differentially expressed genes were down-regulated pointing towards translational arrest and down regulation of host mRNA during late infection. The down-regulated genes are well correlated with the clinical manifestations and symptoms due to SARS-CoV-2 infection such as the loss of smell and taste. We also find evidence of altered gene expression profiles associated with systemic complications such as neurological disturbances and high insulin requirement. Finally, we have identified many lncRNAs being down-regulated during COVID-19 infections. A few of these lncRNAs have functional role in viral infection. However, to understand the functional role of other lncRNAs, we looked at the function of their closest gene, since lncRNA are believed to have cis functionality. Our analysis suggests a role for lncRNA in down-regulation of metabolic and developmental processes during COVID-19 infection.&quot;</code></pre>
+<p>From the title, summary and platform organism, we can infer that the study is based on SARS-Cov-2, in samples from human patients that tested negative or positive for the virus.</p>
+</div>
+<div id="q3-1" class="section level2 hasAnchor" number="8.3">
+<h2><span class="header-section-number">8.3</span> Q3<a href="exercises-inspect-gse166530.html#q3-1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>From the query below, we can see that there are 41 samples.</p>
+<div class="sourceCode" id="cb74"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb74-1"><a href="exercises-inspect-gse166530.html#cb74-1" tabindex="-1"></a><span class="co"># Get samples (GSM)</span></span>
+<span id="cb74-2"><a href="exercises-inspect-gse166530.html#cb74-2" tabindex="-1"></a>sql <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">&quot;SELECT * &quot;</span>,</span>
+<span id="cb74-3"><a href="exercises-inspect-gse166530.html#cb74-3" tabindex="-1"></a>              <span class="st">&quot;FROM gse JOIN gse_gsm ON gse_gsm.gse = gse.gse &quot;</span>,</span>
+<span id="cb74-4"><a href="exercises-inspect-gse166530.html#cb74-4" tabindex="-1"></a>              <span class="st">&quot;JOIN gsm ON gse_gsm.gsm = gsm.gsm &quot;</span>,</span>
+<span id="cb74-5"><a href="exercises-inspect-gse166530.html#cb74-5" tabindex="-1"></a>              <span class="st">&quot;WHERE gse.gse = &#39;&quot;</span>, gse2_num, <span class="st">&quot;&#39;&quot;</span>)</span>
+<span id="cb74-6"><a href="exercises-inspect-gse166530.html#cb74-6" tabindex="-1"></a>gse2 <span class="ot">&lt;-</span> <span class="fu">dbGetQuery</span>(con, sql)</span>
+<span id="cb74-7"><a href="exercises-inspect-gse166530.html#cb74-7" tabindex="-1"></a><span class="fu">dim</span>(gse2)</span></code></pre></div>
+<pre><code>## [1] 41 52</code></pre>
+<p>For each sample, the following information is associated with its record.</p>
+<div class="sourceCode" id="cb76"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb76-1"><a href="exercises-inspect-gse166530.html#cb76-1" tabindex="-1"></a><span class="fu">dbListFields</span>(con, <span class="st">&quot;gsm&quot;</span>)</span></code></pre></div>
+<pre><code>##  [1] &quot;ID&quot;                     &quot;title&quot;                  &quot;gsm&quot;                   
+##  [4] &quot;series_id&quot;              &quot;gpl&quot;                    &quot;status&quot;                
+##  [7] &quot;submission_date&quot;        &quot;last_update_date&quot;       &quot;type&quot;                  
+## [10] &quot;source_name_ch1&quot;        &quot;organism_ch1&quot;           &quot;characteristics_ch1&quot;   
+## [13] &quot;molecule_ch1&quot;           &quot;label_ch1&quot;              &quot;treatment_protocol_ch1&quot;
+## [16] &quot;extract_protocol_ch1&quot;   &quot;label_protocol_ch1&quot;     &quot;source_name_ch2&quot;       
+## [19] &quot;organism_ch2&quot;           &quot;characteristics_ch2&quot;    &quot;molecule_ch2&quot;          
+## [22] &quot;label_ch2&quot;              &quot;treatment_protocol_ch2&quot; &quot;extract_protocol_ch2&quot;  
+## [25] &quot;label_protocol_ch2&quot;     &quot;hyb_protocol&quot;           &quot;description&quot;           
+## [28] &quot;data_processing&quot;        &quot;contact&quot;                &quot;supplementary_file&quot;    
+## [31] &quot;data_row_count&quot;         &quot;channel_count&quot;</code></pre>
+</div>
+<div id="q4-1" class="section level2 hasAnchor" number="8.4">
+<h2><span class="header-section-number">8.4</span> Q4<a href="exercises-inspect-gse166530.html#q4-1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="sourceCode" id="cb78"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb78-1"><a href="exercises-inspect-gse166530.html#cb78-1" tabindex="-1"></a><span class="co"># Controls</span></span>
+<span id="cb78-2"><a href="exercises-inspect-gse166530.html#cb78-2" tabindex="-1"></a><span class="co"># Choosing LIKE keyword by looking through a few of the sample titles:</span></span>
+<span id="cb78-3"><a href="exercises-inspect-gse166530.html#cb78-3" tabindex="-1"></a>sql <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">&quot;SELECT COUNT(*)&quot;</span>,</span>
+<span id="cb78-4"><a href="exercises-inspect-gse166530.html#cb78-4" tabindex="-1"></a>              <span class="st">&quot;FROM gse JOIN gse_gsm ON gse_gsm.gse = gse.gse &quot;</span>,</span>
+<span id="cb78-5"><a href="exercises-inspect-gse166530.html#cb78-5" tabindex="-1"></a>              <span class="st">&quot;JOIN gsm ON gse_gsm.gsm = gsm.gsm &quot;</span>,</span>
+<span id="cb78-6"><a href="exercises-inspect-gse166530.html#cb78-6" tabindex="-1"></a>              <span class="st">&quot;WHERE gse.gse = &#39;&quot;</span>, gse2_num, <span class="st">&quot;&#39;&quot;</span>,</span>
+<span id="cb78-7"><a href="exercises-inspect-gse166530.html#cb78-7" tabindex="-1"></a>              <span class="st">&quot;AND gsm.title LIKE &#39;%Negative%&#39;&quot;</span>)</span>
+<span id="cb78-8"><a href="exercises-inspect-gse166530.html#cb78-8" tabindex="-1"></a><span class="fu">dbGetQuery</span>(con, sql)</span></code></pre></div>
+<pre><code>##   COUNT(*)
+## 1        5</code></pre>
+<p>There are 5 control samples. Thus we can infer that there are 36 disease samples.</p>
 
+</div>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="finding-datasets-of-interest.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="exercises-inspect-gse201427.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="exercises-inspect-gse201427.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="exercises-inspect-gse162183.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

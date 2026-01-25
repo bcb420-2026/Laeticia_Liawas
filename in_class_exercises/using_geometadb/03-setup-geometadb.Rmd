@@ -25,7 +25,9 @@ if (!requireNamespace("ggplot2", quietly = TRUE))
 
 ```{r}
 library(GEOmetadb)
-if (!file.exists('GEOmetadb.sqlite')) getSQLiteFile()
+
+# if file doesn't exist then download
+if (!file.exists('GEOmetadb.sqlite')) getSQLiteFile() 
 file.info('GEOmetadb.sqlite')
 ```
 

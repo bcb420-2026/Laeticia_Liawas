@@ -1,0 +1,75 @@
+
+# Exercises: Inspect GSE166530
+
+Will be done based on 06_1.
+
+## Q1
+
+The following query did not seem to yield any rows.
+```{r}
+gse2_num <- "GSE166530"
+
+sql <- paste(
+  "SELECT DISTINCT gpl.technology",
+  "FROM gse JOIN gse_gpl ON gse_gpl.gse = gse.gse",
+  "JOIN gpl ON gse_gpl.gpl = gpl.gpl",
+  "WHERE gse_gpl.gse ='", gse2_num, "'")
+
+dbGetQuery(con, sql)
+```
+
+However, this shows that there is a GPL accession associated to this GSE, but it is not in the 'gpl' table.
+```{r}
+sql <- paste0(
+  "SELECT * ",
+  "FROM gse_gpl ",
+  "WHERE gse_gpl.gse ='", gse2_num, "'")
+dbGetQuery(con, sql)
+dbGetQuery(con, "select count(*) from gpl where gpl = 'GPL24676'")
+```
+From the [GEO website](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi), using the GPL Accession GPL24676 as retrieved from the query above, the platform technology of this GSE seems to be **'high-throughput sequencing'**, titled "Illumina NovaSeq 6000 (Homo sapiens)".
+
+## Q2
+
+```{r}
+sql <- paste0(
+  "SELECT title, summary ",
+  "FROM gse ",
+  "WHERE gse = '", gse2_num, "'")
+gse2 <- dbGetQuery(con, sql)
+gse2$title
+gse2$summary
+```
+From the title, summary and platform organism, we can infer that the study is based on SARS-Cov-2, in samples from human patients that tested negative or positive for the virus.
+
+## Q3 
+
+From the query below, we can see that there are 41 samples.
+```{r}
+# Get samples (GSM)
+sql <- paste0("SELECT * ",
+              "FROM gse JOIN gse_gsm ON gse_gsm.gse = gse.gse ",
+              "JOIN gsm ON gse_gsm.gsm = gsm.gsm ",
+              "WHERE gse.gse = '", gse2_num, "'")
+gse2 <- dbGetQuery(con, sql)
+dim(gse2)
+```
+
+For each sample, the following information is associated with its record.
+```{r}
+dbListFields(con, "gsm")
+```
+
+## Q4
+
+```{r}
+# Controls
+# Choosing LIKE keyword by looking through a few of the sample titles:
+sql <- paste0("SELECT COUNT(*)",
+              "FROM gse JOIN gse_gsm ON gse_gsm.gse = gse.gse ",
+              "JOIN gsm ON gse_gsm.gsm = gsm.gsm ",
+              "WHERE gse.gse = '", gse2_num, "'",
+              "AND gsm.title LIKE '%Negative%'")
+dbGetQuery(con, sql)
+```
+There are 5 control samples. Thus we can infer that there are 36 disease samples.

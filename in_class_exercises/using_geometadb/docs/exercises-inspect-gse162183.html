@@ -4,12 +4,12 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 6 Exercises: Inspect Specific GEO Series | 06_5-GSE264108</title>
+  <title>Chapter 9 Exercises: Inspect GSE162183 | 06_5-GSE264108</title>
   <meta name="description" content="<p>A hands-on tutorial that shows how to explore GEO metadata with GEOmetadb,
 ask reproducible questions in SQL from R, and shortlist RNA-seq series.</p>" />
   <meta name="generator" content="bookdown 0.46 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 6 Exercises: Inspect Specific GEO Series | 06_5-GSE264108" />
+  <meta property="og:title" content="Chapter 9 Exercises: Inspect GSE162183 | 06_5-GSE264108" />
   <meta property="og:type" content="book" />
   
   <meta property="og:description" content="<p>A hands-on tutorial that shows how to explore GEO metadata with GEOmetadb,
@@ -17,7 +17,7 @@ ask reproducible questions in SQL from R, and shortlist RNA-seq series.</p>" />
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 6 Exercises: Inspect Specific GEO Series | 06_5-GSE264108" />
+  <meta name="twitter:title" content="Chapter 9 Exercises: Inspect GSE162183 | 06_5-GSE264108" />
   
   <meta name="twitter:description" content="<p>A hands-on tutorial that shows how to explore GEO metadata with GEOmetadb,
 ask reproducible questions in SQL from R, and shortlist RNA-seq series.</p>" />
@@ -33,8 +33,8 @@ ask reproducible questions in SQL from R, and shortlist RNA-seq series.</p>" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="finding-datasets-of-interest.html"/>
-<link rel="next" href="exercises-inspect-gse201427.html"/>
+<link rel="prev" href="exercises-inspect-gse166530.html"/>
+<link rel="next" href="exercises-inspect-gse186458.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -215,30 +215,97 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="exercises-inspect-specific-geo-series" class="section level1 hasAnchor" number="6">
-<h1><span class="header-section-number">Chapter 6</span> Exercises: Inspect Specific GEO Series<a href="exercises-inspect-specific-geo-series.html#exercises-inspect-specific-geo-series" class="anchor-section" aria-label="Anchor link to header"></a></h1>
-<p>In this exercise, you’ll retrieve metadata for the following GEO Series and answer:</p>
-<p><strong>GSE IDs:</strong> “GSE201427”,“GSE166530”,“GSE162183”,“GSE186458”</p>
-<p><strong>Questions per GSE</strong></p>
-<ol style="list-style-type: decimal">
-<li><strong>What type of data is it? Describe it.</strong> (platform technology; e.g., high-throughput sequencing, array)</li>
-<li><strong>What disease or model is it using?</strong> (infer from series title/summary/platform organism)</li>
-<li><strong>How many samples are there? What type of data is associated with the record?</strong></li>
-<li><strong>How many control and how many disease?</strong></li>
-<li>**Can you find out any information about the GEO dataset - GSE264108. Why or Why not?</li>
-</ol>
-<blockquote>
-<p>Hint: Sample labels are not standardized. Use robust keyword detection (e.g., <code>control|normal|healthy|wild[- ]?type</code> vs. <code>tumou?r|cancer|patient|disease|mutant|treated</code>). Inspect a few GSM rows if the automatic inference is uncertain.</p>
-</blockquote>
+<div id="exercises-inspect-gse162183" class="section level1 hasAnchor" number="9">
+<h1><span class="header-section-number">Chapter 9</span> Exercises: Inspect GSE162183<a href="exercises-inspect-gse162183.html#exercises-inspect-gse162183" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>Will be done based on 06_1.</p>
+<div id="q1-2" class="section level2 hasAnchor" number="9.1">
+<h2><span class="header-section-number">9.1</span> Q1<a href="exercises-inspect-gse162183.html#q1-2" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>The following query did not seem to yield any rows.</p>
+<div class="sourceCode" id="cb80"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb80-1"><a href="exercises-inspect-gse162183.html#cb80-1" tabindex="-1"></a>gse3_num <span class="ot">&lt;-</span> <span class="st">&quot;GSE162183&quot;</span></span>
+<span id="cb80-2"><a href="exercises-inspect-gse162183.html#cb80-2" tabindex="-1"></a></span>
+<span id="cb80-3"><a href="exercises-inspect-gse162183.html#cb80-3" tabindex="-1"></a>sql <span class="ot">&lt;-</span> <span class="fu">paste</span>(</span>
+<span id="cb80-4"><a href="exercises-inspect-gse162183.html#cb80-4" tabindex="-1"></a>  <span class="st">&quot;SELECT DISTINCT gpl.technology&quot;</span>,</span>
+<span id="cb80-5"><a href="exercises-inspect-gse162183.html#cb80-5" tabindex="-1"></a>  <span class="st">&quot;FROM gse JOIN gse_gpl ON gse_gpl.gse = gse.gse&quot;</span>,</span>
+<span id="cb80-6"><a href="exercises-inspect-gse162183.html#cb80-6" tabindex="-1"></a>  <span class="st">&quot;JOIN gpl ON gse_gpl.gpl = gpl.gpl&quot;</span>,</span>
+<span id="cb80-7"><a href="exercises-inspect-gse162183.html#cb80-7" tabindex="-1"></a>  <span class="st">&quot;WHERE gse_gpl.gse =&#39;&quot;</span>, gse3_num, <span class="st">&quot;&#39;&quot;</span>)</span>
+<span id="cb80-8"><a href="exercises-inspect-gse162183.html#cb80-8" tabindex="-1"></a></span>
+<span id="cb80-9"><a href="exercises-inspect-gse162183.html#cb80-9" tabindex="-1"></a><span class="fu">dbGetQuery</span>(con, sql)</span></code></pre></div>
+<pre><code>## [1] technology
+## &lt;0 rows&gt; (or 0-length row.names)</code></pre>
+<p>However, this shows that there is a GPL accession associated to this GSE, but it is not in the ‘gpl’ table.</p>
+<div class="sourceCode" id="cb82"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb82-1"><a href="exercises-inspect-gse162183.html#cb82-1" tabindex="-1"></a>sql <span class="ot">&lt;-</span> <span class="fu">paste0</span>(</span>
+<span id="cb82-2"><a href="exercises-inspect-gse162183.html#cb82-2" tabindex="-1"></a>  <span class="st">&quot;SELECT * &quot;</span>,</span>
+<span id="cb82-3"><a href="exercises-inspect-gse162183.html#cb82-3" tabindex="-1"></a>  <span class="st">&quot;FROM gse_gpl &quot;</span>,</span>
+<span id="cb82-4"><a href="exercises-inspect-gse162183.html#cb82-4" tabindex="-1"></a>  <span class="st">&quot;WHERE gse_gpl.gse =&#39;&quot;</span>, gse3_num, <span class="st">&quot;&#39;&quot;</span>)</span>
+<span id="cb82-5"><a href="exercises-inspect-gse162183.html#cb82-5" tabindex="-1"></a><span class="fu">dbGetQuery</span>(con, sql)</span></code></pre></div>
+<pre><code>##         gse      gpl
+## 1 GSE162183 GPL24676</code></pre>
+<div class="sourceCode" id="cb84"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb84-1"><a href="exercises-inspect-gse162183.html#cb84-1" tabindex="-1"></a><span class="fu">dbGetQuery</span>(con, <span class="st">&quot;select count(*) from gpl where gpl = &#39;GPL24676&#39;&quot;</span>)</span></code></pre></div>
+<pre><code>##   count(*)
+## 1        0</code></pre>
+<p>From the <a href="https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi">GEO website</a>, using the GPL Accession GPL24676 as retrieved from the query above, the platform technology of this GSE seems to be <strong>‘high-throughput sequencing’</strong>, titled “Illumina NovaSeq 6000 (Homo sapiens)”.</p>
+</div>
+<div id="q2-2" class="section level2 hasAnchor" number="9.2">
+<h2><span class="header-section-number">9.2</span> Q2<a href="exercises-inspect-gse162183.html#q2-2" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="sourceCode" id="cb86"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb86-1"><a href="exercises-inspect-gse162183.html#cb86-1" tabindex="-1"></a>sql <span class="ot">&lt;-</span> <span class="fu">paste0</span>(</span>
+<span id="cb86-2"><a href="exercises-inspect-gse162183.html#cb86-2" tabindex="-1"></a>  <span class="st">&quot;SELECT title, summary &quot;</span>,</span>
+<span id="cb86-3"><a href="exercises-inspect-gse162183.html#cb86-3" tabindex="-1"></a>  <span class="st">&quot;FROM gse &quot;</span>,</span>
+<span id="cb86-4"><a href="exercises-inspect-gse162183.html#cb86-4" tabindex="-1"></a>  <span class="st">&quot;WHERE gse = &#39;&quot;</span>, gse3_num, <span class="st">&quot;&#39;&quot;</span>)</span>
+<span id="cb86-5"><a href="exercises-inspect-gse162183.html#cb86-5" tabindex="-1"></a>gse3 <span class="ot">&lt;-</span> <span class="fu">dbGetQuery</span>(con, sql)</span>
+<span id="cb86-6"><a href="exercises-inspect-gse162183.html#cb86-6" tabindex="-1"></a>gse3<span class="sc">$</span>title</span></code></pre></div>
+<pre><code>## [1] &quot;Single cell transcriptional zonation of human psoriasis whole skin&quot;</code></pre>
+<div class="sourceCode" id="cb88"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb88-1"><a href="exercises-inspect-gse162183.html#cb88-1" tabindex="-1"></a>gse3<span class="sc">$</span>summary</span></code></pre></div>
+<pre><code>## [1] &quot;To explore the cellullar and molecular alteration of human psoriasis, we collected full-thickness skin from the lesion region of 3 patients and the similar region of 3 healthy donors, and submit for single cell RNA sequencing (scRNAseq) with 10x genomics (V3.1). The transcriptional landscape of human psoriasis whole skin provide a unique view of immuno-regulation among skin cell types.;\t;\t\&quot;Single cell transcriptional zonation of human psoriasis skin identifies an alternative immunoregulatory axis\&quot;,&lt;Cell Death Dis.&gt;, 2021 May 6;12(5):450.&quot;</code></pre>
+<p>From the title, summary and platform organism, we can infer that the study is based on human psoriasis, from full thickness skin from the lesion region.</p>
+</div>
+<div id="q3-2" class="section level2 hasAnchor" number="9.3">
+<h2><span class="header-section-number">9.3</span> Q3<a href="exercises-inspect-gse162183.html#q3-2" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>From the query below, we can see that there are 6 samples.</p>
+<div class="sourceCode" id="cb90"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb90-1"><a href="exercises-inspect-gse162183.html#cb90-1" tabindex="-1"></a><span class="co"># Get samples (GSM)</span></span>
+<span id="cb90-2"><a href="exercises-inspect-gse162183.html#cb90-2" tabindex="-1"></a>sql <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">&quot;SELECT * &quot;</span>,</span>
+<span id="cb90-3"><a href="exercises-inspect-gse162183.html#cb90-3" tabindex="-1"></a>              <span class="st">&quot;FROM gse JOIN gse_gsm ON gse_gsm.gse = gse.gse &quot;</span>,</span>
+<span id="cb90-4"><a href="exercises-inspect-gse162183.html#cb90-4" tabindex="-1"></a>              <span class="st">&quot;JOIN gsm ON gse_gsm.gsm = gsm.gsm &quot;</span>,</span>
+<span id="cb90-5"><a href="exercises-inspect-gse162183.html#cb90-5" tabindex="-1"></a>              <span class="st">&quot;WHERE gse.gse = &#39;&quot;</span>, gse3_num, <span class="st">&quot;&#39;&quot;</span>)</span>
+<span id="cb90-6"><a href="exercises-inspect-gse162183.html#cb90-6" tabindex="-1"></a>gse3 <span class="ot">&lt;-</span> <span class="fu">dbGetQuery</span>(con, sql)</span>
+<span id="cb90-7"><a href="exercises-inspect-gse162183.html#cb90-7" tabindex="-1"></a><span class="fu">dim</span>(gse3)</span></code></pre></div>
+<pre><code>## [1]  6 52</code></pre>
+<p>For each sample, the following information is associated with its record.</p>
+<div class="sourceCode" id="cb92"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb92-1"><a href="exercises-inspect-gse162183.html#cb92-1" tabindex="-1"></a><span class="fu">dbListFields</span>(con, <span class="st">&quot;gsm&quot;</span>)</span></code></pre></div>
+<pre><code>##  [1] &quot;ID&quot;                     &quot;title&quot;                  &quot;gsm&quot;                   
+##  [4] &quot;series_id&quot;              &quot;gpl&quot;                    &quot;status&quot;                
+##  [7] &quot;submission_date&quot;        &quot;last_update_date&quot;       &quot;type&quot;                  
+## [10] &quot;source_name_ch1&quot;        &quot;organism_ch1&quot;           &quot;characteristics_ch1&quot;   
+## [13] &quot;molecule_ch1&quot;           &quot;label_ch1&quot;              &quot;treatment_protocol_ch1&quot;
+## [16] &quot;extract_protocol_ch1&quot;   &quot;label_protocol_ch1&quot;     &quot;source_name_ch2&quot;       
+## [19] &quot;organism_ch2&quot;           &quot;characteristics_ch2&quot;    &quot;molecule_ch2&quot;          
+## [22] &quot;label_ch2&quot;              &quot;treatment_protocol_ch2&quot; &quot;extract_protocol_ch2&quot;  
+## [25] &quot;label_protocol_ch2&quot;     &quot;hyb_protocol&quot;           &quot;description&quot;           
+## [28] &quot;data_processing&quot;        &quot;contact&quot;                &quot;supplementary_file&quot;    
+## [31] &quot;data_row_count&quot;         &quot;channel_count&quot;</code></pre>
+</div>
+<div id="q4-2" class="section level2 hasAnchor" number="9.4">
+<h2><span class="header-section-number">9.4</span> Q4<a href="exercises-inspect-gse162183.html#q4-2" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="sourceCode" id="cb94"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb94-1"><a href="exercises-inspect-gse162183.html#cb94-1" tabindex="-1"></a><span class="co"># Controls</span></span>
+<span id="cb94-2"><a href="exercises-inspect-gse162183.html#cb94-2" tabindex="-1"></a><span class="co"># Choosing LIKE keyword by looking through a few of the sample titles:</span></span>
+<span id="cb94-3"><a href="exercises-inspect-gse162183.html#cb94-3" tabindex="-1"></a>sql <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">&quot;SELECT COUNT(*)&quot;</span>,</span>
+<span id="cb94-4"><a href="exercises-inspect-gse162183.html#cb94-4" tabindex="-1"></a>              <span class="st">&quot;FROM gse JOIN gse_gsm ON gse_gsm.gse = gse.gse &quot;</span>,</span>
+<span id="cb94-5"><a href="exercises-inspect-gse162183.html#cb94-5" tabindex="-1"></a>              <span class="st">&quot;JOIN gsm ON gse_gsm.gsm = gsm.gsm &quot;</span>,</span>
+<span id="cb94-6"><a href="exercises-inspect-gse162183.html#cb94-6" tabindex="-1"></a>              <span class="st">&quot;WHERE gse.gse = &#39;&quot;</span>, gse3_num, <span class="st">&quot;&#39;&quot;</span>,</span>
+<span id="cb94-7"><a href="exercises-inspect-gse162183.html#cb94-7" tabindex="-1"></a>              <span class="st">&quot;AND gsm.title LIKE &#39;%control%&#39;&quot;</span>)</span>
+<span id="cb94-8"><a href="exercises-inspect-gse162183.html#cb94-8" tabindex="-1"></a><span class="fu">dbGetQuery</span>(con, sql)</span></code></pre></div>
+<pre><code>##   COUNT(*)
+## 1        3</code></pre>
+<p>There are 3 control samples. Thus we can infer that there are 3 disease samples. This is also mentioned in the GSE summary.</p>
 
+</div>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="finding-datasets-of-interest.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="exercises-inspect-gse201427.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="exercises-inspect-gse166530.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="exercises-inspect-gse186458.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

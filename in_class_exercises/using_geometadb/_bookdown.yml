@@ -1,4 +1,5 @@
 book_filename: geometadb-tutorial
+title: "Finding Expression Data with GEOmetadb"
 output_dir: "docs"
 language:
   ui:
@@ -11,4 +12,9 @@ rmd_files:
   - 04-exploring-platforms.Rmd
   - 05-finding-datasets.Rmd
   - 06-exercises.Rmd
+  - 07_1-GSE201427.Rmd
+  - 07_2-GSE166530.Rmd
+  - 07_3-GSE162183.Rmd
+  - 07_4-GSE186458.Rmd
+  - 07_5-GSE264108.Rmd
   - 08-next-steps.Rmd
