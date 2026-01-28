@@ -1,0 +1,79 @@
+---
+title: "Get to know me!"
+author: "Student's Name"
+date: "2026-01-27"
+output:
+  html_document:
+    toc: true                   # this is to generate a table of contents
+    toc_depth: 2                # this is to control what level of header we are going to display on the table of contents 
+    toc_float: true             #this is to have a floating table of contents
+    code_folding: hide          # this is to fold/hide the code 
+bibliography: references.bib    # this is for the citations/bibliography 
+link-citations: true            # this is for the citations/bibliography 
+---
+
+```{r setup, include=FALSE, echo=FALSE}
+knitr::opts_chunk$set(echo = FALSE,
+                      warning = FALSE, # suppressing warning messages
+                      message = FALSE,
+                      knitr.kable.max_rows = 6)
+
+# attach any relevant packages
+....
+
+# read the data files
+courses <- read.csv(file = "courses.csv")
+hobbies <- read.csv(file = "hobbies.csv")
+```
+
+# This R Markdown is to get to know ...Student's Name...!
+
+## Bio {#bachelors-degree}
+... fill in ...
+
+
+## Bachelors Degree 
+### {#bachelors-degree-table}
+**Table 1. Record of all undergraduate courses** 
+``` {r courses_table, include=TRUE,echo=TRUE}
+
+# show a table with all my courses 
+# ... fill in ...
+
+```
+
+### {#bachelors-degree-figure}
+
+``` {r courses_figure, include=TRUE,echo=TRUE, fig.cap = "**Figure 1 Title** Text "}
+## organize the data for plotting
+# ... fill in ...
+
+# generate plot 
+# ... fill in ...
+  
+```
+
+## Hobbies
+### {#my-hobbies}
+... fill in ...
+
+
+## Custom section {#custom-section}
+... fill in ...
+
+## Questions to answer 
+
+1.[ What is your bachelors degree?](#bachelors-degree)
+
+2.[Which courses have you taken and in which departments?](#bachelors-degree-figure)
+
+3.[What are your hobbies?](#my-hobbies)
+
+4.[How many hours a week do you spend on each hobby?](#hobbies-hours-per-week)
+
+5.[What is your favorite hobby?](#favorite-hobby)
+
+6.[Add a custom section of your choosing!](#custom-section)
+
+## Citations
+... fill in ...
