@@ -1,0 +1,25 @@
+# Exercises
+
+These are intended to be done **after** completing the worked examples.
+
+## Exercise 1 — https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE119732
+
+Using **GSE119732**, confirm whether the ID column contains Ensembl IDs with version suffixes.
+
+1. Extract the first 20 IDs.
+2. Count how many contain a `.`.
+3. Create a new column with versions stripped.
+4. Map the identifiers to HGNC symbols.
+
+## Exercise 2 — https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE122380
+
+Using **GSE122380**, confirm whether the ID column contains Ensembl IDs with version suffixes.
+
+1. Extract the first 20 IDs.
+2. Create a new column with versions stripped.
+3. Map the identifiers to HGNC symbols.
+4. What is different about this file? 
+
+## Exercise 3 - 
+ 
+Can you use the worked example to process the above two GEO records?  How?

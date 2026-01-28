@@ -1,0 +1,235 @@
+---
+title: "worked Example"
+params:
+  gse: "GSE233947"
+  file_grep: "\\.txt.gz$|\\.tsv.gz$|\\.csv.gz$"
+---
+
+
+# Worked examples with before/after tables
+
+This chapter shows **what the data look like**, **what the IDs look like**, and **how the table changes once mapped**.
+
+```{r define_strip}
+library(knitr)
+library(dplyr)
+library(tibble)
+
+kable_head <- function(x, n = 5, caption = NULL) {
+  knitr::kable(utils::head(x, n), caption = caption)
+}
+
+strip_ensembl_version <- function(x) sub("\\..*$", "", x)
+```
+
+
+## `r params$gse`
+
+### Raw data preview
+
+```{r get_data}
+source("./fetch_geo_supp.R")
+fetch_geo_supp(gse = params$gse)
+
+path <- file.path("data", params$gse)
+files <- list.files(path, pattern = params$file_grep, 
+                    full.names = TRUE, recursive = TRUE)
+
+kable_head(tibble(file = basename(files)), min(10, length(files)), paste(params$gse,": extracted file list (first 10)"))
+
+
+```
+
+Raw table preview
+
+```{r preview_raw}
+library(readr)
+
+safe_read <- function(file) {
+  # First attempt: read as TSV
+  df <- tryCatch(
+    readr::read_tsv(file, show_col_types = FALSE),
+    error = function(e) NULL   # catch fatal errors
+  )
+  
+  # If read_tsv failed entirely:
+  if (is.null(df)) {
+    message("TSV read failed — reading as space-delimited file instead.")
+    return(readr::read_table(file, show_col_types = FALSE))
+  }
+  
+  # If read_tsv returned but with parsing issues:
+  probs <- problems(df)
+  if (nrow(probs) > 0) {
+    message("Parsing issues detected in TSV — reading as space-delimited file instead.")
+    return(readr::read_table(file, show_col_types = FALSE))
+  }
+  
+  # If everything was fine:
+  return(df)
+}
+
+x <- safe_read(files[1])
+
+
+kable_head(x[, 1:min(6, ncol(x))], 5, paste(params$gse,": raw table preview"))
+
+```
+
+ID preview
+
+```{r id_preview}
+id_col <- names(x)[1]
+ids <- x[[1]] |> as.character()
+kable_head(tibble(raw_id = head(ids, 10), 
+                  stripped = strip_ensembl_version(head(ids, 10))), 
+           10, paste(params$gse,": ID preview"))
+```
+
+
+### After mapping (Ensembl → HGNC)
+
+```{r after_map}
+if (any(grepl("^ENSG", strip_ensembl_version(ids)))) {
+  library(biomaRt)
+  ensembl_ids <- unique(strip_ensembl_version(ids))
+  ensembl <- useMart("ensembl", dataset = "hsapiens_gene_ensembl")
+
+  map <- getBM(
+    attributes = c("ensembl_gene_id", "hgnc_symbol"),
+    filters = "ensembl_gene_id",
+    values = ensembl_ids,
+    mart = ensembl
+  )
+
+  kable_head(map, 10, paste(params$gse,": mapping preview"))
+
+  expr_mapped <- x %>%
+    mutate(ensembl_gene_id = strip_ensembl_version(.data[[id_col]])) %>%
+    left_join(map, by = "ensembl_gene_id") %>%
+  dplyr::select( ensembl_gene_id,hgnc_symbol, everything())
+
+
+  kable_head(expr_mapped[, 1:min(8, ncol(expr_mapped))], 5, paste(params$gse,": mapped table preview"))
+}
+```
+
+Summarize the mapping
+
+```{r}
+
+n_ensembl_total <- expr_mapped %>%
+  distinct(ensembl_gene_id) %>%
+  nrow()
+
+n_mapped <- expr_mapped %>%
+  filter(!is.na(hgnc_symbol), hgnc_symbol != "") %>%
+  distinct(ensembl_gene_id) %>%
+  nrow()
+
+n_unmapped <- n_ensembl_total - n_mapped
+
+mapping_summary <- tibble::tibble(
+  category = c("Total Ensembl IDs", "Mapped to HGNC", "Unmapped"),
+  n = c(n_ensembl_total, n_mapped, n_unmapped)
+)
+
+mapping_summary
+
+```
+
+
+```{r}
+
+unmapped_ids <- expr_mapped %>%
+  distinct(ensembl_gene_id, hgnc_symbol) %>%
+  filter(is.na(hgnc_symbol) | hgnc_symbol == "") %>%
+  pull(ensembl_gene_id) %>%
+  unique()
+
+length(unmapped_ids)
+
+```
+
+
+```{r}
+
+library(stringr)
+
+unmapped_classified <- tibble::tibble(id = unmapped_ids) %>%
+  mutate(type = case_when(
+    str_detect(id, "^ENSG\\d+$") ~ "Ensembl gene ID (ENSG)",
+    str_detect(id, "^ENSG\\d+\\.\\d+$") ~ "Ensembl gene ID with version (ENSG.x) — needs stripping",
+    str_detect(id, "^ENST\\d+") ~ "Ensembl transcript ID (ENST) — wrong target for gene mapping",
+    str_detect(id, "^ENSP\\d+") ~ "Ensembl protein ID (ENSP) — wrong target",
+    str_detect(id, "^ENS.*G\\d+") ~ "Non-human Ensembl gene (e.g., ENSMUSG...) — wrong organism",
+    str_detect(id, "^ERCC-") ~ "ERCC spike-in control — not a gene",
+    str_detect(id, "^MT-|^mt-") ~ "Mitochondrial gene symbol (not Ensembl ID) — different ID system",
+    str_detect(id, "^\\d+$") ~ "Entrez Gene ID — different ID system",
+    TRUE ~ "Other / unknown format"
+  ))
+
+unmapped_classified %>% count(type) %>% arrange(desc(n))
+
+```
+
+```{r}
+
+# Use the same mart/dataset as your mapping step:
+# ensembl <- useMart("ensembl", dataset = "hsapiens_gene_ensembl")
+
+ensg_details <- getBM(
+  attributes = c(
+    "ensembl_gene_id",
+    "gene_biotype",
+    "external_gene_name"
+  ),
+  filters = "ensembl_gene_id",
+  values  = unmapped_ids,
+  mart    = ensembl
+)
+
+head(ensg_details)
+
+```
+
+Output the distribution of biotypes for the subset of ensembl ids that have no HGNC ID.
+
+```{r}
+library(ggplot2)
+x <- ensg_details$gene_biotype
+x[is.na(x)] <- "Unknown"
+
+# Base R counts table -> data.frame
+tab <- table(x)
+df_counts <- data.frame(
+  biotype = names(tab),
+  n       = as.integer(tab),
+  stringsAsFactors = FALSE
+)
+
+# Order by counts (ascending) for a nice horizontal bar chart
+df_counts <- df_counts[order(df_counts$n,decreasing = TRUE), ]
+df_counts$biotype <- factor(df_counts$biotype, levels = df_counts$biotype)
+
+#only include the top 20 biotypes
+df_counts <- df_counts[1:min(10, nrow(df_counts)), ]
+
+ggplot(df_counts, aes(x = biotype, y = n, fill = biotype)) +
+  geom_col(width = 0.8, color = "grey20") +
+  coord_flip() +
+  scale_fill_brewer(palette = "Set3", guide = "none") +
+  labs(
+    x = NULL, y = "Number of genes",
+    title = "Distribution of Gene Biotypes - \ntop 10 types not mapped"
+  ) +
+  theme_minimal(base_size = 13) +
+  theme(
+    plot.title.position = "plot",
+    panel.grid.major.y = element_blank()
+  )
+
+```
+
+Would the mapping of these identifiers have been different if we used a different version of Ensembl?
+
