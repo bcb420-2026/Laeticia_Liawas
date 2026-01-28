@@ -1,15 +1,16 @@
 ---
 title: "Get to know me!"
-author: "Student's Name"
+author: "Laeticia Liawas"
 date: "2026-01-27"
 output:
   html_document:
     toc: true                   # this is to generate a table of contents
-    toc_depth: 2                # this is to control what level of header we are going to display on the table of contents 
+    toc_depth: 3                # this is to control what level of header we are going to display on the table of contents 
     toc_float: true             #this is to have a floating table of contents
     code_folding: hide          # this is to fold/hide the code 
 bibliography: references.bib    # this is for the citations/bibliography 
 link-citations: true            # this is for the citations/bibliography 
+nocite: '@*'
 ---
 
 ```{r setup, include=FALSE, echo=FALSE}
@@ -19,61 +20,85 @@ knitr::opts_chunk$set(echo = FALSE,
                       knitr.kable.max_rows = 6)
 
 # attach any relevant packages
-....
+library("knitr")
+library("ggplot2")
+library("dplyr")
+library("rmarkdown")
 
 # read the data files
 courses <- read.csv(file = "courses.csv")
 hobbies <- read.csv(file = "hobbies.csv")
 ```
 
-# This R Markdown is to get to know ...Student's Name...!
+# This R Markdown is to get to know Laeticia!
 
 ## Bio {#bachelors-degree}
-... fill in ...
-
+My name is Laeticia! I am a 4th year at UofT as of writing this. My programs are Bioinformatics and Computational Biology specialist, Molecular Genetics and Microbiology major, and Computer Science minor. I like nerdy stuff. Specifically, the weeb-y side of nerd. Concerning more serious topics, I've always been a life sciences person since I was a kid. Right now, the fields I find most interesting are dev. bio, evol. bio and mol. gen!
 
 ## Bachelors Degree 
-### {#bachelors-degree-table}
+### All the courses I've taken{#bachelors-degree-table}
 **Table 1. Record of all undergraduate courses** 
 ``` {r courses_table, include=TRUE,echo=TRUE}
-
-# show a table with all my courses 
-# ... fill in ...
-
+# generate table with knitr::kable()
+colnames(courses) <- c("Course Dept", "Course Code", "Year", "Type")
+paged_table(courses, options=list(rows.print=5))
 ```
 
-### {#bachelors-degree-figure}
-
-``` {r courses_figure, include=TRUE,echo=TRUE, fig.cap = "**Figure 1 Title** Text "}
+### Courses by year and department {#bachelors-degree-figure}
+The following figures show the distribution of the courses I've taken, according to year, and department.
+``` {r courses_figure, include=TRUE, echo=TRUE, fig.cap = "**Figure 1: Courses by Year** Courses according to the year and department."}
 ## organize the data for plotting
-# ... fill in ...
+# idk what to do here
 
 # generate plot 
-# ... fill in ...
-  
+ggplot2::ggplot(data=courses,
+                mapping=aes(x=`Course Dept`,
+                            fill=as.factor(`Year`))) +
+  ggplot2::geom_bar(position="stack",
+                    show.legend=T) +
+  ggplot2::labs(title="Courses by Dept",
+                x="Dept",
+                y="Number of courses",
+                fill="Year")
+
 ```
 
 ## Hobbies
-### {#my-hobbies}
-... fill in ...
+### What are my hobbies? {#my-hobbies}
+I have a lot of dumb hobbies! They have changed over the years but generally all loser activities.
+```{r r hobbies-hours-per-week, include=TRUE, echo=TRUE, fig.cap = "**Figure 2: Hobbies** My hobbies"}
+paged_table(hobbies, options=list(rows.print=5))
+```
 
+### My Fav Hobby {#my-favourite-hobby}
+Ermm... playing games? Listening to music? I also like baking!
 
 ## Custom section {#custom-section}
-... fill in ...
+
+I drew this!
+![I drew this](IMG_0272.jpg)
+
+I also drew this!
+![I drew this too](IMG_3759.jpg)
 
 ## Questions to answer 
 
 1.[ What is your bachelors degree?](#bachelors-degree)
+Honours Bachelors of Science? My programs are BCB, MoGen and CS!
 
 2.[Which courses have you taken and in which departments?](#bachelors-degree-figure)
+A lot...
 
 3.[What are your hobbies?](#my-hobbies)
+A lot too...
 
 4.[How many hours a week do you spend on each hobby?](#hobbies-hours-per-week)
+A lot!
 
 5.[What is your favorite hobby?](#favorite-hobby)
+Listening to music maybe??
 
 6.[Add a custom section of your choosing!](#custom-section)
+I put some stuff I drew~~
 
-## Citations
-... fill in ...
+## References

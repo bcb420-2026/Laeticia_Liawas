@@ -1,6 +1,42 @@
-﻿Course_Department,Course_Code,Year,course_type
-ANTH,227,1,Elective
-BIOL,121,1,BSc Requirement 
-CHEM,121,1,BSc Requirement 
-ENGL,110,1,BSc Requirement 
-
+Course_Department,Course_Code,Year,course_type
+ANT,193,1,Elective
+BIO,120,1,BSc Requirement
+CHM,135,1,BSc Requirement
+EAS,120,1,Elective
+MAT,135,1,BSc Requirement
+BIO,130,1,BSc Requirement
+CHM,136,1,BSc Requirement
+CSC,108,1,Elective
+MAT,136,1,BSc Requirement
+PSL,299,1,Elective
+BCH,210,2,BSc Requirement
+BIO,230,2,BSc Requirement
+CSC,148,2,BSc Requirement
+HMB,265,2,BSc Requirement
+STA,237,2,BSc Requirement
+BCH,311,2,BSc Requirement
+CSB,352,2,BSc Requirement
+CSC,165,2,BSc Requirement
+MAT,223,2,Elective
+MGY,200,2,BSc Requirement
+CSC,207,2,BSc Requirement
+CSC,236,2,BSc Requirement
+BCB,330,3,BSc Requirement
+CSC,209,3,BSc Requirement
+CSC,263,3,BSc Requirement
+CSC,300,3,BSc Requirement
+MGY,340,3,BSc Requirement
+CSB,472,3,BSc Requirement
+CSC,343,3,Elective
+CSC,373,3,BSc Requirement
+MGY,350,3,BSc Requirement
+BCB,410,4,BSc Requirement
+BCB,430,4,BSc Requirement
+CSC,311,4,BSc Requirement
+MGY,314,4,BSc Requirement
+MGY,460,4,BSc Requirement
+MGY,470,4,BSc Requirement
+BCB,420,4,BSc Requirement
+CSC,384,4,Elective
+MGY,360,4,BSc Requirement
+SPA,101,4,Elective
