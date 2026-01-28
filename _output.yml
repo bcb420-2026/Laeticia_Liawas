@@ -1,0 +1,13 @@
+bookdown::gitbook:
+  css: style.css
+  toc_depth: 2
+  config:
+    toc:
+      collapse: subsection
+      before: |
+        <li><a href="./">Identifier Mapping Tutorial</a></li>
+    download: ["pdf", "epub"]
+bookdown::pdf_book:
+  toc: true
+  number_sections: true
+  keep_tex: false

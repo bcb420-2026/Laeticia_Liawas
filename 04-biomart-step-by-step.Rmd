@@ -1,0 +1,129 @@
+---
+title: "Biomart step by step"
+params:
+  ensembl_version: 115
+---
+
+# biomaRt step-by-step
+
+This follows the following workflow: **choose a mart → choose a dataset → discover filters/attributes → query with getBM() → merge back into your matrix**.
+
+```{r}
+library(biomaRt)
+```
+
+
+## 1. List marts
+
+```{r}
+listMarts()
+```
+
+## 2. (Optional) pin an Ensembl archive version
+
+```{r}
+listEnsemblArchives()[1:10,]
+
+# Example: pin to Ensembl 114
+ensembl <- useEnsembl(biomart = "ensembl",version = params$ensembl_version)
+```
+
+If you do not pin versions:
+
+```{r}
+ensembl <- useMart("ensembl")
+```
+
+## 3. List datasets and select human
+
+```{r}
+datasets <- listDatasets(ensembl)
+
+# filter for human
+human <- datasets[grep(datasets$dataset, pattern = "hsapiens"), ]
+human
+
+ensembl <- useDataset("hsapiens_gene_ensembl", mart = ensembl)
+```
+
+## 4. Identify the correct filter
+
+Filters are your **input ID type**.
+
+```{r}
+all_filters <- listFilters(ensembl)
+dim(all_filters)
+
+# search for Ensembl gene filters
+all_filters[grep(all_filters$name, pattern = "ensembl_gene"), ]
+```
+
+For Ensembl gene IDs, use filter: `ensembl_gene_id`.
+
+## 5. Identify the correct attributes
+
+Attributes are the **output columns** you want.
+
+```{r}
+all_attr <- listAttributes(ensembl)
+all_attr[1:10,]
+
+# search for HGNC
+searchAttributes(ensembl, "hgnc")
+```
+
+Common attributes:
+
+- `ensembl_gene_id`
+- `hgnc_symbol`
+
+## 6. Strip version suffixes (if present)
+
+```{r}
+strip_ensembl_version <- function(x) sub("\\..*$", "", x)
+ids <- c("ENSG00000141510.17", "ENSG00000157764.2")
+ids_clean <- strip_ensembl_version(ids)
+ids_clean
+```
+
+## 7. Run the query with `getBM()`
+
+```{r}
+map <- getBM(
+  attributes = c("ensembl_gene_id", "hgnc_symbol"),
+  filters = "ensembl_gene_id",
+  values = ids_clean,
+  mart = ensembl
+)
+map
+```
+
+## 8. Cache the mapping (recommended)
+
+```{r}
+cache_file <- "id_conversion.rds"
+
+if (file.exists(cache_file)) {
+  map <- readRDS(cache_file)
+} else {
+  map <- getBM(
+    attributes = c("ensembl_gene_id", "hgnc_symbol"),
+    filters = "ensembl_gene_id",
+    values = ids_clean,
+    mart = ensembl
+  )
+  saveRDS(map, cache_file)
+}
+```
+
+## 9. Merge back into your data
+
+```{r}
+library(dplyr)
+
+df <- tibble(ensembl_gene_id = ids_clean, value = c(1, 2))
+df_annot <- left_join(df, map, by = "ensembl_gene_id")
+df_annot
+```
+
+
