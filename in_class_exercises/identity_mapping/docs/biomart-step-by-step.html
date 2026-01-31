@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 4 biomaRt step-by-step | worked Example</title>
+  <meta name="description" content="Chapter 4 biomaRt step-by-step | worked Example" />
+  <meta name="generator" content="bookdown 0.46 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 4 biomaRt step-by-step | worked Example" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 4 biomaRt step-by-step | worked Example" />
+  
+  
+  
+
+<meta name="author" content="Ruth Isserlin" />
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="why-identifiers-are-messy.html"/>
+<link rel="next" href="worked-examples-with-beforeafter-tables.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+<link href="libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
+<script src="libs/pagedtable-1.1/js/pagedtable.js"></script>
+
+
+<style type="text/css">
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Identifier Mapping Tutorial</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Welcome</a></li>
+<li class="chapter" data-level="1" data-path="what-is-identifier-mapping.html"><a href="what-is-identifier-mapping.html"><i class="fa fa-check"></i><b>1</b> What is identifier mapping?</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="what-is-identifier-mapping.html"><a href="what-is-identifier-mapping.html#visual-overview"><i class="fa fa-check"></i><b>1.1</b> Visual overview</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="getting-data-from-geo.html"><a href="getting-data-from-geo.html"><i class="fa fa-check"></i><b>2</b> Getting data from GEO</a></li>
+<li class="chapter" data-level="3" data-path="why-identifiers-are-messy.html"><a href="why-identifiers-are-messy.html"><i class="fa fa-check"></i><b>3</b> Why identifiers are messy</a></li>
+<li class="chapter" data-level="4" data-path="biomart-step-by-step.html"><a href="biomart-step-by-step.html"><i class="fa fa-check"></i><b>4</b> biomaRt step-by-step</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="biomart-step-by-step.html"><a href="biomart-step-by-step.html#list-marts"><i class="fa fa-check"></i><b>4.1</b> 1. List marts</a></li>
+<li class="chapter" data-level="4.2" data-path="biomart-step-by-step.html"><a href="biomart-step-by-step.html#optional-pin-an-ensembl-archive-version"><i class="fa fa-check"></i><b>4.2</b> 2. (Optional) pin an Ensembl archive version</a></li>
+<li class="chapter" data-level="4.3" data-path="biomart-step-by-step.html"><a href="biomart-step-by-step.html#list-datasets-and-select-human"><i class="fa fa-check"></i><b>4.3</b> 3. List datasets and select human</a></li>
+<li class="chapter" data-level="4.4" data-path="biomart-step-by-step.html"><a href="biomart-step-by-step.html#identify-the-correct-filter"><i class="fa fa-check"></i><b>4.4</b> 4. Identify the correct filter</a></li>
+<li class="chapter" data-level="4.5" data-path="biomart-step-by-step.html"><a href="biomart-step-by-step.html#identify-the-correct-attributes"><i class="fa fa-check"></i><b>4.5</b> 5. Identify the correct attributes</a></li>
+<li class="chapter" data-level="4.6" data-path="biomart-step-by-step.html"><a href="biomart-step-by-step.html#strip-version-suffixes-if-present"><i class="fa fa-check"></i><b>4.6</b> 6. Strip version suffixes (if present)</a></li>
+<li class="chapter" data-level="4.7" data-path="biomart-step-by-step.html"><a href="biomart-step-by-step.html#run-the-query-with-getbm"><i class="fa fa-check"></i><b>4.7</b> 7. Run the query with <code>getBM()</code></a></li>
+<li class="chapter" data-level="4.8" data-path="biomart-step-by-step.html"><a href="biomart-step-by-step.html#cache-the-mapping-recommended"><i class="fa fa-check"></i><b>4.8</b> 8. Cache the mapping (recommended)</a></li>
+<li class="chapter" data-level="4.9" data-path="biomart-step-by-step.html"><a href="biomart-step-by-step.html#merge-back-into-your-data"><i class="fa fa-check"></i><b>4.9</b> 9. Merge back into your data</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="worked-examples-with-beforeafter-tables.html"><a href="worked-examples-with-beforeafter-tables.html"><i class="fa fa-check"></i><b>5</b> Worked examples with before/after tables</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="worked-examples-with-beforeafter-tables.html"><a href="worked-examples-with-beforeafter-tables.html#gse233947"><i class="fa fa-check"></i><b>5.1</b> GSE233947</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="exercises.html"><a href="exercises.html"><i class="fa fa-check"></i><b>6</b> Exercises</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="exercises.html"><a href="exercises.html#exercise-1-httpswww.ncbi.nlm.nih.govgeoqueryacc.cgiaccgse119732"><i class="fa fa-check"></i><b>6.1</b> Exercise 1 — https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE119732</a></li>
+<li class="chapter" data-level="6.2" data-path="exercises.html"><a href="exercises.html#exercise-2-httpswww.ncbi.nlm.nih.govgeoqueryacc.cgiaccgse122380"><i class="fa fa-check"></i><b>6.2</b> Exercise 2 — https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE122380</a></li>
+<li class="chapter" data-level="6.3" data-path="exercises.html"><a href="exercises.html#exercise-3--"><i class="fa fa-check"></i><b>6.3</b> Exercise 3 -</a></li>
+</ul></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">worked Example</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="biomart-step-by-step" class="section level1 hasAnchor" number="4">
+<h1><span class="header-section-number">Chapter 4</span> biomaRt step-by-step<a href="biomart-step-by-step.html#biomart-step-by-step" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>This follows the following workflow: <strong>choose a mart → choose a dataset → discover filters/attributes → query with getBM() → merge back into your matrix</strong>.</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="biomart-step-by-step.html#cb20-1" tabindex="-1"></a><span class="fu">library</span>(biomaRt)</span></code></pre></div>
+<div id="list-marts" class="section level2 hasAnchor" number="4.1">
+<h2><span class="header-section-number">4.1</span> 1. List marts<a href="biomart-step-by-step.html#list-marts" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="biomart-step-by-step.html#cb21-1" tabindex="-1"></a><span class="fu">listMarts</span>()</span></code></pre></div>
+<pre><code>##                biomart                version
+## 1 ENSEMBL_MART_ENSEMBL      Ensembl Genes 115
+## 2   ENSEMBL_MART_MOUSE      Mouse strains 115
+## 3     ENSEMBL_MART_SNP  Ensembl Variation 115
+## 4 ENSEMBL_MART_FUNCGEN Ensembl Regulation 115</code></pre>
+</div>
+<div id="optional-pin-an-ensembl-archive-version" class="section level2 hasAnchor" number="4.2">
+<h2><span class="header-section-number">4.2</span> 2. (Optional) pin an Ensembl archive version<a href="biomart-step-by-step.html#optional-pin-an-ensembl-archive-version" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="biomart-step-by-step.html#cb23-1" tabindex="-1"></a><span class="fu">listEnsemblArchives</span>()[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>,]</span></code></pre></div>
+<pre><code>##              name     date                                 url version
+## 1  Ensembl GRCh37 Feb 2014          https://grch37.ensembl.org  GRCh37
+## 2     Ensembl 115 Sep 2025 https://sep2025.archive.ensembl.org     115
+## 3     Ensembl 114 May 2025 https://may2025.archive.ensembl.org     114
+## 4     Ensembl 113 Oct 2024 https://oct2024.archive.ensembl.org     113
+## 5     Ensembl 112 May 2024 https://may2024.archive.ensembl.org     112
+## 6     Ensembl 111 Jan 2024 https://jan2024.archive.ensembl.org     111
+## 7     Ensembl 110 Jul 2023 https://jul2023.archive.ensembl.org     110
+## 8     Ensembl 109 Feb 2023 https://feb2023.archive.ensembl.org     109
+## 9     Ensembl 108 Oct 2022 https://oct2022.archive.ensembl.org     108
+## 10    Ensembl 107 Jul 2022 https://jul2022.archive.ensembl.org     107
+##    current_release
+## 1                 
+## 2                *
+## 3                 
+## 4                 
+## 5                 
+## 6                 
+## 7                 
+## 8                 
+## 9                 
+## 10</code></pre>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="biomart-step-by-step.html#cb25-1" tabindex="-1"></a><span class="co"># Example: pin to Ensembl 114</span></span>
+<span id="cb25-2"><a href="biomart-step-by-step.html#cb25-2" tabindex="-1"></a>ensembl <span class="ot">&lt;-</span> <span class="fu">useEnsembl</span>(<span class="at">biomart =</span> <span class="st">&quot;ensembl&quot;</span>,<span class="at">version =</span> params<span class="sc">$</span>ensembl_version)</span></code></pre></div>
+<p>If you do not pin versions:</p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="biomart-step-by-step.html#cb26-1" tabindex="-1"></a>ensembl <span class="ot">&lt;-</span> <span class="fu">useMart</span>(<span class="st">&quot;ensembl&quot;</span>)</span></code></pre></div>
+</div>
+<div id="list-datasets-and-select-human" class="section level2 hasAnchor" number="4.3">
+<h2><span class="header-section-number">4.3</span> 3. List datasets and select human<a href="biomart-step-by-step.html#list-datasets-and-select-human" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="biomart-step-by-step.html#cb27-1" tabindex="-1"></a>datasets <span class="ot">&lt;-</span> <span class="fu">listDatasets</span>(ensembl)</span>
+<span id="cb27-2"><a href="biomart-step-by-step.html#cb27-2" tabindex="-1"></a></span>
+<span id="cb27-3"><a href="biomart-step-by-step.html#cb27-3" tabindex="-1"></a><span class="co"># filter for human</span></span>
+<span id="cb27-4"><a href="biomart-step-by-step.html#cb27-4" tabindex="-1"></a>human <span class="ot">&lt;-</span> datasets[<span class="fu">grep</span>(datasets<span class="sc">$</span>dataset, <span class="at">pattern =</span> <span class="st">&quot;hsapiens&quot;</span>), ]</span>
+<span id="cb27-5"><a href="biomart-step-by-step.html#cb27-5" tabindex="-1"></a>human</span></code></pre></div>
+<pre><code>##                  dataset              description    version
+## 80 hsapiens_gene_ensembl Human genes (GRCh38.p14) GRCh38.p14</code></pre>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="biomart-step-by-step.html#cb29-1" tabindex="-1"></a>ensembl <span class="ot">&lt;-</span> <span class="fu">useDataset</span>(<span class="st">&quot;hsapiens_gene_ensembl&quot;</span>, <span class="at">mart =</span> ensembl)</span></code></pre></div>
+</div>
+<div id="identify-the-correct-filter" class="section level2 hasAnchor" number="4.4">
+<h2><span class="header-section-number">4.4</span> 4. Identify the correct filter<a href="biomart-step-by-step.html#identify-the-correct-filter" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Filters are your <strong>input ID type</strong>.</p>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="biomart-step-by-step.html#cb30-1" tabindex="-1"></a>all_filters <span class="ot">&lt;-</span> <span class="fu">listFilters</span>(ensembl)</span>
+<span id="cb30-2"><a href="biomart-step-by-step.html#cb30-2" tabindex="-1"></a><span class="fu">dim</span>(all_filters)</span></code></pre></div>
+<pre><code>## [1] 443   2</code></pre>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="biomart-step-by-step.html#cb32-1" tabindex="-1"></a><span class="co"># search for Ensembl gene filters</span></span>
+<span id="cb32-2"><a href="biomart-step-by-step.html#cb32-2" tabindex="-1"></a>all_filters[<span class="fu">grep</span>(all_filters<span class="sc">$</span>name, <span class="at">pattern =</span> <span class="st">&quot;ensembl_gene&quot;</span>), ]</span></code></pre></div>
+<pre><code>##                       name
+## 54         ensembl_gene_id
+## 55 ensembl_gene_id_version
+##                                                 description
+## 54                 Gene stable ID(s) [e.g. ENSG00000000003]
+## 55 Gene stable ID(s) with version [e.g. ENSG00000000003.17]</code></pre>
+<p>For Ensembl gene IDs, use filter: <code>ensembl_gene_id</code>.</p>
+</div>
+<div id="identify-the-correct-attributes" class="section level2 hasAnchor" number="4.5">
+<h2><span class="header-section-number">4.5</span> 5. Identify the correct attributes<a href="biomart-step-by-step.html#identify-the-correct-attributes" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Attributes are the <strong>output columns</strong> you want.</p>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="biomart-step-by-step.html#cb34-1" tabindex="-1"></a>all_attr <span class="ot">&lt;-</span> <span class="fu">listAttributes</span>(ensembl)</span>
+<span id="cb34-2"><a href="biomart-step-by-step.html#cb34-2" tabindex="-1"></a>all_attr[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>,]</span></code></pre></div>
+<pre><code>##                             name                  description         page
+## 1                ensembl_gene_id               Gene stable ID feature_page
+## 2        ensembl_gene_id_version       Gene stable ID version feature_page
+## 3          ensembl_transcript_id         Transcript stable ID feature_page
+## 4  ensembl_transcript_id_version Transcript stable ID version feature_page
+## 5             ensembl_peptide_id            Protein stable ID feature_page
+## 6     ensembl_peptide_id_version    Protein stable ID version feature_page
+## 7                ensembl_exon_id               Exon stable ID feature_page
+## 8                    description             Gene description feature_page
+## 9                chromosome_name     Chromosome/scaffold name feature_page
+## 10                start_position              Gene start (bp) feature_page</code></pre>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="biomart-step-by-step.html#cb36-1" tabindex="-1"></a><span class="co"># search for HGNC</span></span>
+<span id="cb36-2"><a href="biomart-step-by-step.html#cb36-2" tabindex="-1"></a><span class="fu">searchAttributes</span>(ensembl, <span class="st">&quot;hgnc&quot;</span>)</span></code></pre></div>
+<pre><code>##               name        description         page
+## 63     hgnc_symbol        HGNC symbol feature_page
+## 64         hgnc_id            HGNC ID feature_page
+## 95 hgnc_trans_name Transcript name ID feature_page</code></pre>
+<p>Common attributes:</p>
+<ul>
+<li><code>ensembl_gene_id</code></li>
+<li><code>hgnc_symbol</code></li>
+</ul>
+</div>
+<div id="strip-version-suffixes-if-present" class="section level2 hasAnchor" number="4.6">
+<h2><span class="header-section-number">4.6</span> 6. Strip version suffixes (if present)<a href="biomart-step-by-step.html#strip-version-suffixes-if-present" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="biomart-step-by-step.html#cb38-1" tabindex="-1"></a>strip_ensembl_version <span class="ot">&lt;-</span> <span class="cf">function</span>(x) <span class="fu">sub</span>(<span class="st">&quot;</span><span class="sc">\\</span><span class="st">..*$&quot;</span>, <span class="st">&quot;&quot;</span>, x)</span>
+<span id="cb38-2"><a href="biomart-step-by-step.html#cb38-2" tabindex="-1"></a>ids <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;ENSG00000141510.17&quot;</span>, <span class="st">&quot;ENSG00000157764.2&quot;</span>)</span>
+<span id="cb38-3"><a href="biomart-step-by-step.html#cb38-3" tabindex="-1"></a>ids_clean <span class="ot">&lt;-</span> <span class="fu">strip_ensembl_version</span>(ids)</span>
+<span id="cb38-4"><a href="biomart-step-by-step.html#cb38-4" tabindex="-1"></a>ids_clean</span></code></pre></div>
+<pre><code>## [1] &quot;ENSG00000141510&quot; &quot;ENSG00000157764&quot;</code></pre>
+</div>
+<div id="run-the-query-with-getbm" class="section level2 hasAnchor" number="4.7">
+<h2><span class="header-section-number">4.7</span> 7. Run the query with <code>getBM()</code><a href="biomart-step-by-step.html#run-the-query-with-getbm" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="biomart-step-by-step.html#cb40-1" tabindex="-1"></a>map <span class="ot">&lt;-</span> <span class="fu">getBM</span>(</span>
+<span id="cb40-2"><a href="biomart-step-by-step.html#cb40-2" tabindex="-1"></a>  <span class="at">attributes =</span> <span class="fu">c</span>(<span class="st">&quot;ensembl_gene_id&quot;</span>, <span class="st">&quot;hgnc_symbol&quot;</span>),</span>
+<span id="cb40-3"><a href="biomart-step-by-step.html#cb40-3" tabindex="-1"></a>  <span class="at">filters =</span> <span class="st">&quot;ensembl_gene_id&quot;</span>,</span>
+<span id="cb40-4"><a href="biomart-step-by-step.html#cb40-4" tabindex="-1"></a>  <span class="at">values =</span> ids_clean,</span>
+<span id="cb40-5"><a href="biomart-step-by-step.html#cb40-5" tabindex="-1"></a>  <span class="at">mart =</span> ensembl</span>
+<span id="cb40-6"><a href="biomart-step-by-step.html#cb40-6" tabindex="-1"></a>)</span>
+<span id="cb40-7"><a href="biomart-step-by-step.html#cb40-7" tabindex="-1"></a>map</span></code></pre></div>
+<pre><code>##   ensembl_gene_id hgnc_symbol
+## 1 ENSG00000141510        TP53
+## 2 ENSG00000157764        BRAF</code></pre>
+</div>
+<div id="cache-the-mapping-recommended" class="section level2 hasAnchor" number="4.8">
+<h2><span class="header-section-number">4.8</span> 8. Cache the mapping (recommended)<a href="biomart-step-by-step.html#cache-the-mapping-recommended" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="biomart-step-by-step.html#cb42-1" tabindex="-1"></a>cache_file <span class="ot">&lt;-</span> <span class="st">&quot;id_conversion.rds&quot;</span></span>
+<span id="cb42-2"><a href="biomart-step-by-step.html#cb42-2" tabindex="-1"></a></span>
+<span id="cb42-3"><a href="biomart-step-by-step.html#cb42-3" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">file.exists</span>(cache_file)) {</span>
+<span id="cb42-4"><a href="biomart-step-by-step.html#cb42-4" tabindex="-1"></a>  map <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(cache_file)</span>
+<span id="cb42-5"><a href="biomart-step-by-step.html#cb42-5" tabindex="-1"></a>} <span class="cf">else</span> {</span>
+<span id="cb42-6"><a href="biomart-step-by-step.html#cb42-6" tabindex="-1"></a>  map <span class="ot">&lt;-</span> <span class="fu">getBM</span>(</span>
+<span id="cb42-7"><a href="biomart-step-by-step.html#cb42-7" tabindex="-1"></a>    <span class="at">attributes =</span> <span class="fu">c</span>(<span class="st">&quot;ensembl_gene_id&quot;</span>, <span class="st">&quot;hgnc_symbol&quot;</span>),</span>
+<span id="cb42-8"><a href="biomart-step-by-step.html#cb42-8" tabindex="-1"></a>    <span class="at">filters =</span> <span class="st">&quot;ensembl_gene_id&quot;</span>,</span>
+<span id="cb42-9"><a href="biomart-step-by-step.html#cb42-9" tabindex="-1"></a>    <span class="at">values =</span> ids_clean,</span>
+<span id="cb42-10"><a href="biomart-step-by-step.html#cb42-10" tabindex="-1"></a>    <span class="at">mart =</span> ensembl</span>
+<span id="cb42-11"><a href="biomart-step-by-step.html#cb42-11" tabindex="-1"></a>  )</span>
+<span id="cb42-12"><a href="biomart-step-by-step.html#cb42-12" tabindex="-1"></a>  <span class="fu">saveRDS</span>(map, cache_file)</span>
+<span id="cb42-13"><a href="biomart-step-by-step.html#cb42-13" tabindex="-1"></a>}</span></code></pre></div>
+</div>
+<div id="merge-back-into-your-data" class="section level2 hasAnchor" number="4.9">
+<h2><span class="header-section-number">4.9</span> 9. Merge back into your data<a href="biomart-step-by-step.html#merge-back-into-your-data" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="biomart-step-by-step.html#cb43-1" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code></pre></div>
+<pre><code>## 
+## Attaching package: &#39;dplyr&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:biomaRt&#39;:
+## 
+##     select</code></pre>
+<pre><code>## The following objects are masked from &#39;package:stats&#39;:
+## 
+##     filter, lag</code></pre>
+<pre><code>## The following objects are masked from &#39;package:base&#39;:
+## 
+##     intersect, setdiff, setequal, union</code></pre>
+<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="biomart-step-by-step.html#cb48-1" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">ensembl_gene_id =</span> ids_clean, <span class="at">value =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</span>
+<span id="cb48-2"><a href="biomart-step-by-step.html#cb48-2" tabindex="-1"></a>df_annot <span class="ot">&lt;-</span> <span class="fu">left_join</span>(df, map, <span class="at">by =</span> <span class="st">&quot;ensembl_gene_id&quot;</span>)</span>
+<span id="cb48-3"><a href="biomart-step-by-step.html#cb48-3" tabindex="-1"></a>df_annot</span></code></pre></div>
+<pre><code>## # A tibble: 2 × 3
+##   ensembl_gene_id value hgnc_symbol
+##   &lt;chr&gt;           &lt;dbl&gt; &lt;chr&gt;      
+## 1 ENSG00000141510     1 TP53       
+## 2 ENSG00000157764     2 BRAF</code></pre>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="why-identifiers-are-messy.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="worked-examples-with-beforeafter-tables.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+  "sharing": {
+    "github": false,
+    "facebook": true,
+    "twitter": true,
+    "linkedin": false,
+    "weibo": false,
+    "instapaper": false,
+    "vk": false,
+    "whatsapp": false,
+    "all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+  },
+  "fontsettings": {
+    "theme": "white",
+    "family": "sans",
+    "size": 2
+  },
+  "edit": {
+    "link": null,
+    "text": null
+  },
+  "history": {
+    "link": null,
+    "text": null
+  },
+  "view": {
+    "link": null,
+    "text": null
+  },
+  "download": ["bcb420_identifier_mapping.pdf", "bcb420_identifier_mapping.epub"],
+  "search": {
+    "engine": "fuse",
+    "options": null
+  },
+  "toc": {
+    "collapse": "subsection"
+  }
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 5 Worked examples with before/after tables | worked Example</title>
+  <meta name="description" content="Chapter 5 Worked examples with before/after tables | worked Example" />
+  <meta name="generator" content="bookdown 0.46 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 5 Worked examples with before/after tables | worked Example" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 5 Worked examples with before/after tables | worked Example" />
+  
+  
+  
+
+<meta name="author" content="Ruth Isserlin" />
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="biomart-step-by-step.html"/>
+<link rel="next" href="exercises.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+<link href="libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
+<script src="libs/pagedtable-1.1/js/pagedtable.js"></script>
+
+
+<style type="text/css">
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Identifier Mapping Tutorial</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Welcome</a></li>
+<li class="chapter" data-level="1" data-path="what-is-identifier-mapping.html"><a href="what-is-identifier-mapping.html"><i class="fa fa-check"></i><b>1</b> What is identifier mapping?</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="what-is-identifier-mapping.html"><a href="what-is-identifier-mapping.html#visual-overview"><i class="fa fa-check"></i><b>1.1</b> Visual overview</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="getting-data-from-geo.html"><a href="getting-data-from-geo.html"><i class="fa fa-check"></i><b>2</b> Getting data from GEO</a></li>
+<li class="chapter" data-level="3" data-path="why-identifiers-are-messy.html"><a href="why-identifiers-are-messy.html"><i class="fa fa-check"></i><b>3</b> Why identifiers are messy</a></li>
+<li class="chapter" data-level="4" data-path="biomart-step-by-step.html"><a href="biomart-step-by-step.html"><i class="fa fa-check"></i><b>4</b> biomaRt step-by-step</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="biomart-step-by-step.html"><a href="biomart-step-by-step.html#list-marts"><i class="fa fa-check"></i><b>4.1</b> 1. List marts</a></li>
+<li class="chapter" data-level="4.2" data-path="biomart-step-by-step.html"><a href="biomart-step-by-step.html#optional-pin-an-ensembl-archive-version"><i class="fa fa-check"></i><b>4.2</b> 2. (Optional) pin an Ensembl archive version</a></li>
+<li class="chapter" data-level="4.3" data-path="biomart-step-by-step.html"><a href="biomart-step-by-step.html#list-datasets-and-select-human"><i class="fa fa-check"></i><b>4.3</b> 3. List datasets and select human</a></li>
+<li class="chapter" data-level="4.4" data-path="biomart-step-by-step.html"><a href="biomart-step-by-step.html#identify-the-correct-filter"><i class="fa fa-check"></i><b>4.4</b> 4. Identify the correct filter</a></li>
+<li class="chapter" data-level="4.5" data-path="biomart-step-by-step.html"><a href="biomart-step-by-step.html#identify-the-correct-attributes"><i class="fa fa-check"></i><b>4.5</b> 5. Identify the correct attributes</a></li>
+<li class="chapter" data-level="4.6" data-path="biomart-step-by-step.html"><a href="biomart-step-by-step.html#strip-version-suffixes-if-present"><i class="fa fa-check"></i><b>4.6</b> 6. Strip version suffixes (if present)</a></li>
+<li class="chapter" data-level="4.7" data-path="biomart-step-by-step.html"><a href="biomart-step-by-step.html#run-the-query-with-getbm"><i class="fa fa-check"></i><b>4.7</b> 7. Run the query with <code>getBM()</code></a></li>
+<li class="chapter" data-level="4.8" data-path="biomart-step-by-step.html"><a href="biomart-step-by-step.html#cache-the-mapping-recommended"><i class="fa fa-check"></i><b>4.8</b> 8. Cache the mapping (recommended)</a></li>
+<li class="chapter" data-level="4.9" data-path="biomart-step-by-step.html"><a href="biomart-step-by-step.html#merge-back-into-your-data"><i class="fa fa-check"></i><b>4.9</b> 9. Merge back into your data</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="worked-examples-with-beforeafter-tables.html"><a href="worked-examples-with-beforeafter-tables.html"><i class="fa fa-check"></i><b>5</b> Worked examples with before/after tables</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="worked-examples-with-beforeafter-tables.html"><a href="worked-examples-with-beforeafter-tables.html#gse233947"><i class="fa fa-check"></i><b>5.1</b> GSE233947</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="exercises.html"><a href="exercises.html"><i class="fa fa-check"></i><b>6</b> Exercises</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="exercises.html"><a href="exercises.html#exercise-1-httpswww.ncbi.nlm.nih.govgeoqueryacc.cgiaccgse119732"><i class="fa fa-check"></i><b>6.1</b> Exercise 1 — https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE119732</a></li>
+<li class="chapter" data-level="6.2" data-path="exercises.html"><a href="exercises.html#exercise-2-httpswww.ncbi.nlm.nih.govgeoqueryacc.cgiaccgse122380"><i class="fa fa-check"></i><b>6.2</b> Exercise 2 — https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE122380</a></li>
+<li class="chapter" data-level="6.3" data-path="exercises.html"><a href="exercises.html#exercise-3--"><i class="fa fa-check"></i><b>6.3</b> Exercise 3 -</a></li>
+</ul></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">worked Example</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="worked-examples-with-beforeafter-tables" class="section level1 hasAnchor" number="5">
+<h1><span class="header-section-number">Chapter 5</span> Worked examples with before/after tables<a href="worked-examples-with-beforeafter-tables.html#worked-examples-with-beforeafter-tables" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>This chapter shows <strong>what the data look like</strong>, <strong>what the IDs look like</strong>, and <strong>how the table changes once mapped</strong>.</p>
+<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="worked-examples-with-beforeafter-tables.html#cb50-1" tabindex="-1"></a><span class="fu">library</span>(knitr)</span>
+<span id="cb50-2"><a href="worked-examples-with-beforeafter-tables.html#cb50-2" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code></pre></div>
+<pre><code>## 
+## Attaching package: &#39;dplyr&#39;</code></pre>
+<pre><code>## The following objects are masked from &#39;package:stats&#39;:
+## 
+##     filter, lag</code></pre>
+<pre><code>## The following objects are masked from &#39;package:base&#39;:
+## 
+##     intersect, setdiff, setequal, union</code></pre>
+<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb54-1"><a href="worked-examples-with-beforeafter-tables.html#cb54-1" tabindex="-1"></a><span class="fu">library</span>(tibble)</span>
+<span id="cb54-2"><a href="worked-examples-with-beforeafter-tables.html#cb54-2" tabindex="-1"></a></span>
+<span id="cb54-3"><a href="worked-examples-with-beforeafter-tables.html#cb54-3" tabindex="-1"></a>kable_head <span class="ot">&lt;-</span> <span class="cf">function</span>(x, <span class="at">n =</span> <span class="dv">5</span>, <span class="at">caption =</span> <span class="cn">NULL</span>) {</span>
+<span id="cb54-4"><a href="worked-examples-with-beforeafter-tables.html#cb54-4" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>(utils<span class="sc">::</span><span class="fu">head</span>(x, n), <span class="at">caption =</span> caption)</span>
+<span id="cb54-5"><a href="worked-examples-with-beforeafter-tables.html#cb54-5" tabindex="-1"></a>}</span>
+<span id="cb54-6"><a href="worked-examples-with-beforeafter-tables.html#cb54-6" tabindex="-1"></a></span>
+<span id="cb54-7"><a href="worked-examples-with-beforeafter-tables.html#cb54-7" tabindex="-1"></a>strip_ensembl_version <span class="ot">&lt;-</span> <span class="cf">function</span>(x) <span class="fu">sub</span>(<span class="st">&quot;</span><span class="sc">\\</span><span class="st">..*$&quot;</span>, <span class="st">&quot;&quot;</span>, x)</span></code></pre></div>
+<div id="gse233947" class="section level2 hasAnchor" number="5.1">
+<h2><span class="header-section-number">5.1</span> GSE233947<a href="worked-examples-with-beforeafter-tables.html#gse233947" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="raw-data-preview" class="section level3 hasAnchor" number="5.1.1">
+<h3><span class="header-section-number">5.1.1</span> Raw data preview<a href="worked-examples-with-beforeafter-tables.html#raw-data-preview" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb55-1"><a href="worked-examples-with-beforeafter-tables.html#cb55-1" tabindex="-1"></a><span class="fu">source</span>(<span class="st">&quot;./fetch_geo_supp.R&quot;</span>)</span>
+<span id="cb55-2"><a href="worked-examples-with-beforeafter-tables.html#cb55-2" tabindex="-1"></a><span class="fu">fetch_geo_supp</span>(<span class="at">gse =</span> params<span class="sc">$</span>gse)</span></code></pre></div>
+<pre><code>## Setting options(&#39;download.file.method.GEOquery&#39;=&#39;auto&#39;)</code></pre>
+<pre><code>## Setting options(&#39;GEOquery.inmemory.gpl&#39;=FALSE)</code></pre>
+<pre><code>## Using locally cached version of supplementary file(s) GSE233947 found here:
+## data/GSE233947/GSE233947_FeatureCounts_V31genes_RawCounts_ENSG.tsv.gz</code></pre>
+<pre><code>## Using locally cached version of supplementary file(s) GSE233947 found here:
+## data/GSE233947/GSE233947_modulize_3CTG_20CTG_junctions.tsv.gz</code></pre>
+<pre><code>## Using locally cached version of supplementary file(s) GSE233947 found here:
+## data/GSE233947/GSE233947_modulize_NT_20CTG_junctions.tsv.gz</code></pre>
+<pre><code>## Using locally cached version of supplementary file(s) GSE233947 found here:
+## data/GSE233947/GSE233947_modulize_NT_3CTG_junctions.tsv.gz</code></pre>
+<div class="sourceCode" id="cb62"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb62-1"><a href="worked-examples-with-beforeafter-tables.html#cb62-1" tabindex="-1"></a>path <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="st">&quot;data&quot;</span>, params<span class="sc">$</span>gse)</span>
+<span id="cb62-2"><a href="worked-examples-with-beforeafter-tables.html#cb62-2" tabindex="-1"></a>files <span class="ot">&lt;-</span> <span class="fu">list.files</span>(path, <span class="at">pattern =</span> params<span class="sc">$</span>file_grep, </span>
+<span id="cb62-3"><a href="worked-examples-with-beforeafter-tables.html#cb62-3" tabindex="-1"></a>                    <span class="at">full.names =</span> <span class="cn">TRUE</span>, <span class="at">recursive =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb62-4"><a href="worked-examples-with-beforeafter-tables.html#cb62-4" tabindex="-1"></a></span>
+<span id="cb62-5"><a href="worked-examples-with-beforeafter-tables.html#cb62-5" tabindex="-1"></a><span class="fu">kable_head</span>(<span class="fu">tibble</span>(<span class="at">file =</span> <span class="fu">basename</span>(files)), <span class="fu">min</span>(<span class="dv">10</span>, <span class="fu">length</span>(files)), <span class="fu">paste</span>(params<span class="sc">$</span>gse,<span class="st">&quot;: extracted file list (first 10)&quot;</span>))</span></code></pre></div>
+<table>
+<caption>(#tab:get_data)GSE233947 : extracted file list (first 10)</caption>
+<thead>
+<tr class="header">
+<th align="left">file</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">GSE233947_FeatureCounts_V31genes_RawCounts_ENSG.tsv.gz</td>
+</tr>
+<tr class="even">
+<td align="left">GSE233947_modulize_3CTG_20CTG_junctions.tsv.gz</td>
+</tr>
+<tr class="odd">
+<td align="left">GSE233947_modulize_NT_20CTG_junctions.tsv.gz</td>
+</tr>
+<tr class="even">
+<td align="left">GSE233947_modulize_NT_3CTG_junctions.tsv.gz</td>
+</tr>
+</tbody>
+</table>
+<p>Raw table preview</p>
+<div class="sourceCode" id="cb63"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb63-1"><a href="worked-examples-with-beforeafter-tables.html#cb63-1" tabindex="-1"></a><span class="fu">library</span>(readr)</span>
+<span id="cb63-2"><a href="worked-examples-with-beforeafter-tables.html#cb63-2" tabindex="-1"></a></span>
+<span id="cb63-3"><a href="worked-examples-with-beforeafter-tables.html#cb63-3" tabindex="-1"></a>safe_read <span class="ot">&lt;-</span> <span class="cf">function</span>(file) {</span>
+<span id="cb63-4"><a href="worked-examples-with-beforeafter-tables.html#cb63-4" tabindex="-1"></a>  <span class="co"># First attempt: read as TSV</span></span>
+<span id="cb63-5"><a href="worked-examples-with-beforeafter-tables.html#cb63-5" tabindex="-1"></a>  df <span class="ot">&lt;-</span> <span class="fu">tryCatch</span>(</span>
+<span id="cb63-6"><a href="worked-examples-with-beforeafter-tables.html#cb63-6" tabindex="-1"></a>    readr<span class="sc">::</span><span class="fu">read_tsv</span>(file, <span class="at">show_col_types =</span> <span class="cn">FALSE</span>),</span>
+<span id="cb63-7"><a href="worked-examples-with-beforeafter-tables.html#cb63-7" tabindex="-1"></a>    <span class="at">error =</span> <span class="cf">function</span>(e) <span class="cn">NULL</span>   <span class="co"># catch fatal errors</span></span>
+<span id="cb63-8"><a href="worked-examples-with-beforeafter-tables.html#cb63-8" tabindex="-1"></a>  )</span>
+<span id="cb63-9"><a href="worked-examples-with-beforeafter-tables.html#cb63-9" tabindex="-1"></a>  </span>
+<span id="cb63-10"><a href="worked-examples-with-beforeafter-tables.html#cb63-10" tabindex="-1"></a>  <span class="co"># If read_tsv failed entirely:</span></span>
+<span id="cb63-11"><a href="worked-examples-with-beforeafter-tables.html#cb63-11" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">is.null</span>(df)) {</span>
+<span id="cb63-12"><a href="worked-examples-with-beforeafter-tables.html#cb63-12" tabindex="-1"></a>    <span class="fu">message</span>(<span class="st">&quot;TSV read failed — reading as space-delimited file instead.&quot;</span>)</span>
+<span id="cb63-13"><a href="worked-examples-with-beforeafter-tables.html#cb63-13" tabindex="-1"></a>    <span class="fu">return</span>(readr<span class="sc">::</span><span class="fu">read_table</span>(file, <span class="at">show_col_types =</span> <span class="cn">FALSE</span>))</span>
+<span id="cb63-14"><a href="worked-examples-with-beforeafter-tables.html#cb63-14" tabindex="-1"></a>  }</span>
+<span id="cb63-15"><a href="worked-examples-with-beforeafter-tables.html#cb63-15" tabindex="-1"></a>  </span>
+<span id="cb63-16"><a href="worked-examples-with-beforeafter-tables.html#cb63-16" tabindex="-1"></a>  <span class="co"># If read_tsv returned but with parsing issues:</span></span>
+<span id="cb63-17"><a href="worked-examples-with-beforeafter-tables.html#cb63-17" tabindex="-1"></a>  probs <span class="ot">&lt;-</span> <span class="fu">problems</span>(df)</span>
+<span id="cb63-18"><a href="worked-examples-with-beforeafter-tables.html#cb63-18" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">nrow</span>(probs) <span class="sc">&gt;</span> <span class="dv">0</span>) {</span>
+<span id="cb63-19"><a href="worked-examples-with-beforeafter-tables.html#cb63-19" tabindex="-1"></a>    <span class="fu">message</span>(<span class="st">&quot;Parsing issues detected in TSV — reading as space-delimited file instead.&quot;</span>)</span>
+<span id="cb63-20"><a href="worked-examples-with-beforeafter-tables.html#cb63-20" tabindex="-1"></a>    <span class="fu">return</span>(readr<span class="sc">::</span><span class="fu">read_table</span>(file, <span class="at">show_col_types =</span> <span class="cn">FALSE</span>))</span>
+<span id="cb63-21"><a href="worked-examples-with-beforeafter-tables.html#cb63-21" tabindex="-1"></a>  }</span>
+<span id="cb63-22"><a href="worked-examples-with-beforeafter-tables.html#cb63-22" tabindex="-1"></a>  </span>
+<span id="cb63-23"><a href="worked-examples-with-beforeafter-tables.html#cb63-23" tabindex="-1"></a>  <span class="co"># If everything was fine:</span></span>
+<span id="cb63-24"><a href="worked-examples-with-beforeafter-tables.html#cb63-24" tabindex="-1"></a>  <span class="fu">return</span>(df)</span>
+<span id="cb63-25"><a href="worked-examples-with-beforeafter-tables.html#cb63-25" tabindex="-1"></a>}</span>
+<span id="cb63-26"><a href="worked-examples-with-beforeafter-tables.html#cb63-26" tabindex="-1"></a></span>
+<span id="cb63-27"><a href="worked-examples-with-beforeafter-tables.html#cb63-27" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">safe_read</span>(files[<span class="dv">1</span>])</span>
+<span id="cb63-28"><a href="worked-examples-with-beforeafter-tables.html#cb63-28" tabindex="-1"></a></span>
+<span id="cb63-29"><a href="worked-examples-with-beforeafter-tables.html#cb63-29" tabindex="-1"></a></span>
+<span id="cb63-30"><a href="worked-examples-with-beforeafter-tables.html#cb63-30" tabindex="-1"></a><span class="fu">kable_head</span>(x[, <span class="dv">1</span><span class="sc">:</span><span class="fu">min</span>(<span class="dv">6</span>, <span class="fu">ncol</span>(x))], <span class="dv">5</span>, <span class="fu">paste</span>(params<span class="sc">$</span>gse,<span class="st">&quot;: raw table preview&quot;</span>))</span></code></pre></div>
+<table>
+<caption>(#tab:preview_raw)GSE233947 : raw table preview</caption>
+<colgroup>
+<col width="15%" />
+<col width="15%" />
+<col width="16%" />
+<col width="16%" />
+<col width="18%" />
+<col width="19%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">Gene</th>
+<th align="right">T8657_900CTG_NT</th>
+<th align="right">T8658_1150CTG_NT</th>
+<th align="right">T8659_1450CTG_NT</th>
+<th align="right">T8660_900CTG_20CTG</th>
+<th align="right">T8661_1150CTG_20CTG</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">ENSG00000108821</td>
+<td align="right">456397</td>
+<td align="right">486088</td>
+<td align="right">608151</td>
+<td align="right">2012962</td>
+<td align="right">379186</td>
+</tr>
+<tr class="even">
+<td align="left">ENSG00000265150</td>
+<td align="right">170681</td>
+<td align="right">299425</td>
+<td align="right">286295</td>
+<td align="right">747000</td>
+<td align="right">210962</td>
+</tr>
+<tr class="odd">
+<td align="left">ENSG00000164692</td>
+<td align="right">169781</td>
+<td align="right">190854</td>
+<td align="right">263391</td>
+<td align="right">869194</td>
+<td align="right">180006</td>
+</tr>
+<tr class="even">
+<td align="left">ENSG00000265735</td>
+<td align="right">78113</td>
+<td align="right">121697</td>
+<td align="right">113379</td>
+<td align="right">532435</td>
+<td align="right">112977</td>
+</tr>
+<tr class="odd">
+<td align="left">ENSG00000259001</td>
+<td align="right">55081</td>
+<td align="right">78811</td>
+<td align="right">73032</td>
+<td align="right">353442</td>
+<td align="right">100823</td>
+</tr>
+</tbody>
+</table>
+<p>ID preview</p>
+<div class="sourceCode" id="cb64"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb64-1"><a href="worked-examples-with-beforeafter-tables.html#cb64-1" tabindex="-1"></a>id_col <span class="ot">&lt;-</span> <span class="fu">names</span>(x)[<span class="dv">1</span>]</span>
+<span id="cb64-2"><a href="worked-examples-with-beforeafter-tables.html#cb64-2" tabindex="-1"></a>ids <span class="ot">&lt;-</span> x[[<span class="dv">1</span>]] <span class="sc">|&gt;</span> <span class="fu">as.character</span>()</span>
+<span id="cb64-3"><a href="worked-examples-with-beforeafter-tables.html#cb64-3" tabindex="-1"></a><span class="fu">kable_head</span>(<span class="fu">tibble</span>(<span class="at">raw_id =</span> <span class="fu">head</span>(ids, <span class="dv">10</span>), </span>
+<span id="cb64-4"><a href="worked-examples-with-beforeafter-tables.html#cb64-4" tabindex="-1"></a>                  <span class="at">stripped =</span> <span class="fu">strip_ensembl_version</span>(<span class="fu">head</span>(ids, <span class="dv">10</span>))), </span>
+<span id="cb64-5"><a href="worked-examples-with-beforeafter-tables.html#cb64-5" tabindex="-1"></a>           <span class="dv">10</span>, <span class="fu">paste</span>(params<span class="sc">$</span>gse,<span class="st">&quot;: ID preview&quot;</span>))</span></code></pre></div>
+<table>
+<caption>(#tab:id_preview)GSE233947 : ID preview</caption>
+<thead>
+<tr class="header">
+<th align="left">raw_id</th>
+<th align="left">stripped</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">ENSG00000108821</td>
+<td align="left">ENSG00000108821</td>
+</tr>
+<tr class="even">
+<td align="left">ENSG00000265150</td>
+<td align="left">ENSG00000265150</td>
+</tr>
+<tr class="odd">
+<td align="left">ENSG00000164692</td>
+<td align="left">ENSG00000164692</td>
+</tr>
+<tr class="even">
+<td align="left">ENSG00000265735</td>
+<td align="left">ENSG00000265735</td>
+</tr>
+<tr class="odd">
+<td align="left">ENSG00000259001</td>
+<td align="left">ENSG00000259001</td>
+</tr>
+<tr class="even">
+<td align="left">ENSG00000163359</td>
+<td align="left">ENSG00000163359</td>
+</tr>
+<tr class="odd">
+<td align="left">ENSG00000115414</td>
+<td align="left">ENSG00000115414</td>
+</tr>
+<tr class="even">
+<td align="left">ENSG00000168542</td>
+<td align="left">ENSG00000168542</td>
+</tr>
+<tr class="odd">
+<td align="left">ENSG00000251562</td>
+<td align="left">ENSG00000251562</td>
+</tr>
+<tr class="even">
+<td align="left">ENSG00000155657</td>
+<td align="left">ENSG00000155657</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="after-mapping-ensembl-hgnc" class="section level3 hasAnchor" number="5.1.2">
+<h3><span class="header-section-number">5.1.2</span> After mapping (Ensembl → HGNC)<a href="worked-examples-with-beforeafter-tables.html#after-mapping-ensembl-hgnc" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div class="sourceCode" id="cb65"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb65-1"><a href="worked-examples-with-beforeafter-tables.html#cb65-1" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">any</span>(<span class="fu">grepl</span>(<span class="st">&quot;^ENSG&quot;</span>, <span class="fu">strip_ensembl_version</span>(ids)))) {</span>
+<span id="cb65-2"><a href="worked-examples-with-beforeafter-tables.html#cb65-2" tabindex="-1"></a>  <span class="fu">library</span>(biomaRt)</span>
+<span id="cb65-3"><a href="worked-examples-with-beforeafter-tables.html#cb65-3" tabindex="-1"></a>  ensembl_ids <span class="ot">&lt;-</span> <span class="fu">unique</span>(<span class="fu">strip_ensembl_version</span>(ids))</span>
+<span id="cb65-4"><a href="worked-examples-with-beforeafter-tables.html#cb65-4" tabindex="-1"></a>  ensembl <span class="ot">&lt;-</span> <span class="fu">useMart</span>(<span class="st">&quot;ensembl&quot;</span>, <span class="at">dataset =</span> <span class="st">&quot;hsapiens_gene_ensembl&quot;</span>)</span>
+<span id="cb65-5"><a href="worked-examples-with-beforeafter-tables.html#cb65-5" tabindex="-1"></a></span>
+<span id="cb65-6"><a href="worked-examples-with-beforeafter-tables.html#cb65-6" tabindex="-1"></a>  map <span class="ot">&lt;-</span> <span class="fu">getBM</span>(</span>
+<span id="cb65-7"><a href="worked-examples-with-beforeafter-tables.html#cb65-7" tabindex="-1"></a>    <span class="at">attributes =</span> <span class="fu">c</span>(<span class="st">&quot;ensembl_gene_id&quot;</span>, <span class="st">&quot;hgnc_symbol&quot;</span>),</span>
+<span id="cb65-8"><a href="worked-examples-with-beforeafter-tables.html#cb65-8" tabindex="-1"></a>    <span class="at">filters =</span> <span class="st">&quot;ensembl_gene_id&quot;</span>,</span>
+<span id="cb65-9"><a href="worked-examples-with-beforeafter-tables.html#cb65-9" tabindex="-1"></a>    <span class="at">values =</span> ensembl_ids,</span>
+<span id="cb65-10"><a href="worked-examples-with-beforeafter-tables.html#cb65-10" tabindex="-1"></a>    <span class="at">mart =</span> ensembl</span>
+<span id="cb65-11"><a href="worked-examples-with-beforeafter-tables.html#cb65-11" tabindex="-1"></a>  )</span>
+<span id="cb65-12"><a href="worked-examples-with-beforeafter-tables.html#cb65-12" tabindex="-1"></a></span>
+<span id="cb65-13"><a href="worked-examples-with-beforeafter-tables.html#cb65-13" tabindex="-1"></a>  <span class="fu">kable_head</span>(map, <span class="dv">10</span>, <span class="fu">paste</span>(params<span class="sc">$</span>gse,<span class="st">&quot;: mapping preview&quot;</span>))</span>
+<span id="cb65-14"><a href="worked-examples-with-beforeafter-tables.html#cb65-14" tabindex="-1"></a></span>
+<span id="cb65-15"><a href="worked-examples-with-beforeafter-tables.html#cb65-15" tabindex="-1"></a>  expr_mapped <span class="ot">&lt;-</span> x <span class="sc">%&gt;%</span></span>
+<span id="cb65-16"><a href="worked-examples-with-beforeafter-tables.html#cb65-16" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">ensembl_gene_id =</span> <span class="fu">strip_ensembl_version</span>(.data[[id_col]])) <span class="sc">%&gt;%</span></span>
+<span id="cb65-17"><a href="worked-examples-with-beforeafter-tables.html#cb65-17" tabindex="-1"></a>    <span class="fu">left_join</span>(map, <span class="at">by =</span> <span class="st">&quot;ensembl_gene_id&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb65-18"><a href="worked-examples-with-beforeafter-tables.html#cb65-18" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>( ensembl_gene_id,hgnc_symbol, <span class="fu">everything</span>())</span>
+<span id="cb65-19"><a href="worked-examples-with-beforeafter-tables.html#cb65-19" tabindex="-1"></a></span>
+<span id="cb65-20"><a href="worked-examples-with-beforeafter-tables.html#cb65-20" tabindex="-1"></a></span>
+<span id="cb65-21"><a href="worked-examples-with-beforeafter-tables.html#cb65-21" tabindex="-1"></a>  <span class="fu">kable_head</span>(expr_mapped[, <span class="dv">1</span><span class="sc">:</span><span class="fu">min</span>(<span class="dv">8</span>, <span class="fu">ncol</span>(expr_mapped))], <span class="dv">5</span>, <span class="fu">paste</span>(params<span class="sc">$</span>gse,<span class="st">&quot;: mapped table preview&quot;</span>))</span>
+<span id="cb65-22"><a href="worked-examples-with-beforeafter-tables.html#cb65-22" tabindex="-1"></a>}</span></code></pre></div>
+<table>
+<caption>(#tab:after_map)GSE233947 : mapped table preview</caption>
+<colgroup>
+<col width="12%" />
+<col width="9%" />
+<col width="12%" />
+<col width="12%" />
+<col width="12%" />
+<col width="12%" />
+<col width="14%" />
+<col width="15%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">ensembl_gene_id</th>
+<th align="left">hgnc_symbol</th>
+<th align="left">Gene</th>
+<th align="right">T8657_900CTG_NT</th>
+<th align="right">T8658_1150CTG_NT</th>
+<th align="right">T8659_1450CTG_NT</th>
+<th align="right">T8660_900CTG_20CTG</th>
+<th align="right">T8661_1150CTG_20CTG</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">ENSG00000108821</td>
+<td align="left">COL1A1</td>
+<td align="left">ENSG00000108821</td>
+<td align="right">456397</td>
+<td align="right">486088</td>
+<td align="right">608151</td>
+<td align="right">2012962</td>
+<td align="right">379186</td>
+</tr>
+<tr class="even">
+<td align="left">ENSG00000265150</td>
+<td align="left">NA</td>
+<td align="left">ENSG00000265150</td>
+<td align="right">170681</td>
+<td align="right">299425</td>
+<td align="right">286295</td>
+<td align="right">747000</td>
+<td align="right">210962</td>
+</tr>
+<tr class="odd">
+<td align="left">ENSG00000164692</td>
+<td align="left">COL1A2</td>
+<td align="left">ENSG00000164692</td>
+<td align="right">169781</td>
+<td align="right">190854</td>
+<td align="right">263391</td>
+<td align="right">869194</td>
+<td align="right">180006</td>
+</tr>
+<tr class="even">
+<td align="left">ENSG00000265735</td>
+<td align="left">RN7SL5P</td>
+<td align="left">ENSG00000265735</td>
+<td align="right">78113</td>
+<td align="right">121697</td>
+<td align="right">113379</td>
+<td align="right">532435</td>
+<td align="right">112977</td>
+</tr>
+<tr class="odd">
+<td align="left">ENSG00000259001</td>
+<td align="left"></td>
+<td align="left">ENSG00000259001</td>
+<td align="right">55081</td>
+<td align="right">78811</td>
+<td align="right">73032</td>
+<td align="right">353442</td>
+<td align="right">100823</td>
+</tr>
+</tbody>
+</table>
+<p>Summarize the mapping</p>
+<div class="sourceCode" id="cb66"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb66-1"><a href="worked-examples-with-beforeafter-tables.html#cb66-1" tabindex="-1"></a>n_ensembl_total <span class="ot">&lt;-</span> expr_mapped <span class="sc">%&gt;%</span></span>
+<span id="cb66-2"><a href="worked-examples-with-beforeafter-tables.html#cb66-2" tabindex="-1"></a>  <span class="fu">distinct</span>(ensembl_gene_id) <span class="sc">%&gt;%</span></span>
+<span id="cb66-3"><a href="worked-examples-with-beforeafter-tables.html#cb66-3" tabindex="-1"></a>  <span class="fu">nrow</span>()</span>
+<span id="cb66-4"><a href="worked-examples-with-beforeafter-tables.html#cb66-4" tabindex="-1"></a></span>
+<span id="cb66-5"><a href="worked-examples-with-beforeafter-tables.html#cb66-5" tabindex="-1"></a>n_mapped <span class="ot">&lt;-</span> expr_mapped <span class="sc">%&gt;%</span></span>
+<span id="cb66-6"><a href="worked-examples-with-beforeafter-tables.html#cb66-6" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(hgnc_symbol), hgnc_symbol <span class="sc">!=</span> <span class="st">&quot;&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb66-7"><a href="worked-examples-with-beforeafter-tables.html#cb66-7" tabindex="-1"></a>  <span class="fu">distinct</span>(ensembl_gene_id) <span class="sc">%&gt;%</span></span>
+<span id="cb66-8"><a href="worked-examples-with-beforeafter-tables.html#cb66-8" tabindex="-1"></a>  <span class="fu">nrow</span>()</span>
+<span id="cb66-9"><a href="worked-examples-with-beforeafter-tables.html#cb66-9" tabindex="-1"></a></span>
+<span id="cb66-10"><a href="worked-examples-with-beforeafter-tables.html#cb66-10" tabindex="-1"></a>n_unmapped <span class="ot">&lt;-</span> n_ensembl_total <span class="sc">-</span> n_mapped</span>
+<span id="cb66-11"><a href="worked-examples-with-beforeafter-tables.html#cb66-11" tabindex="-1"></a></span>
+<span id="cb66-12"><a href="worked-examples-with-beforeafter-tables.html#cb66-12" tabindex="-1"></a>mapping_summary <span class="ot">&lt;-</span> tibble<span class="sc">::</span><span class="fu">tibble</span>(</span>
+<span id="cb66-13"><a href="worked-examples-with-beforeafter-tables.html#cb66-13" tabindex="-1"></a>  <span class="at">category =</span> <span class="fu">c</span>(<span class="st">&quot;Total Ensembl IDs&quot;</span>, <span class="st">&quot;Mapped to HGNC&quot;</span>, <span class="st">&quot;Unmapped&quot;</span>),</span>
+<span id="cb66-14"><a href="worked-examples-with-beforeafter-tables.html#cb66-14" tabindex="-1"></a>  <span class="at">n =</span> <span class="fu">c</span>(n_ensembl_total, n_mapped, n_unmapped)</span>
+<span id="cb66-15"><a href="worked-examples-with-beforeafter-tables.html#cb66-15" tabindex="-1"></a>)</span>
+<span id="cb66-16"><a href="worked-examples-with-beforeafter-tables.html#cb66-16" tabindex="-1"></a></span>
+<span id="cb66-17"><a href="worked-examples-with-beforeafter-tables.html#cb66-17" tabindex="-1"></a>mapping_summary</span></code></pre></div>
+<pre><code>## # A tibble: 3 × 2
+##   category              n
+##   &lt;chr&gt;             &lt;int&gt;
+## 1 Total Ensembl IDs 62248
+## 2 Mapped to HGNC    40176
+## 3 Unmapped          22072</code></pre>
+<div class="sourceCode" id="cb68"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb68-1"><a href="worked-examples-with-beforeafter-tables.html#cb68-1" tabindex="-1"></a>unmapped_ids <span class="ot">&lt;-</span> expr_mapped <span class="sc">%&gt;%</span></span>
+<span id="cb68-2"><a href="worked-examples-with-beforeafter-tables.html#cb68-2" tabindex="-1"></a>  <span class="fu">distinct</span>(ensembl_gene_id, hgnc_symbol) <span class="sc">%&gt;%</span></span>
+<span id="cb68-3"><a href="worked-examples-with-beforeafter-tables.html#cb68-3" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">is.na</span>(hgnc_symbol) <span class="sc">|</span> hgnc_symbol <span class="sc">==</span> <span class="st">&quot;&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb68-4"><a href="worked-examples-with-beforeafter-tables.html#cb68-4" tabindex="-1"></a>  <span class="fu">pull</span>(ensembl_gene_id) <span class="sc">%&gt;%</span></span>
+<span id="cb68-5"><a href="worked-examples-with-beforeafter-tables.html#cb68-5" tabindex="-1"></a>  <span class="fu">unique</span>()</span>
+<span id="cb68-6"><a href="worked-examples-with-beforeafter-tables.html#cb68-6" tabindex="-1"></a></span>
+<span id="cb68-7"><a href="worked-examples-with-beforeafter-tables.html#cb68-7" tabindex="-1"></a><span class="fu">length</span>(unmapped_ids)</span></code></pre></div>
+<pre><code>## [1] 22072</code></pre>
+<div class="sourceCode" id="cb70"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb70-1"><a href="worked-examples-with-beforeafter-tables.html#cb70-1" tabindex="-1"></a><span class="fu">library</span>(stringr)</span>
+<span id="cb70-2"><a href="worked-examples-with-beforeafter-tables.html#cb70-2" tabindex="-1"></a></span>
+<span id="cb70-3"><a href="worked-examples-with-beforeafter-tables.html#cb70-3" tabindex="-1"></a>unmapped_classified <span class="ot">&lt;-</span> tibble<span class="sc">::</span><span class="fu">tibble</span>(<span class="at">id =</span> unmapped_ids) <span class="sc">%&gt;%</span></span>
+<span id="cb70-4"><a href="worked-examples-with-beforeafter-tables.html#cb70-4" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">type =</span> <span class="fu">case_when</span>(</span>
+<span id="cb70-5"><a href="worked-examples-with-beforeafter-tables.html#cb70-5" tabindex="-1"></a>    <span class="fu">str_detect</span>(id, <span class="st">&quot;^ENSG</span><span class="sc">\\</span><span class="st">d+$&quot;</span>) <span class="sc">~</span> <span class="st">&quot;Ensembl gene ID (ENSG)&quot;</span>,</span>
+<span id="cb70-6"><a href="worked-examples-with-beforeafter-tables.html#cb70-6" tabindex="-1"></a>    <span class="fu">str_detect</span>(id, <span class="st">&quot;^ENSG</span><span class="sc">\\</span><span class="st">d+</span><span class="sc">\\</span><span class="st">.</span><span class="sc">\\</span><span class="st">d+$&quot;</span>) <span class="sc">~</span> <span class="st">&quot;Ensembl gene ID with version (ENSG.x) — needs stripping&quot;</span>,</span>
+<span id="cb70-7"><a href="worked-examples-with-beforeafter-tables.html#cb70-7" tabindex="-1"></a>    <span class="fu">str_detect</span>(id, <span class="st">&quot;^ENST</span><span class="sc">\\</span><span class="st">d+&quot;</span>) <span class="sc">~</span> <span class="st">&quot;Ensembl transcript ID (ENST) — wrong target for gene mapping&quot;</span>,</span>
+<span id="cb70-8"><a href="worked-examples-with-beforeafter-tables.html#cb70-8" tabindex="-1"></a>    <span class="fu">str_detect</span>(id, <span class="st">&quot;^ENSP</span><span class="sc">\\</span><span class="st">d+&quot;</span>) <span class="sc">~</span> <span class="st">&quot;Ensembl protein ID (ENSP) — wrong target&quot;</span>,</span>
+<span id="cb70-9"><a href="worked-examples-with-beforeafter-tables.html#cb70-9" tabindex="-1"></a>    <span class="fu">str_detect</span>(id, <span class="st">&quot;^ENS.*G</span><span class="sc">\\</span><span class="st">d+&quot;</span>) <span class="sc">~</span> <span class="st">&quot;Non-human Ensembl gene (e.g., ENSMUSG...) — wrong organism&quot;</span>,</span>
+<span id="cb70-10"><a href="worked-examples-with-beforeafter-tables.html#cb70-10" tabindex="-1"></a>    <span class="fu">str_detect</span>(id, <span class="st">&quot;^ERCC-&quot;</span>) <span class="sc">~</span> <span class="st">&quot;ERCC spike-in control — not a gene&quot;</span>,</span>
+<span id="cb70-11"><a href="worked-examples-with-beforeafter-tables.html#cb70-11" tabindex="-1"></a>    <span class="fu">str_detect</span>(id, <span class="st">&quot;^MT-|^mt-&quot;</span>) <span class="sc">~</span> <span class="st">&quot;Mitochondrial gene symbol (not Ensembl ID) — different ID system&quot;</span>,</span>
+<span id="cb70-12"><a href="worked-examples-with-beforeafter-tables.html#cb70-12" tabindex="-1"></a>    <span class="fu">str_detect</span>(id, <span class="st">&quot;^</span><span class="sc">\\</span><span class="st">d+$&quot;</span>) <span class="sc">~</span> <span class="st">&quot;Entrez Gene ID — different ID system&quot;</span>,</span>
+<span id="cb70-13"><a href="worked-examples-with-beforeafter-tables.html#cb70-13" tabindex="-1"></a>    <span class="cn">TRUE</span> <span class="sc">~</span> <span class="st">&quot;Other / unknown format&quot;</span></span>
+<span id="cb70-14"><a href="worked-examples-with-beforeafter-tables.html#cb70-14" tabindex="-1"></a>  ))</span>
+<span id="cb70-15"><a href="worked-examples-with-beforeafter-tables.html#cb70-15" tabindex="-1"></a></span>
+<span id="cb70-16"><a href="worked-examples-with-beforeafter-tables.html#cb70-16" tabindex="-1"></a>unmapped_classified <span class="sc">%&gt;%</span> <span class="fu">count</span>(type) <span class="sc">%&gt;%</span> <span class="fu">arrange</span>(<span class="fu">desc</span>(n))</span></code></pre></div>
+<pre><code>## # A tibble: 1 × 2
+##   type                       n
+##   &lt;chr&gt;                  &lt;int&gt;
+## 1 Ensembl gene ID (ENSG) 22072</code></pre>
+<div class="sourceCode" id="cb72"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb72-1"><a href="worked-examples-with-beforeafter-tables.html#cb72-1" tabindex="-1"></a><span class="co"># Use the same mart/dataset as your mapping step:</span></span>
+<span id="cb72-2"><a href="worked-examples-with-beforeafter-tables.html#cb72-2" tabindex="-1"></a><span class="co"># ensembl &lt;- useMart(&quot;ensembl&quot;, dataset = &quot;hsapiens_gene_ensembl&quot;)</span></span>
+<span id="cb72-3"><a href="worked-examples-with-beforeafter-tables.html#cb72-3" tabindex="-1"></a></span>
+<span id="cb72-4"><a href="worked-examples-with-beforeafter-tables.html#cb72-4" tabindex="-1"></a>ensg_details <span class="ot">&lt;-</span> <span class="fu">getBM</span>(</span>
+<span id="cb72-5"><a href="worked-examples-with-beforeafter-tables.html#cb72-5" tabindex="-1"></a>  <span class="at">attributes =</span> <span class="fu">c</span>(</span>
+<span id="cb72-6"><a href="worked-examples-with-beforeafter-tables.html#cb72-6" tabindex="-1"></a>    <span class="st">&quot;ensembl_gene_id&quot;</span>,</span>
+<span id="cb72-7"><a href="worked-examples-with-beforeafter-tables.html#cb72-7" tabindex="-1"></a>    <span class="st">&quot;gene_biotype&quot;</span>,</span>
+<span id="cb72-8"><a href="worked-examples-with-beforeafter-tables.html#cb72-8" tabindex="-1"></a>    <span class="st">&quot;external_gene_name&quot;</span></span>
+<span id="cb72-9"><a href="worked-examples-with-beforeafter-tables.html#cb72-9" tabindex="-1"></a>  ),</span>
+<span id="cb72-10"><a href="worked-examples-with-beforeafter-tables.html#cb72-10" tabindex="-1"></a>  <span class="at">filters =</span> <span class="st">&quot;ensembl_gene_id&quot;</span>,</span>
+<span id="cb72-11"><a href="worked-examples-with-beforeafter-tables.html#cb72-11" tabindex="-1"></a>  <span class="at">values  =</span> unmapped_ids,</span>
+<span id="cb72-12"><a href="worked-examples-with-beforeafter-tables.html#cb72-12" tabindex="-1"></a>  <span class="at">mart    =</span> ensembl</span>
+<span id="cb72-13"><a href="worked-examples-with-beforeafter-tables.html#cb72-13" tabindex="-1"></a>)</span>
+<span id="cb72-14"><a href="worked-examples-with-beforeafter-tables.html#cb72-14" tabindex="-1"></a></span>
+<span id="cb72-15"><a href="worked-examples-with-beforeafter-tables.html#cb72-15" tabindex="-1"></a><span class="fu">head</span>(ensg_details)</span></code></pre></div>
+<pre><code>##   ensembl_gene_id                       gene_biotype external_gene_name
+## 1 ENSG00000093100                             lncRNA                   
+## 2 ENSG00000124593                     protein_coding                   
+## 3 ENSG00000124835                             lncRNA                   
+## 4 ENSG00000141979                     protein_coding                   
+## 5 ENSG00000149656 transcribed_unprocessed_pseudogene                   
+## 6 ENSG00000151303                             lncRNA</code></pre>
+<p>Output the distribution of biotypes for the subset of ensembl ids that have no HGNC ID.</p>
+<div class="sourceCode" id="cb74"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb74-1"><a href="worked-examples-with-beforeafter-tables.html#cb74-1" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb74-2"><a href="worked-examples-with-beforeafter-tables.html#cb74-2" tabindex="-1"></a>x <span class="ot">&lt;-</span> ensg_details<span class="sc">$</span>gene_biotype</span>
+<span id="cb74-3"><a href="worked-examples-with-beforeafter-tables.html#cb74-3" tabindex="-1"></a>x[<span class="fu">is.na</span>(x)] <span class="ot">&lt;-</span> <span class="st">&quot;Unknown&quot;</span></span>
+<span id="cb74-4"><a href="worked-examples-with-beforeafter-tables.html#cb74-4" tabindex="-1"></a></span>
+<span id="cb74-5"><a href="worked-examples-with-beforeafter-tables.html#cb74-5" tabindex="-1"></a><span class="co"># Base R counts table -&gt; data.frame</span></span>
+<span id="cb74-6"><a href="worked-examples-with-beforeafter-tables.html#cb74-6" tabindex="-1"></a>tab <span class="ot">&lt;-</span> <span class="fu">table</span>(x)</span>
+<span id="cb74-7"><a href="worked-examples-with-beforeafter-tables.html#cb74-7" tabindex="-1"></a>df_counts <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb74-8"><a href="worked-examples-with-beforeafter-tables.html#cb74-8" tabindex="-1"></a>  <span class="at">biotype =</span> <span class="fu">names</span>(tab),</span>
+<span id="cb74-9"><a href="worked-examples-with-beforeafter-tables.html#cb74-9" tabindex="-1"></a>  <span class="at">n       =</span> <span class="fu">as.integer</span>(tab),</span>
+<span id="cb74-10"><a href="worked-examples-with-beforeafter-tables.html#cb74-10" tabindex="-1"></a>  <span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span></span>
+<span id="cb74-11"><a href="worked-examples-with-beforeafter-tables.html#cb74-11" tabindex="-1"></a>)</span>
+<span id="cb74-12"><a href="worked-examples-with-beforeafter-tables.html#cb74-12" tabindex="-1"></a></span>
+<span id="cb74-13"><a href="worked-examples-with-beforeafter-tables.html#cb74-13" tabindex="-1"></a><span class="co"># Order by counts (ascending) for a nice horizontal bar chart</span></span>
+<span id="cb74-14"><a href="worked-examples-with-beforeafter-tables.html#cb74-14" tabindex="-1"></a>df_counts <span class="ot">&lt;-</span> df_counts[<span class="fu">order</span>(df_counts<span class="sc">$</span>n,<span class="at">decreasing =</span> <span class="cn">TRUE</span>), ]</span>
+<span id="cb74-15"><a href="worked-examples-with-beforeafter-tables.html#cb74-15" tabindex="-1"></a>df_counts<span class="sc">$</span>biotype <span class="ot">&lt;-</span> <span class="fu">factor</span>(df_counts<span class="sc">$</span>biotype, <span class="at">levels =</span> df_counts<span class="sc">$</span>biotype)</span>
+<span id="cb74-16"><a href="worked-examples-with-beforeafter-tables.html#cb74-16" tabindex="-1"></a></span>
+<span id="cb74-17"><a href="worked-examples-with-beforeafter-tables.html#cb74-17" tabindex="-1"></a><span class="co">#only include the top 20 biotypes</span></span>
+<span id="cb74-18"><a href="worked-examples-with-beforeafter-tables.html#cb74-18" tabindex="-1"></a>df_counts <span class="ot">&lt;-</span> df_counts[<span class="dv">1</span><span class="sc">:</span><span class="fu">min</span>(<span class="dv">10</span>, <span class="fu">nrow</span>(df_counts)), ]</span>
+<span id="cb74-19"><a href="worked-examples-with-beforeafter-tables.html#cb74-19" tabindex="-1"></a></span>
+<span id="cb74-20"><a href="worked-examples-with-beforeafter-tables.html#cb74-20" tabindex="-1"></a><span class="fu">ggplot</span>(df_counts, <span class="fu">aes</span>(<span class="at">x =</span> biotype, <span class="at">y =</span> n, <span class="at">fill =</span> biotype)) <span class="sc">+</span></span>
+<span id="cb74-21"><a href="worked-examples-with-beforeafter-tables.html#cb74-21" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">width =</span> <span class="fl">0.8</span>, <span class="at">color =</span> <span class="st">&quot;grey20&quot;</span>) <span class="sc">+</span></span>
+<span id="cb74-22"><a href="worked-examples-with-beforeafter-tables.html#cb74-22" tabindex="-1"></a>  <span class="fu">coord_flip</span>() <span class="sc">+</span></span>
+<span id="cb74-23"><a href="worked-examples-with-beforeafter-tables.html#cb74-23" tabindex="-1"></a>  <span class="fu">scale_fill_brewer</span>(<span class="at">palette =</span> <span class="st">&quot;Set3&quot;</span>, <span class="at">guide =</span> <span class="st">&quot;none&quot;</span>) <span class="sc">+</span></span>
+<span id="cb74-24"><a href="worked-examples-with-beforeafter-tables.html#cb74-24" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb74-25"><a href="worked-examples-with-beforeafter-tables.html#cb74-25" tabindex="-1"></a>    <span class="at">x =</span> <span class="cn">NULL</span>, <span class="at">y =</span> <span class="st">&quot;Number of genes&quot;</span>,</span>
+<span id="cb74-26"><a href="worked-examples-with-beforeafter-tables.html#cb74-26" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">&quot;Distribution of Gene Biotypes - </span><span class="sc">\n</span><span class="st">top 10 types not mapped&quot;</span></span>
+<span id="cb74-27"><a href="worked-examples-with-beforeafter-tables.html#cb74-27" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb74-28"><a href="worked-examples-with-beforeafter-tables.html#cb74-28" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">13</span>) <span class="sc">+</span></span>
+<span id="cb74-29"><a href="worked-examples-with-beforeafter-tables.html#cb74-29" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb74-30"><a href="worked-examples-with-beforeafter-tables.html#cb74-30" tabindex="-1"></a>    <span class="at">plot.title.position =</span> <span class="st">&quot;plot&quot;</span>,</span>
+<span id="cb74-31"><a href="worked-examples-with-beforeafter-tables.html#cb74-31" tabindex="-1"></a>    <span class="at">panel.grid.major.y =</span> <span class="fu">element_blank</span>()</span>
+<span id="cb74-32"><a href="worked-examples-with-beforeafter-tables.html#cb74-32" tabindex="-1"></a>  )</span></code></pre></div>
+<p><img src="05-worked-examples_files/figure-html/unnamed-chunk-5-1.png" alt="" width="672" /></p>
+<p>Would the mapping of these identifiers have been different if we used a different version of Ensembl?</p>
+<p>-&gt; I think that there is the potential for them to be different, because there could have been a change or an update that would lead to some of the identifiers to map differently.</p>
+
+</div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="biomart-step-by-step.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="exercises.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+  "sharing": {
+    "github": false,
+    "facebook": true,
+    "twitter": true,
+    "linkedin": false,
+    "weibo": false,
+    "instapaper": false,
+    "vk": false,
+    "whatsapp": false,
+    "all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+  },
+  "fontsettings": {
+    "theme": "white",
+    "family": "sans",
+    "size": 2
+  },
+  "edit": {
+    "link": null,
+    "text": null
+  },
+  "history": {
+    "link": null,
+    "text": null
+  },
+  "view": {
+    "link": null,
+    "text": null
+  },
+  "download": ["bcb420_identifier_mapping.pdf", "bcb420_identifier_mapping.epub"],
+  "search": {
+    "engine": "fuse",
+    "options": null
+  },
+  "toc": {
+    "collapse": "subsection"
+  }
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

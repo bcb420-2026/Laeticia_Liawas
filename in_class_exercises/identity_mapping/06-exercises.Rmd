@@ -7,19 +7,168 @@ These are intended to be done **after** completing the worked examples.
 Using **GSE119732**, confirm whether the ID column contains Ensembl IDs with version suffixes.
 
 1. Extract the first 20 IDs.
+
+First, we extract the raw data files from the GSE. 
+```{r}
+source("fetch_geo_supp.R")
+library(dplyr)
+library(GEOquery)
+library(biomaRt)
+
+gse1 <- "GSE119732"
+
+# get GSE, then get files in the GSE
+
+file_grep <- "\\.txt.gz$|\\.tsv.gz$|\\.csv.gz$"
+fetch_geo_supp(gse1)
+gse1_path <- file.path("data", gse1)
+gse1_files <- list.files(gse1_path, pattern = file_grep, 
+                    full.names = TRUE, recursive = TRUE)
+
+cat(gse1_files, sep = "\n")
+```
+From here, we see that there is only one file, a .txt file of RNA counts. We can then extract the first 20 IDs in this file.
+
+```{r}
+# Read the first 20 lines of the text file. Preview how it looks to see if need
+# to make any changes.
+
+gse1_data <- read.table(gse1_files, header = T)
+rmarkdown::paged_table(gse1_data[seq(1, 20, by = 1),])
+```
+The data table looks right, so we read in the data using the `read.table()` function, using these arguments. The first 20 IDs are as yielded above. 
+
 2. Count how many contain a `.`.
+
+We use `grep()` to find the indices in which `gene_id` has `.`:
+```{r}
+gse1_versioned <- grep('\\.', gse1_data$gene_id)
+sprintf("Number of IDs with `.`: %s", length(gse1_versioned))
+sprintf("Number of IDs (total): %s", nrow(gse1_data))
+```
+
+It seems that all of them have `.`, i.e. all of them have version numbers.
+
 3. Create a new column with versions stripped.
+
+We use `gsub()` to replace the `.` and anything after it with `""`.
+```{r}
+gse1_unversioned <- gsub("\\..*", "", gse1_data$gene_id)
+
+# sanity check
+paste(gse1_data[1,1], gse1_unversioned[1])
+
+# create a new column in the original table, move it beside the OG gene_id
+gse1_data$gene_id_unversioned <- gse1_unversioned
+gse1_data <- gse1_data %>% relocate(gene_id_unversioned, 
+                                    .after = gene_id)
+  
+```
+
 4. Map the identifiers to HGNC symbols.
+
+```{r}
+# attributes we want: ENSG to HGNC
+# Attribute names from 04-biomart-step-by-step
+
+ensembl <- useMart(
+  biomart = "ensembl",
+  dataset = "hsapiens_gene_ensembl"
+)
+gse1_mapping <- getBM(attributes = c("ensembl_gene_id", "hgnc_symbol"),
+                      filters = "ensembl_gene_id",
+                      value = gse1_data$gene_id_unversioned,
+                      mart = ensembl)
+
+# cant use mutate() because of potential missing values
+# use left_join()
+
+gse1_data_annot <- left_join(
+  gse1_data,
+  gse1_mapping,
+  by = c("gene_id_unversioned" = "ensembl_gene_id")
+)
+gse1_data_annot <- gse1_data_annot %>% relocate(hgnc_symbol, 
+                                        .after = gene_id_unversioned)
+
+# sanity check
+gse1_data_annot[1,]
+```
+
 
 ## Exercise 2 — https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE122380
 
 Using **GSE122380**, confirm whether the ID column contains Ensembl IDs with version suffixes.
 
 1. Extract the first 20 IDs.
+
+Same as before, but replace the GSE accession number.
+```{r}
+gse2 <- "GSE122380"
+
+# get GSE, then get files in the GSE
+file_grep = "\\.txt.gz$|\\.tsv.gz$|\\.csv.gz$"
+
+fetch_geo_supp(gse2)
+gse2_path <- file.path("data", gse2)
+gse2_files <- list.files(gse2_path, pattern = file_grep, 
+                    full.names = TRUE, recursive = TRUE)
+
+cat(gse2_files, sep = ", ")
+```
+Next, read the file.
+
+```{r}
+# Read the first 20 lines of the text file. Preview how it looks to see if need
+# to make any changes.
+
+gse2_data <- read.table(gse2_files, header = T)
+rmarkdown::paged_table(gse2_data[seq(1, 20, by = 1),])
+```
 2. Create a new column with versions stripped.
+
+The first 20 IDs have no version number, so we need to be a bit more careful.
+Conditionally substitute, so that if there is no gene number, keep it constant.
+```{r}
+gse2_data <- gse2_data %>%
+  mutate(Gene_id = gsub("\\..*", "", Gene_id))
+
+# sanity check
+paste(gse2_data[seq(1, 10, by = 1),1])
+  
+```
+
 3. Map the identifiers to HGNC symbols.
+
+```{r}
+# attributes we want: ENSG to HGNC
+# Attribute names from 04-biomart-step-by-step
+
+gse2_mapping <- getBM(attributes = c("ensembl_gene_id", "hgnc_symbol"),
+                      filters = "ensembl_gene_id",
+                      value = gse2_data$Gene_id,
+                      mart = ensembl)
+
+# cant use mutate() because of potential missing values
+# use left_join()
+
+gse2_data_annot <- left_join(gse2_data, gse2_mapping, 
+                          by = join_by(Gene_id == ensembl_gene_id))
+gse2_data_annot <- gse2_data_annot %>% relocate(hgnc_symbol, 
+                                        .after = Gene_id)
+
+# sanity check
+gse2_data_annot[1,]
+```
+
 4. What is different about this file? 
+
+In this file, the gene IDs are mostly unversioned. So, it is important to check what we are working with before doing anything.
 
 ## Exercise 3 - 
  
 Can you use the worked example to process the above two GEO records?  How?
+
+You can, by replacing the `param$gse` value, as well as changing some steps, e.g. change the method of file reading because the file types are different (.tsv vs .txt).
+
+

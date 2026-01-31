@@ -1,4 +1,5 @@
 book_filename: "bcb420_identifier_mapping"
+title: "Identity Mapping Tutorial (Mapping Identifiers to Gene Symbols)"
 output_dir: "docs"
 language:
   ui:
@@ -6,10 +7,10 @@ language:
 new_session: yes
 delete_merged_file: true
 rmd_files:
-  - "index.Rmd"
-  - "01-introduction.Rmd"
-  - "02-getting-data.Rmd"
-  - "03-why-ids-change.Rmd"
-  - "04-biomart-step-by-step.Rmd"
-  - "05-worked-examples.Rmd"
-  - "06-exercises.Rmd"
+  - index.Rmd
+  - 01-introduction.Rmd
+  - 02-getting-data.Rmd
+  - 03-why-ids-change.Rmd
+  - 04-biomart-step-by-step.Rmd
+  - 05-worked-examples.Rmd
+  - 06-exercises.Rmd
