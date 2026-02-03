@@ -1,0 +1,15 @@
+book_filename: "bcb420_normalization"
+output_dir: "docs"
+new_session: yes
+delete_merged_file: true
+language:
+  ui:
+    chapter_name: "Chapter "
+rmd_files:
+  - "index.Rmd"
+  - "01-introduction.Rmd"
+  - "02-technical-vs-biological.Rmd"
+  - "03-visualizing-distributions.Rmd"
+  - "04-normalization-methods.Rmd"
+  - "05-worked-examples.Rmd"
+  - "06-exercises.Rmd"
