@@ -1,0 +1,83 @@
+
+# Differential expression with limma-voom {#limma-voom}
+
+In this chapter we run **limma-voom**, which:
+
+1. Starts from **raw counts**
+2. Transforms to **log2-CPM** with precision weights (`voom()`)
+3. Fits a linear model + empirical Bayes moderation
+
+We use an additive model:
+
+\[
+\text{expression} \sim \text{cellline} + \text{treatment}
+\]
+
+This estimates treatment effects while controlling for baseline differences between cell lines.
+
+```{r}
+obj <- readRDS("data/d1_qc_objects.rds")
+dge_f <- obj$dge_f
+meta <- obj$meta
+mappings <- obj$mappings
+
+design <- obj$design
+
+v <- limma::voom(dge_f, design, plot = TRUE)
+fit <- limma::lmFit(v, design)
+fit <- limma::eBayes(fit, trend = TRUE)
+
+# Contrasts
+contr <- limma::makeContrasts(
+  `3CTG_vs_NT` = treatment3CTG - treatmentNT,
+  `20CTG_vs_NT` = treatment20CTG - treatmentNT,
+  `20CTG_vs_3CTG` = treatment20CTG - treatment3CTG,
+  levels = design
+)
+
+fit2 <- limma::contrasts.fit(fit, contr)
+fit2 <- limma::eBayes(fit2, trend = TRUE)
+```
+
+## Results tables
+
+```{r}
+res_3_vs_nt <- limma::topTable(fit2, coef = "3CTG_vs_NT", number = Inf, sort.by = "P")
+res_20_vs_nt <- limma::topTable(fit2, coef = "20CTG_vs_NT", number = Inf, sort.by = "P")
+res_20_vs_3 <- limma::topTable(fit2, coef = "20CTG_vs_3CTG", number = Inf, sort.by = "P")
+
+head(res_20_vs_nt)
+```
+
+## Volcano plot (20CTG vs NT)
+
+```{r}
+volcano_df <- res_20_vs_nt %>%
+  rownames_to_column("ensembl") %>%
+  mutate(sig = adj.P.Val < 0.05)
+
+ggplot(volcano_df, aes(x = logFC, y = -log10(P.Value), color = sig)) +
+  geom_point(alpha = 0.6) +
+  theme_minimal() +
+  labs(
+    title = "limma-voom: 20CTG vs NT",
+    x = "log2 fold-change",
+    y = "-log10(p-value)"
+  )
+```
+
+## Save limma results
+
+```{r}
+saveRDS(
+  list(
+    meta = meta,
+    counts_mapped_filtered = counts_mapped_filtered,
+    fit2 = fit2,
+    res_3_vs_nt = res_3_vs_nt,
+    res_20_vs_nt = res_20_vs_nt,
+    res_20_vs_3 = res_20_vs_3
+  ),
+  file = "data/d1_limma_results.rds"
+)
+```

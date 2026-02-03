@@ -1,0 +1,123 @@
+
+# Get the data {#get-data}
+
+## Download the GEO supplementary file(s)
+
+This chapter downloads it automatically using **GEOquery**.
+
+```{r}
+GSE_ID <- "GSE233947"
+
+# Download supplementary files into ./data/GSE233947/
+# (If already downloaded, GEOquery will reuse existing files.)
+
+dir.create("data", showWarnings = FALSE)
+
+supp <- GEOquery::getGEOSuppFiles(
+  GSE_ID,
+  makeDirectory = TRUE,
+  baseDir = "data"
+)
+```
+
+## Read the FeatureCounts matrix
+
+```{r}
+counts_file <- file.path("data", GSE_ID, "GSE233947_FeatureCounts_V31genes_RawCounts_ENSG.tsv.gz")
+stopifnot(file.exists(counts_file))
+
+fc <- readr::read_tsv(counts_file, show_col_types = FALSE)
+
+# Peek at the columns
+names(fc)[1:min(12, ncol(fc))]
+```
+
+### Build a counts matrix (genes × samples)
+
+```{r}
+sample_cols <- colnames(fc)
+
+counts <- fc %>%
+  dplyr::select( all_of(sample_cols)) %>%
+  as.data.frame()
+
+rownames(counts) <- counts$Gene
+counts$Gene <- NULL
+
+counts <- as.matrix(counts)
+storage.mode(counts) <- "integer"
+
+dim(counts)
+counts[1:3, 1:3]
+```
+
+## Create metadata from sample names
+
+Sample names in this series follow patterns like:
+
+- `900CTG_NT`
+- `900CTG_3'CTG`
+- `900CTG_20CTG`
+
+We will parse:
+
+- `cellline`: `900CTG`, `1150CTG`, `1450CTG`
+- `treatment`: `NT`, `3CTG`, `20CTG`
+
+```{r}
+
+#design matrix - 
+samples <- colnames(counts)[1:ncol(counts)]
+cellline  <- unlist(lapply(samples,FUN =
+                             function(x){unlist(strsplit(x,split = "_"))[2]}))       
+treatment <- unlist(lapply(samples,FUN = 
+                             function(x){unlist(strsplit(x,split = "_"))[3]}))     
+meta <- data.frame(samples, cellline, treatment)
+
+
+```
+
+## Identifier mapping
+
+```{r}
+strip_ensembl_version <- function(x) sub("\\..*$", "", x)
+
+kable_head <- function(x, n = 5, caption = NULL) {
+  knitr::kable(utils::head(x, n), caption = caption)
+}
+
+mapped_counts <- data.frame(ensembl_gene_id = rownames(counts),counts)
+ids<- mapped_counts$ensembl_gene_id
+
+if (any(grepl("^ENSG", strip_ensembl_version(ids)))) {
+  library(biomaRt)
+  ensembl_ids <- unique(strip_ensembl_version(ids))
+  ensembl <- useMart("ensembl", dataset = "hsapiens_gene_ensembl")
+
+  map <- getBM(
+    attributes = c("ensembl_gene_id", "hgnc_symbol"),
+    filters = "ensembl_gene_id",
+    values = ensembl_ids,
+    mart = ensembl
+  )
+
+  kable_head(map, 10, paste(": mapping preview"))
+
+counts_mapped <- mapped_counts %>%
+    left_join(map, by = "ensembl_gene_id") %>%
+  dplyr::select( ensembl_gene_id,hgnc_symbol, everything())
+
+
+  kable_head(counts_mapped[, 1:min(8, ncol(counts_mapped))], 5, paste(": mapped table preview"))
+}
+```
+
+
+## Save intermediate objects
+
+```{r}
+saveRDS(list(counts = counts, 
+             meta = meta, 
+             mappings = counts_mapped[,1:2]), 
+        file = "data/d1_counts_and_meta.rds")
+```

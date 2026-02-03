@@ -1,0 +1,18 @@
+book_filename: "DE_tutorial"
+language:
+  ui:
+    chapter_name: "Chapter "
+delete_merged_file: true
+output_dir: "docs"
+rmd_files:
+  - "index.Rmd"
+  - "D1_01-get-data.Rmd"
+  - "D1_02-qc-filtering.Rmd"
+  - "D1_03-limma-voom.Rmd"
+  - "D1_04-edgeR.Rmd"
+  - "D1_05-deseq2.Rmd"
+  - "D2_01-get-data.Rmd"
+  - "D2_02-qc-filtering.Rmd"
+  - "D2_03-limma-voom.Rmd"
+  - "D2_04-edgeR.Rmd"
+  - "D2_05-deseq2.Rmd"

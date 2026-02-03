@@ -1,0 +1,104 @@
+
+# QC, filtering and identifier mapping {#qc}
+
+This chapter performs shared QC steps used by both **limma-voom** and **edgeR** and **DEseq2**.
+
+```{r}
+obj <- readRDS("data/d1_counts_and_meta.rds")
+counts <- obj$counts
+meta <- obj$meta
+mappings <- obj$mappings
+
+# Create a DGEList (edgeR data container)
+dge <- edgeR::DGEList(counts = counts)
+
+# Attach metadata
+# (not required, but helpful)
+dge$samples <- cbind(dge$samples, meta)
+
+dge$samples
+```
+
+## Filter lowly expressed genes
+
+We use `filterByExpr` with the intended design to remove genes with insufficient counts.
+
+```{r}
+design <- model.matrix(~ 0 +  treatment+ cellline, data = meta)
+
+keep <- edgeR::filterByExpr(dge, design)
+dge_f <- dge[keep, , keep.lib.sizes = FALSE]
+
+dim(dge)
+dim(dge_f)
+
+#create a subset of the gene mappings
+counts_mapped_filtered <- counts_mapped[counts_mapped$ensembl_gene_id %in% rownames(dge_f$counts),] 
+```
+
+## TMM normalization
+
+```{r}
+dge_f <- edgeR::calcNormFactors(dge_f, method = "TMM")
+dge_f$samples
+```
+
+## Exploratory MDS plot
+
+```{r}
+current_colors <- RColorBrewer::brewer.pal(n = length(unique(meta$treatment)), "Set2")
+names(current_colors) <- levels(factor(meta$treatment))
+
+plotMDS(dge_f,
+  labels = meta$treatment,
+  col = current_colors[meta$treatment],
+  main = "MDS plot (colored by treatment)"
+)
+legend("topright",
+  legend = names(current_colors),
+  col = current_colors,
+  pch = 16,
+  bty = "n"
+)
+```
+
+
+## Exploratory MDS plot - coloured by cellline
+
+```{r}
+current_colors_cellline <- RColorBrewer::brewer.pal(n = length(unique(meta$cellline)), "Set1")
+names(current_colors_cellline) <- levels(factor(meta$cellline))
+
+plotMDS(dge_f,
+  labels = meta$cellline,
+  col = current_colors_cellline[meta$cellline],
+  main = "MDS plot (colored by cellline)"
+)
+legend("topright",
+  legend = names(current_colors_cellline),
+  col = current_colors_cellline,
+  pch = 16,
+  bty = "n"
+)
+```
+
+## log-CPM for visualization
+
+```{r}
+lcpm <- edgeR::cpm(dge_f, log = TRUE, prior.count = 1)
+summary(as.vector(lcpm))
+```
+
+## Save for downstream chapters
+
+```{r}
+saveRDS(list(dge_f = dge_f, 
+             meta = meta, 
+             design = design, 
+             lcpm = lcpm, 
+             mappings = mappings),
+        file = "data/d1_qc_objects.rds")
+```
+
+
+

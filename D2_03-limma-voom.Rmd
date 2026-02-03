@@ -1,0 +1,77 @@
+# Differential expression with limma-voom - Dataset 2 {#limma-voom_dataset2}
+
+In this chapter we run **limma-voom**, which:
+
+1. Starts from **raw counts**
+2. Transforms to **log2-CPM** with precision weights (`voom()`)
+3. Fits a linear model + empirical Bayes moderation
+
+We use an additive model:
+
+\[
+\text{expression} \sim \text{cellline} + \text{treatment}
+\]
+
+This estimates treatment effects while controlling for baseline differences between cell lines.
+
+```{r}
+obj <- readRDS("data/d2_qc_objects.rds")
+dge_f <- obj$dge_f
+meta <- obj$meta
+mappings <- obj$mappings
+
+design <- obj$design
+
+v <- limma::voom(dge_f, design, plot = TRUE)
+fit <- limma::lmFit(v, design)
+fit <- limma::eBayes(fit, trend = TRUE)
+
+# Contrasts
+contr <- limma::makeContrasts(
+  `status0` = status0 - (status1),
+  levels = design
+)
+
+fit2 <- limma::contrasts.fit(fit, contr)
+fit2 <- limma::eBayes(fit2, trend = TRUE)
+```
+
+## Results tables
+
+```{r}
+res_0_vs_1 <- limma::topTable(fit2, coef = "status0", number = Inf, sort.by = "P")
+
+head(res_0_vs_1 )
+```
+
+## Volcano plot (0 vs rest)
+
+```{r}
+volcano_df <- res_0_vs_1  %>%
+  rownames_to_column("ensembl") %>%
+  mutate(sig = adj.P.Val < 0.05)
+
+ggplot(volcano_df, aes(x = logFC, y = -log10(P.Value), color = sig)) +
+  geom_point(alpha = 0.6) +
+  theme_minimal() +
+  labs(
+    title = "limma-voom: res_0_vs_1 ",
+    x = "log2 fold-change",
+    y = "-log10(p-value)"
+  )
+```
+
+
+## Save limma results
+
+```{r}
+saveRDS(
+  list(
+    meta = meta,
+    mappings = mappings,
+    fit2 = fit2,
+    res_0_vs_1 = res_0_vs_1
+  ),
+  file = "data/d2_limma_results.rds"
+)
+```

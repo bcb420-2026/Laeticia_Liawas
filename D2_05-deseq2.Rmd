@@ -1,0 +1,76 @@
+
+# Differential expression with DESeq2 - Dataset 2 {#deseq2_dataset2}
+
+DESeq2 performs differential expression analysis for RNA-seq **count** data.
+
+We are assuming here that the counts data are estimated counts exported from salmon - but that is not guarenteed.  
+
+DESeq requires count data - specifically integer count data (not an estimated version).  We will round these numbers but this is not ideal.  You should ideally have count data.  
+
+If you have TPM, (or RPKM, or FPKM) your real only route is to use limma as both edgeR and DESEq2 require raw counts. 
+
+```{r}
+obj <- readRDS("data/d2_qc_objects.rds")
+dge_f <- obj$dge_f
+meta <- obj$meta
+
+design = obj$design
+
+## but DESeq requires the formula and not the model.matrix object
+## below we put the formula in directly 
+
+library(DESeq2)
+
+count_mat <- round(dge_f$counts)
+
+dds <- DESeqDataSetFromMatrix(
+  countData = count_mat,
+  colData = as.data.frame(meta),
+  design = ~ 0 + status 
+)
+
+
+dds <- DESeq(dds)
+```
+
+## Results
+
+```{r}
+res_0_vs_1 <- results(dds,contrast = c("status","0","1"))
+
+summary(res_20_vs_nt)
+```
+
+## Volcano (red=up, blue=down)
+
+```{r}
+library(ggplot2)
+library(dplyr)
+library(tibble)
+
+vol <- as.data.frame(res_0_vs_1) %>%
+  rownames_to_column("gene") %>%
+  mutate(
+    neglog10p = -log10(pvalue),
+    direction = case_when(
+      !is.na(padj) & padj < 0.05 & log2FoldChange > 0 ~ "Up",
+      !is.na(padj) & padj < 0.05 & log2FoldChange < 0 ~ "Down",
+      TRUE ~ "Not sig"
+    )
+  )
+
+ggplot(vol, aes(log2FoldChange, neglog10p)) +
+  geom_point(aes(color = direction), alpha = 0.7, size = 1.2) +
+  scale_color_manual(values = c(Up = "red", Down = "blue", `Not sig` = "grey70")) +
+  theme_minimal() +
+  labs(title = "DESeq2: 0 vs 1", x = "log2 FC", y = "-log10(p)", color = NULL)
+```
+
+```{r}
+saveRDS(list(meta = meta, 
+             dds = dds, 
+             res_20_vs_nt = res_20_vs_nt,
+             res_3_vs_nt = res_3_vs_nt, 
+             res_20_vs_3 = res_20_vs_3),
+        file = "data/d2_deseq2_results.rds")
+```

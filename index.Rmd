@@ -1,0 +1,68 @@
+
+---
+title: "Differential Expression Tutorial"
+author: "BCB420 / Ruth Isserlin"
+site: bookdown::bookdown_site
+output:
+  bookdown::html_book:
+    toc: true
+    toc_depth: 3
+    number_sections: true
+    df_print: paged
+  bookdown::pdf_book:
+    toc: true
+    number_sections: true
+documentclass: book
+bibliography: [references.bib]
+link-citations: true
+---
+
+# Overview
+
+This bookdown tutorial demonstrates differential expression analysis on **GSE233947**, which provides a **FeatureCounts raw-count matrix** as a GEO supplementary file (`GSE233947_FeatureCounts_V31genes_RawCounts_ENSG.tsv.gz`).
+
+We implement three DE workflows in clearly separated chapters:
+
+- **limma-voom** (Chapter \@ref(limma-voom))
+- **edgeR (quasi-likelihood)** (Chapter \@ref(edger))
+- **DESeq2 ** (Chapter \@ref(deseq2))
+
+In addition, it also demonstrates the analysis of differential expression analysis on a  messy dataset  **GSE240829**, which provides multiple files on GEO, two are TPM and one is labelled as salmon feature counts so for argument's sake I am going to assume that it is salmon estimated counts (as opposed to TPM, like the other files.).
+
+- **limma-voom** (Chapter \@ref(limma-voom_dataset2))
+- **edgeR (quasi-likelihood)** --> well we try quasi-likelihood (Chapter \@ref(edger_dataset2))
+- **DESeq2 ** (Chapter \@ref(deseq2_dataset2))
+
+
+```{r setup, include=FALSE}
+# Global chunk defaults
+knitr::opts_chunk$set(
+  echo = TRUE,
+  warning = FALSE,
+  message = FALSE
+)
+
+set.seed(1)
+```
+
+## Packages
+
+```{r}
+# Install once if needed:
+if(!require(tidyverse)){
+  install.packages(c("tidyverse"))
+}
+library(GEOquery)
+library(edgeR)
+library(limma)
+library(tidyverse)
+library(ComplexHeatmap)
+library(RColorBrewer)
+library(circlize)
+```
+
+## Reproducibility
+
+- Run this project in RStudio.
+- Click **Build** → **Build Book** (or run `bookdown::render_book("index.Rmd")`).
+
