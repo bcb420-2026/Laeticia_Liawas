@@ -1,0 +1,18 @@
+# Getting data from GEO
+
+We download GEO supplementary files to obtain realistic identifiers.
+
+```{r}
+library(GEOquery)
+
+fetch_geo_supp <- function(gse, destdir = "data") {
+  dir.create(destdir, showWarnings = FALSE, recursive = TRUE)
+  GEOquery::getGEOSuppFiles(GSE = gse, baseDir = destdir, makeDirectory = TRUE)
+  invisible(file.path(destdir, gse))
+}
+
+fetch_geo_supp("GSE119732")
+fetch_geo_supp("GSE233947")
+```
+
+

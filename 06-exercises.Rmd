@@ -1,0 +1,24 @@
+# Exercises
+These are intended to be done **after** completing the worked examples.
+
+## Exercise 1 — https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE119732
+
+Using **GSE119732**, 
+
+  1. Map the distribution of the samples as a box plot and a density plot using only the raw data.
+  2.  Add colours to the plot separating the different variables in the model
+  3.  Filter out lowly expressed genes and re plot the distributions.
+
+
+
+## Exercise 2 — https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE122380
+
+Using **GSE122380**, confirm whether the ID column contains Ensembl IDs with version suffixes.
+
+ 1. Map the distribution of the samples as a box plot and a density plot using only the raw data.
+  2.  Add colours to the plot separating the different variables in the model
+  3.  Filter out lowly expressed genes and re plot the distributions.
+
+## Exercise 3 - 
+ 
+Can you use the worked example to process the above two GEO records?  How?
