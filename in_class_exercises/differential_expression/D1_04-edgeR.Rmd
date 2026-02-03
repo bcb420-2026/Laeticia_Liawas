@@ -1,0 +1,303 @@
+
+# Differential expression with edgeR (QLF) {#edger}
+
+In this chapter we run **edgeR** using the recommended **quasi-likelihood** pipeline:
+
+1. Start from **raw counts** in a `DGEList`
+2. Estimate dispersions
+3. Fit a QL GLM
+4. Perform QL F-tests for contrasts of interest
+
+We use the same additive design:
+
+\[
+\text{counts} \sim \text{cellline} + \text{treatment}
+\]
+
+```{r}
+obj <- readRDS("data/d1_qc_objects.rds")
+dge_f <- obj$dge_f
+meta <- obj$meta
+mappings <- obj$mappings
+
+design <- obj$design
+
+# Contrasts
+contr <- makeContrasts(
+  `3CTG_vs_NT` = treatment3CTG - treatmentNT,
+  `20CTG_vs_NT` = treatment20CTG - treatmentNT,
+  `20CTG_vs_3CTG` = treatment20CTG - treatment3CTG,
+  levels = design
+)
+
+# Estimate dispersion and fit QL model
+edge <- edgeR::estimateDisp(dge_f, design)
+fit <- edgeR::glmQLFit(edge, design)
+```
+
+## Plot Biological coefficient of variance plot
+
+```{r}
+plotBCV(edge)
+```
+
+## Test: 3CTG vs NT and 20CTG vs NT
+
+With this design, the coefficients `treatment3CTG` and `treatment20CTG` correspond to contrasts vs NT.
+
+```{r}
+qlf_3_vs_nt <- edgeR::glmQLFTest(fit, contrast = contr[, "3CTG_vs_NT"])
+qlf_20_vs_nt <- edgeR::glmQLFTest(fit, contrast = contr[, "20CTG_vs_NT"])
+
+edgeR::topTags(qlf_20_vs_nt)
+```
+
+## Test: 20CTG vs 3CTG
+
+```{r}
+
+qlf_20_vs_3 <- edgeR::glmQLFTest(fit, contrast = contr[, "20CTG_vs_3CTG"])
+
+edgeR::topTags(qlf_20_vs_3)
+```
+
+## Extract full results
+
+```{r}
+tab_3_vs_nt <- edgeR::topTags(qlf_3_vs_nt, n = Inf)$table %>% rownames_to_column("ensembl")
+tab_20_vs_nt <- edgeR::topTags(qlf_20_vs_nt, n = Inf)$table %>% rownames_to_column("ensembl")
+tab_20_vs_3 <- edgeR::topTags(qlf_20_vs_3, n = Inf)$table %>% rownames_to_column("ensembl")
+
+head(tab_20_vs_nt)
+```
+
+## Volcano plot of EdgeR results
+
+```{r}
+volcano_df <- tab_20_vs_nt %>%
+  mutate(sig = FDR < 0.05)
+
+ggplot(volcano_df, aes(x = logFC, y = -log10(PValue), color = sig)) +
+  geom_point(alpha = 0.6) +
+  theme_minimal() +
+  labs(
+    title = "EdgeR: 20CTG vs NT",
+    x = "log2 fold-change",
+    y = "-log10(p-value)"
+  )
+```
+
+
+```{r}
+
+
+tab <- topTags(qlf_20_vs_nt, n = Inf)$table %>%
+  rownames_to_column("gene") %>%
+  mutate(
+    neglog10P = -log10(PValue),
+    direction = case_when(
+      FDR < 0.05 & logFC > 0 ~ "Up",
+      FDR < 0.05 & logFC < 0 ~ "Down",
+      TRUE ~ "Not sig"
+    )
+  )
+
+ggplot(tab, aes(x = logFC, y = neglog10P)) +
+  geom_point(aes(color = direction), alpha = 0.7, size = 1.2) +
+  scale_color_manual(values = c(
+    "Up" = "red",
+    "Down" = "blue",
+    "Not sig" = "grey70"
+  )) +
+  geom_vline(xintercept = c(-1, 1), linetype = "dashed", color = "steelblue") +
+  geom_hline(yintercept = -log10(0.05), linetype = "dashed", color = "steelblue") +
+  theme_minimal() +
+  labs(
+    title = "edgeR volcano: 20CTG vs NT",
+    x = "log2 fold change (logFC)",
+    y = "-log10(p-value)",
+    color = NULL
+  )
+
+
+```
+
+## Visualize the top hits as a heatmap
+
+ first map the ensembl ids to gene ids
+
+```{r}
+
+# Keep only the columns we need and ensure they are character
+map_df <- mappings %>%
+  transmute(
+    ensembl = as.character(ensembl_gene_id),
+    hgnc_symbol = as.character(hgnc_symbol)
+  ) %>%
+  distinct(ensembl, .keep_all = TRUE)
+
+# Join mapping onto the edgeR results table (tab_20_vs_nt)
+tab_20_vs_nt_annot <- tab_20_vs_nt %>%
+  mutate(ensembl = as.character(ensembl)) %>%
+  left_join(map_df, by = "ensembl") %>%
+  mutate(
+    # Use HGNC when available, otherwise fall back to Ensembl
+    display_name = ifelse(!is.na(hgnc_symbol) & hgnc_symbol != "",
+                          hgnc_symbol,
+                          ensembl)
+  )
+
+# Quick check: how many mapped?
+mean(!is.na(tab_20_vs_nt_annot$hgnc_symbol))
+head(tab_20_vs_nt_annot[, c("ensembl","hgnc_symbol","display_name","logFC","FDR")])
+
+```
+
+
+
+## Select top hits from `tab_20_vs_nt_annot`
+
+Pick either **top N by FDR** (good default for teaching) or **all genes with FDR < 0.05**.
+
+### top N genes by FDR
+
+```{r edger-heatmap-top-hits}
+top_n <- 50  # change to 25/100 as desired
+
+top_hits_tbl <- tab_20_vs_nt_annot %>%
+  arrange(FDR, PValue) %>%
+  slice_head(n = top_n)
+
+# Ensembl IDs for subsetting the matrix
+top_hits_ensembl <- top_hits_tbl$ensembl
+
+# Row labels we want to show on the heatmap
+top_hits_labels <- top_hits_tbl$display_name
+
+head(top_hits_tbl[, c("ensembl","display_name","logFC","FDR")])
+```
+
+## Make the expression matrix for the heatmap (logCPM + row z-score)
+
+We’ll compute **logCPM** from counts (recommended for visualization), then **z-score per gene**.
+
+```{r edger-heatmap-matrix}
+# logCPM from counts for visualization
+# logCPM for visualization
+logcpm <- edgeR::cpm(counts, log = TRUE, prior.count = 1)
+
+# Keep only genes present in the expression matrix
+keep <- top_hits_ensembl %in% rownames(logcpm)
+
+hm_mat <- logcpm[top_hits_ensembl[keep], , drop = FALSE]
+
+# Create labels aligned to hm_mat rows
+hm_labels <- top_hits_labels[keep]
+
+# IMPORTANT: avoid duplicate rownames (HGNC symbols can repeat)
+# Make labels unique while preserving readability
+rownames(hm_mat) <- make.unique(hm_labels)
+
+# Z-score per gene across samples for pattern visibility
+hm_z <- t(scale(t(hm_mat)))
+
+dim(hm_z)
+```
+
+---
+
+## Sample annotation (treatment + cellline) using Set3
+
+```{r edger-heatmap-annotation}
+
+meta$cellline <- as.factor(meta$cellline)
+meta$treatment <- as.factor(meta$treatment)
+
+# Set3 palettes (qualitative)
+treat_levels <- levels(meta$treatment)
+cell_levels  <- levels(meta$cellline)
+
+treat_cols <- setNames(
+  brewer.pal(max(3, length(treat_levels)), "Set3")[seq_along(treat_levels)],
+  treat_levels
+)
+
+cell_cols <- setNames(
+  brewer.pal(max(3, length(cell_levels)), "Set2")[seq_along(cell_levels)],
+  cell_levels
+)
+
+ha <- HeatmapAnnotation(
+  treatment = meta$treatment,
+  cellline  = meta$cellline,
+  col = list(
+    treatment = treat_cols,
+    cellline  = cell_cols
+  ),
+  annotation_legend_param = list(
+    treatment = list(title = "Treatment"),
+    cellline  = list(title = "Cell line")
+  )
+)
+
+```
+---
+
+## 5) Draw the ComplexHeatmap heatmap
+
+This produces the actual figure. Since we z-scored the rows, use a diverging palette centered at 0.
+
+```{r edger-heatmap-plot, fig.width=8, fig.height=8}
+col_fun <- circlize::colorRamp2(c(-2, 0, 2), c("blue", "white", "red"))
+
+Heatmap(
+  hm_z,
+  col = col_fun,
+  top_annotation = ha,
+  show_row_names = FALSE,
+  show_column_names = FALSE,
+  cluster_rows = TRUE,
+  cluster_columns = TRUE,
+  row_title = paste0("Top ", nrow(hm_z), " genes (edgeR: 20CTG vs NT)"),
+  column_title = "Samples"
+)
+```
+
+Add labels of the gene names - only include 25 of the top hit for easier visibility.  
+
+Is this the correct way to add the top 25?
+
+```{r}
+Heatmap(
+  hm_z[1:25,],
+  col = col_fun,
+  top_annotation = ha,
+  show_row_names = TRUE,         # <-- now shows HGNC symbols
+  row_names_gp = grid::gpar(fontsize = 8),
+  show_column_names = FALSE,
+  cluster_rows = TRUE,
+  cluster_columns = TRUE,
+  row_title = paste0("Top ", nrow(hm_z), " genes (edgeR: 20CTG vs NT)"),
+  column_title = "Samples"
+)
+```
+
+
+## Save edgeR results
+
+```{r}
+saveRDS(
+  list(
+    meta = meta,
+    counts_mapped_filtered = counts_mapped_filtered,
+    fit = fit,
+    qlf_3_vs_nt = qlf_3_vs_nt,
+    qlf_20_vs_nt = qlf_20_vs_nt,
+    qlf_20_vs_3 = qlf_20_vs_3,
+    tab_3_vs_nt = tab_3_vs_nt,
+    tab_20_vs_nt = tab_20_vs_nt,
+    tab_20_vs_3 = tab_20_vs_3
+  ),
+  file = "data/d1_edger_results.rds"
+)
+```

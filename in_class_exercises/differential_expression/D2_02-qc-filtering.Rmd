@@ -1,0 +1,264 @@
+# QC, filtering and identifier mapping - Dataset 2{#qc_dataset2}
+
+This chapter performs shared QC steps used by both **limma-voom** and **edgeR** and **DEseq2**.
+
+## Load in the data
+
+```{r}
+obj <- readRDS("data/d2_counts_and_meta.rds")
+counts <- obj$counts
+meta <- obj$meta
+mappings <- obj$mappings
+```
+
+
+
+## Simplify this model
+
+Too many variables in this dataset - reduce the data to just two statuses - 0 or 1
+
+```{r}
+meta <- meta[(meta$status == 0 | meta$status == 1),]
+counts <- counts[,meta$samples]
+```
+
+
+```{r}
+
+
+# Create a DGEList (edgeR data container)
+dge <- edgeR::DGEList(counts = counts)
+
+# Attach metadata
+# (not required, but helpful)
+dge$samples <- cbind(dge$samples, meta)
+
+dge$samples
+```
+
+
+
+## Filter lowly expressed genes
+
+We use `filterByExpr` with the intended design to remove genes with insufficient counts.
+
+```{r}
+design <- model.matrix(~ 0 + status +patient , 
+                       data = meta)
+
+keep <- edgeR::filterByExpr(dge,design,min.count = 3)
+dge_f <- dge[keep, , keep.lib.sizes = FALSE]
+
+#if the above is too stringent because of a complicated model desitn
+# you can do it manually - 
+
+#examples - 
+#cpm_mat <- edgeR::cpm(dge)
+#keep <- rowSums(cpm_mat > 1) >= 2
+#dge2 <- dge[keep, , keep.lib.sizes = FALSE]
+
+
+dim(dge)
+dim(dge_f)
+
+#create a subset of the gene mappings
+counts_mapped_filtered <- counts_mapped[counts_mapped$ensembl_gene_id %in% rownames(dge_f$counts),] 
+```
+
+## TMM normalization
+
+```{r}
+dge_f <- edgeR::calcNormFactors(dge_f, method = "TMM")
+dge_f$samples
+```
+
+## Exploratory MDS plot
+
+```{r}
+current_colors <- RColorBrewer::brewer.pal(n = length(unique(meta$status)), "Set2")
+names(current_colors) <- levels(factor(meta$status))
+
+plotMDS(dge_f,
+  labels = meta$status,
+  col = current_colors[meta$status],
+  main = "MDS plot (colored by status)"
+)
+legend("topright",
+  legend = names(current_colors),
+  col = current_colors,
+  pch = 16,
+  bty = "n"
+)
+```
+
+
+## Exploratory MDS plot - coloured by patient
+
+```{r}
+current_colors_location <-  colorRampPalette(RColorBrewer::brewer.pal(9, "Set1"))(length(unique(meta$location)))
+names(current_colors_location) <- levels(factor(meta$location))
+
+
+
+op <- par(no.readonly = TRUE)     # save graphics settings
+par(mar = c(5, 4, 4, 10) + 0.1)   # increase right margin (last number)
+par(xpd = NA)                    # allow drawing outside plot region
+
+plotMDS(dge_f,
+  labels = meta$location,
+  col = current_colors_location[meta$location],
+  main = "MDS plot (colored by location)"
+)
+# legend("topright",
+#   legend = names(current_colors_location),
+#   col = current_colors_location,
+#   pch = 16,
+#   bty = "n"
+# )
+
+
+legend("topright",
+  inset = c(-0.35, 0),           # push legend into the right margin
+  legend = names(current_colors_location),
+  col = current_colors_location,
+  pch = 16,
+  bty = "n",
+  cex = 0.8
+)
+
+
+```
+
+Number of samples by region - 
+
+```{r}
+
+# Count samples per location
+meta$location <- as.character(meta$location)
+loc_counts <- meta %>%
+  dplyr::count(location, name = "n") 
+  
+
+# Plot
+ggplot(loc_counts, aes(x = location, y = n)) +
+  geom_col(fill = "#2C7FB8", width = 0.75) +
+  geom_text(aes(label = n), hjust = -0.15, size = 3.8) +
+  coord_flip() +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.12))
+                     ) +
+  labs(
+    title = "Number of samples by location",
+    x = NULL,
+    y = "Number of samples"
+  ) +
+  theme_minimal(base_size = 13) +
+  theme(
+    panel.grid.major.y = element_blank(),
+    plot.title = element_text(face = "bold")
+  )
+
+```
+
+look at the different make ups of the data - What are the different locations divided by statuses?
+
+```{r}
+
+
+meta2 <- meta %>%
+  mutate(
+    status = factor(status, levels = 0:3),
+    location = factor(location)
+  )
+
+
+
+# totals per status for labeling
+tot_status <- meta2 %>% dplyr::count(status, name = "total")
+
+status_broken_into_locations <- ggplot(meta2, aes(x = status, fill = location)) +
+  geom_bar(color = "white", linewidth = 0.2) +   # stacked counts
+  geom_text(
+    data = tot_status,
+    aes(x = status, y = total, label = total),
+    inherit.aes = FALSE,
+    vjust = -0.4,
+    size = 4
+  ) +
+  labs(
+    title = "Number of samples by Status (stacked by Location)",
+    x = "Status",
+    y = "Number of samples",
+    fill = "Location"
+  ) +   coord_flip() +
+  theme_minimal(base_size = 13) +
+  theme(
+    panel.grid.major.x = element_blank(),
+    plot.title = element_text(face = "bold")
+  ) +
+  expand_limits(y = max(tot_status$total) * 1.08)
+
+status_broken_into_locations
+
+
+
+```
+
+What are the different status divided by locations?
+
+```{r}
+
+meta2$location <- factor(meta$location,
+                         levels = names(sort(table(meta$location), 
+                                             decreasing = TRUE)))
+
+tot_loc <- meta2 %>% dplyr::count(location, name = "total")
+
+locations_broken_into_statuses <- ggplot(meta2, aes(x = location, fill = status)) +
+  geom_bar(color = "white", linewidth = 0.2) +
+  coord_flip() +
+  geom_text(
+    data = tot_loc %>% mutate(location = location),
+    aes(x = location, y = total, label = total),
+    inherit.aes = FALSE,
+    hjust = -0.15,
+    size = 3.8
+  ) +
+  labs(
+    title = "Number of samples by Location (stacked by Status)",
+    x = "Location",
+    y = "Number of samples",
+    fill = "Status"
+  ) +
+  theme_minimal(base_size = 13) +
+  theme(
+    panel.grid.major.y = element_blank(),
+    plot.title = element_text(face = "bold")
+  ) +
+  expand_limits(y = max(tot_loc$total) * 1.08)
+
+locations_broken_into_statuses
+
+```
+
+
+
+## log-CPM for visualization
+
+```{r}
+lcpm <- edgeR::cpm(dge_f, log = TRUE, prior.count = 1)
+summary(as.vector(lcpm))
+```
+
+## Save for downstream chapters
+
+```{r}
+saveRDS(list(dge_f = dge_f, 
+             meta = meta, 
+             design = design, 
+             lcpm = lcpm, 
+             mappings = mappings),
+        file = "data/d2_qc_objects.rds")
+```
+
+
+

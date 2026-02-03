@@ -1,0 +1,137 @@
+# Differential expression with edgeR (QLF) - Dataset 2 {#edger_dataset2}
+
+In this chapter we run **edgeR** using the recommended **quasi-likelihood** pipeline:
+
+1. Start from **raw counts** in a `DGEList`
+2. Estimate dispersions
+3. Fit a QL GLM
+4. Perform QL F-tests for contrasts of interest
+
+We use the same additive design:
+
+\[
+\text{counts} \sim \text{status} + \text{patient}
+\]
+
+```{r}
+obj <- readRDS("data/d2_qc_objects.rds")
+dge_f <- obj$dge_f
+meta <- obj$meta
+mappings <- obj$mappings
+
+design <- obj$design
+
+# Contrasts
+contr <- limma::makeContrasts(
+  `status0vs1` = status0 - (status1),
+  levels = design
+)
+
+# Estimate dispersion and fit QL model
+edge <- edgeR::estimateDisp(dge_f, design)
+fit <- edgeR::glmQLFit(edge, design)
+```
+
+## Plot Biological coefficient of variance plot
+
+```{r}
+plotBCV(edge)
+```
+
+
+## Test: status 0 vs status 1 
+
+```{r}
+qlf_0_vs_1 <- edgeR::glmQLFTest(fit, contrast = contr[, "status0vs1"])
+
+edgeR::topTags(qlf_0_vs_1)
+```
+
+
+## Extract full results
+
+```{r}
+tab_0_vs_1 <- edgeR::topTags(qlf_0_vs_1, n = Inf)$table %>% rownames_to_column("ensembl")
+
+
+head(tab_0_vs_1)
+```
+
+## Volcano plot of EdgeR results
+
+```{r}
+volcano_df <- tab_0_vs_1 %>%
+  mutate(sig = FDR < 0.05)
+
+ggplot(volcano_df, aes(x = logFC, y = -log10(PValue), color = sig)) +
+  geom_point(alpha = 0.6) +
+  theme_minimal() +
+  labs(
+    title = "EdgeR: 0 vs 1",
+    x = "log2 fold-change",
+    y = "-log10(p-value)"
+  )
+```
+
+
+## Try and run glmFit
+
+## Test: status 0 vs status 1 
+
+```{r}
+glmfit_0_vs_1 <- edgeR::glmFit(edge, design)
+glmtest_0_vs_1 <- edgeR::glmLRT(fit, contrast = contr[, "status0vs1"])
+
+edgeR::topTags(glmtest_0_vs_1)
+```
+
+
+
+```{r}
+glm_tab_0_vs_1 <- edgeR::topTags(glmtest_0_vs_1, n = Inf)$table %>% rownames_to_column("ensembl")
+
+tab_glm <- glm_tab_0_vs_1 %>%
+  rownames_to_column("gene") %>%
+  mutate(
+    neglog10P = -log10(PValue),
+    direction = case_when(
+      FDR < 0.05 & logFC > 0 ~ "Up",
+      FDR < 0.05 & logFC < 0 ~ "Down",
+      TRUE ~ "Not sig"
+    )
+  )
+
+ggplot(tab, aes(x = logFC, y = neglog10P)) +
+  geom_point(aes(color = direction), alpha = 0.7, size = 1.2) +
+  scale_color_manual(values = c(
+    "Up" = "red",
+    "Down" = "blue",
+    "Not sig" = "grey70"
+  )) +
+  geom_vline(xintercept = c(-1, 1), linetype = "dashed", color = "steelblue") +
+  geom_hline(yintercept = -log10(0.05), linetype = "dashed", color = "steelblue") +
+  theme_minimal() +
+  labs(
+    title = "edgeR volcano: 0 vs rest",
+    x = "log2 fold change (logFC)",
+    y = "-log10(p-value)",
+    color = NULL
+  )
+
+
+```
+
+## Save edgeR results
+
+```{r}
+saveRDS(
+  list(
+    meta = meta,
+    mappings = mappings,
+    fit = fit,
+    qlf_0_vs_1  = qlf_0_vs_1 ,
+    glm_tab_0_vs_1  = glm_tab_0_vs_1 
+  ),
+  file = "data/d2_edger_results.rds"
+)
+```
