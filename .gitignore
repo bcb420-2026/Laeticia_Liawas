@@ -1,4 +1,4 @@
 *.sqlite
 *.rds
 *.RDS
-in_class_exercises/identity_mapping/data/
+data/
