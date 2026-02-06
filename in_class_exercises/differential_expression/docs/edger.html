@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 5 Differential expression with edgeR (QLF) | Differential Expression Tutorial</title>
+  <meta name="description" content="Chapter 5 Differential expression with edgeR (QLF) | Differential Expression Tutorial" />
+  <meta name="generator" content="bookdown 0.46 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 5 Differential expression with edgeR (QLF) | Differential Expression Tutorial" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 5 Differential expression with edgeR (QLF) | Differential Expression Tutorial" />
+  
+  
+  
+
+<meta name="author" content="BCB420 / Ruth Isserlin" />
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="limma-voom.html"/>
+<link rel="next" href="deseq2.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+
+
+<style type="text/css">
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">BCB420 Lecture </a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Overview</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#packages"><i class="fa fa-check"></i><b>1.1</b> Packages</a></li>
+<li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#reproducibility"><i class="fa fa-check"></i><b>1.2</b> Reproducibility</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="get-data.html"><a href="get-data.html"><i class="fa fa-check"></i><b>2</b> Get the data</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="get-data.html"><a href="get-data.html#download-the-geo-supplementary-files"><i class="fa fa-check"></i><b>2.1</b> Download the GEO supplementary file(s)</a></li>
+<li class="chapter" data-level="2.2" data-path="get-data.html"><a href="get-data.html#read-the-featurecounts-matrix"><i class="fa fa-check"></i><b>2.2</b> Read the FeatureCounts matrix</a>
+<ul>
+<li class="chapter" data-level="2.2.1" data-path="get-data.html"><a href="get-data.html#build-a-counts-matrix-genes-samples"><i class="fa fa-check"></i><b>2.2.1</b> Build a counts matrix (genes × samples)</a></li>
+</ul></li>
+<li class="chapter" data-level="2.3" data-path="get-data.html"><a href="get-data.html#create-metadata-from-sample-names"><i class="fa fa-check"></i><b>2.3</b> Create metadata from sample names</a></li>
+<li class="chapter" data-level="2.4" data-path="get-data.html"><a href="get-data.html#identifier-mapping"><i class="fa fa-check"></i><b>2.4</b> Identifier mapping</a></li>
+<li class="chapter" data-level="2.5" data-path="get-data.html"><a href="get-data.html#save-intermediate-objects"><i class="fa fa-check"></i><b>2.5</b> Save intermediate objects</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="qc.html"><a href="qc.html"><i class="fa fa-check"></i><b>3</b> QC, filtering and identifier mapping</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="qc.html"><a href="qc.html#filter-lowly-expressed-genes"><i class="fa fa-check"></i><b>3.1</b> Filter lowly expressed genes</a></li>
+<li class="chapter" data-level="3.2" data-path="qc.html"><a href="qc.html#tmm-normalization"><i class="fa fa-check"></i><b>3.2</b> TMM normalization</a></li>
+<li class="chapter" data-level="3.3" data-path="qc.html"><a href="qc.html#exploratory-mds-plot"><i class="fa fa-check"></i><b>3.3</b> Exploratory MDS plot</a></li>
+<li class="chapter" data-level="3.4" data-path="qc.html"><a href="qc.html#exploratory-mds-plot---coloured-by-cellline"><i class="fa fa-check"></i><b>3.4</b> Exploratory MDS plot - coloured by cellline</a></li>
+<li class="chapter" data-level="3.5" data-path="qc.html"><a href="qc.html#log-cpm-for-visualization"><i class="fa fa-check"></i><b>3.5</b> log-CPM for visualization</a></li>
+<li class="chapter" data-level="3.6" data-path="qc.html"><a href="qc.html#save-for-downstream-chapters"><i class="fa fa-check"></i><b>3.6</b> Save for downstream chapters</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="limma-voom.html"><a href="limma-voom.html"><i class="fa fa-check"></i><b>4</b> Differential expression with limma-voom</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="limma-voom.html"><a href="limma-voom.html#results-tables"><i class="fa fa-check"></i><b>4.1</b> Results tables</a></li>
+<li class="chapter" data-level="4.2" data-path="limma-voom.html"><a href="limma-voom.html#volcano-plot-20ctg-vs-nt"><i class="fa fa-check"></i><b>4.2</b> Volcano plot (20CTG vs NT)</a></li>
+<li class="chapter" data-level="4.3" data-path="limma-voom.html"><a href="limma-voom.html#save-limma-results"><i class="fa fa-check"></i><b>4.3</b> Save limma results</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="edger.html"><a href="edger.html"><i class="fa fa-check"></i><b>5</b> Differential expression with edgeR (QLF)</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="edger.html"><a href="edger.html#plot-biological-coefficient-of-variance-plot"><i class="fa fa-check"></i><b>5.1</b> Plot Biological coefficient of variance plot</a></li>
+<li class="chapter" data-level="5.2" data-path="edger.html"><a href="edger.html#test-3ctg-vs-nt-and-20ctg-vs-nt"><i class="fa fa-check"></i><b>5.2</b> Test: 3CTG vs NT and 20CTG vs NT</a></li>
+<li class="chapter" data-level="5.3" data-path="edger.html"><a href="edger.html#test-20ctg-vs-3ctg"><i class="fa fa-check"></i><b>5.3</b> Test: 20CTG vs 3CTG</a></li>
+<li class="chapter" data-level="5.4" data-path="edger.html"><a href="edger.html#extract-full-results"><i class="fa fa-check"></i><b>5.4</b> Extract full results</a></li>
+<li class="chapter" data-level="5.5" data-path="edger.html"><a href="edger.html#volcano-plot-of-edger-results"><i class="fa fa-check"></i><b>5.5</b> Volcano plot of EdgeR results</a></li>
+<li class="chapter" data-level="5.6" data-path="edger.html"><a href="edger.html#visualize-the-top-hits-as-a-heatmap"><i class="fa fa-check"></i><b>5.6</b> Visualize the top hits as a heatmap</a></li>
+<li class="chapter" data-level="5.7" data-path="edger.html"><a href="edger.html#select-top-hits-from-tab_20_vs_nt_annot"><i class="fa fa-check"></i><b>5.7</b> Select top hits from <code>tab_20_vs_nt_annot</code></a>
+<ul>
+<li class="chapter" data-level="5.7.1" data-path="edger.html"><a href="edger.html#top-n-genes-by-fdr"><i class="fa fa-check"></i><b>5.7.1</b> top N genes by FDR</a></li>
+</ul></li>
+<li class="chapter" data-level="5.8" data-path="edger.html"><a href="edger.html#make-the-expression-matrix-for-the-heatmap-logcpm-row-z-score"><i class="fa fa-check"></i><b>5.8</b> Make the expression matrix for the heatmap (logCPM + row z-score)</a></li>
+<li class="chapter" data-level="5.9" data-path="edger.html"><a href="edger.html#sample-annotation-treatment-cellline-using-set3"><i class="fa fa-check"></i><b>5.9</b> Sample annotation (treatment + cellline) using Set3</a></li>
+<li class="chapter" data-level="5.10" data-path="edger.html"><a href="edger.html#draw-the-complexheatmap-heatmap"><i class="fa fa-check"></i><b>5.10</b> 5) Draw the ComplexHeatmap heatmap</a></li>
+<li class="chapter" data-level="5.11" data-path="edger.html"><a href="edger.html#save-edger-results"><i class="fa fa-check"></i><b>5.11</b> Save edgeR results</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="deseq2.html"><a href="deseq2.html"><i class="fa fa-check"></i><b>6</b> Differential expression with DESeq2</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="deseq2.html"><a href="deseq2.html#results"><i class="fa fa-check"></i><b>6.1</b> Results</a></li>
+<li class="chapter" data-level="6.2" data-path="deseq2.html"><a href="deseq2.html#volcano-redup-bluedown"><i class="fa fa-check"></i><b>6.2</b> Volcano (red=up, blue=down)</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="get-data_dataset2.html"><a href="get-data_dataset2.html"><i class="fa fa-check"></i><b>7</b> Get the data - Dataset 2</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="get-data_dataset2.html"><a href="get-data_dataset2.html#download-the-geo-supplementary-files-1"><i class="fa fa-check"></i><b>7.1</b> Download the GEO supplementary file(s)</a></li>
+<li class="chapter" data-level="7.2" data-path="get-data_dataset2.html"><a href="get-data_dataset2.html#read-the-featurecounts-matrix-1"><i class="fa fa-check"></i><b>7.2</b> Read the FeatureCounts matrix</a>
+<ul>
+<li class="chapter" data-level="7.2.1" data-path="get-data_dataset2.html"><a href="get-data_dataset2.html#build-a-counts-matrix-genes-samples-1"><i class="fa fa-check"></i><b>7.2.1</b> Build a counts matrix (genes × samples)</a></li>
+</ul></li>
+<li class="chapter" data-level="7.3" data-path="get-data_dataset2.html"><a href="get-data_dataset2.html#create-metadata-from-sample-names-1"><i class="fa fa-check"></i><b>7.3</b> Create metadata from sample names</a></li>
+<li class="chapter" data-level="7.4" data-path="get-data_dataset2.html"><a href="get-data_dataset2.html#identifier-mapping-1"><i class="fa fa-check"></i><b>7.4</b> Identifier mapping</a></li>
+<li class="chapter" data-level="7.5" data-path="get-data_dataset2.html"><a href="get-data_dataset2.html#save-intermediate-objects-1"><i class="fa fa-check"></i><b>7.5</b> Save intermediate objects</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="qc_dataset2.html"><a href="qc_dataset2.html"><i class="fa fa-check"></i><b>8</b> QC, filtering and identifier mapping - Dataset 2</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="qc_dataset2.html"><a href="qc_dataset2.html#load-in-the-data"><i class="fa fa-check"></i><b>8.1</b> Load in the data</a></li>
+<li class="chapter" data-level="8.2" data-path="qc_dataset2.html"><a href="qc_dataset2.html#simplify-this-model"><i class="fa fa-check"></i><b>8.2</b> Simplify this model</a></li>
+<li class="chapter" data-level="8.3" data-path="qc_dataset2.html"><a href="qc_dataset2.html#filter-lowly-expressed-genes-1"><i class="fa fa-check"></i><b>8.3</b> Filter lowly expressed genes</a></li>
+<li class="chapter" data-level="8.4" data-path="qc_dataset2.html"><a href="qc_dataset2.html#tmm-normalization-1"><i class="fa fa-check"></i><b>8.4</b> TMM normalization</a></li>
+<li class="chapter" data-level="8.5" data-path="qc_dataset2.html"><a href="qc_dataset2.html#exploratory-mds-plot-1"><i class="fa fa-check"></i><b>8.5</b> Exploratory MDS plot</a></li>
+<li class="chapter" data-level="8.6" data-path="qc_dataset2.html"><a href="qc_dataset2.html#exploratory-mds-plot---coloured-by-patient"><i class="fa fa-check"></i><b>8.6</b> Exploratory MDS plot - coloured by patient</a></li>
+<li class="chapter" data-level="8.7" data-path="qc_dataset2.html"><a href="qc_dataset2.html#log-cpm-for-visualization-1"><i class="fa fa-check"></i><b>8.7</b> log-CPM for visualization</a></li>
+<li class="chapter" data-level="8.8" data-path="qc_dataset2.html"><a href="qc_dataset2.html#save-for-downstream-chapters-1"><i class="fa fa-check"></i><b>8.8</b> Save for downstream chapters</a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="limma-voom_dataset2.html"><a href="limma-voom_dataset2.html"><i class="fa fa-check"></i><b>9</b> Differential expression with limma-voom - Dataset 2</a>
+<ul>
+<li class="chapter" data-level="9.1" data-path="limma-voom_dataset2.html"><a href="limma-voom_dataset2.html#results-tables-1"><i class="fa fa-check"></i><b>9.1</b> Results tables</a></li>
+<li class="chapter" data-level="9.2" data-path="limma-voom_dataset2.html"><a href="limma-voom_dataset2.html#volcano-plot-0-vs-rest"><i class="fa fa-check"></i><b>9.2</b> Volcano plot (0 vs rest)</a></li>
+<li class="chapter" data-level="9.3" data-path="limma-voom_dataset2.html"><a href="limma-voom_dataset2.html#save-limma-results-1"><i class="fa fa-check"></i><b>9.3</b> Save limma results</a></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="edger_dataset2.html"><a href="edger_dataset2.html"><i class="fa fa-check"></i><b>10</b> Differential expression with edgeR (QLF) - Dataset 2</a>
+<ul>
+<li class="chapter" data-level="10.1" data-path="edger_dataset2.html"><a href="edger_dataset2.html#plot-biological-coefficient-of-variance-plot-1"><i class="fa fa-check"></i><b>10.1</b> Plot Biological coefficient of variance plot</a></li>
+<li class="chapter" data-level="10.2" data-path="edger_dataset2.html"><a href="edger_dataset2.html#test-status-0-vs-status-1"><i class="fa fa-check"></i><b>10.2</b> Test: status 0 vs status 1</a></li>
+<li class="chapter" data-level="10.3" data-path="edger_dataset2.html"><a href="edger_dataset2.html#extract-full-results-1"><i class="fa fa-check"></i><b>10.3</b> Extract full results</a></li>
+<li class="chapter" data-level="10.4" data-path="edger_dataset2.html"><a href="edger_dataset2.html#volcano-plot-of-edger-results-1"><i class="fa fa-check"></i><b>10.4</b> Volcano plot of EdgeR results</a></li>
+<li class="chapter" data-level="10.5" data-path="edger_dataset2.html"><a href="edger_dataset2.html#try-and-run-glmfit"><i class="fa fa-check"></i><b>10.5</b> Try and run glmFit</a></li>
+<li class="chapter" data-level="10.6" data-path="edger_dataset2.html"><a href="edger_dataset2.html#test-status-0-vs-status-1-1"><i class="fa fa-check"></i><b>10.6</b> Test: status 0 vs status 1</a></li>
+<li class="chapter" data-level="10.7" data-path="edger_dataset2.html"><a href="edger_dataset2.html#save-edger-results-1"><i class="fa fa-check"></i><b>10.7</b> Save edgeR results</a></li>
+</ul></li>
+<li class="chapter" data-level="11" data-path="deseq2_dataset2.html"><a href="deseq2_dataset2.html"><i class="fa fa-check"></i><b>11</b> Differential expression with DESeq2 - Dataset 2</a>
+<ul>
+<li class="chapter" data-level="11.1" data-path="deseq2_dataset2.html"><a href="deseq2_dataset2.html#results-1"><i class="fa fa-check"></i><b>11.1</b> Results</a></li>
+<li class="chapter" data-level="11.2" data-path="deseq2_dataset2.html"><a href="deseq2_dataset2.html#volcano-redup-bluedown-1"><i class="fa fa-check"></i><b>11.2</b> Volcano (red=up, blue=down)</a></li>
+</ul></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Differential Expression Tutorial</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="edger" class="section level1 hasAnchor" number="5">
+<h1><span class="header-section-number">Chapter 5</span> Differential expression with edgeR (QLF)<a href="edger.html#edger" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>In this chapter we run <strong>edgeR</strong> using the recommended <strong>quasi-likelihood</strong> pipeline:</p>
+<ol style="list-style-type: decimal">
+<li>Start from <strong>raw counts</strong> in a <code>DGEList</code></li>
+<li>Estimate dispersions</li>
+<li>Fit a QL GLM</li>
+<li>Perform QL F-tests for contrasts of interest</li>
+</ol>
+<p>We use the same additive design:</p>
+<p><span class="math display">\[
+\text{counts} \sim \text{cellline} + \text{treatment}
+\]</span></p>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="edger.html#cb32-1" tabindex="-1"></a>obj <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">&quot;data/d1_qc_objects.rds&quot;</span>)</span>
+<span id="cb32-2"><a href="edger.html#cb32-2" tabindex="-1"></a>dge_f <span class="ot">&lt;-</span> obj<span class="sc">$</span>dge_f</span>
+<span id="cb32-3"><a href="edger.html#cb32-3" tabindex="-1"></a>meta <span class="ot">&lt;-</span> obj<span class="sc">$</span>meta</span>
+<span id="cb32-4"><a href="edger.html#cb32-4" tabindex="-1"></a>mappings <span class="ot">&lt;-</span> obj<span class="sc">$</span>mappings</span>
+<span id="cb32-5"><a href="edger.html#cb32-5" tabindex="-1"></a></span>
+<span id="cb32-6"><a href="edger.html#cb32-6" tabindex="-1"></a>design <span class="ot">&lt;-</span> obj<span class="sc">$</span>design</span>
+<span id="cb32-7"><a href="edger.html#cb32-7" tabindex="-1"></a></span>
+<span id="cb32-8"><a href="edger.html#cb32-8" tabindex="-1"></a><span class="co"># Contrasts</span></span>
+<span id="cb32-9"><a href="edger.html#cb32-9" tabindex="-1"></a>contr <span class="ot">&lt;-</span> <span class="fu">makeContrasts</span>(</span>
+<span id="cb32-10"><a href="edger.html#cb32-10" tabindex="-1"></a>  <span class="st">`</span><span class="at">3CTG_vs_NT</span><span class="st">`</span> <span class="ot">=</span> treatment3CTG <span class="sc">-</span> treatmentNT,</span>
+<span id="cb32-11"><a href="edger.html#cb32-11" tabindex="-1"></a>  <span class="st">`</span><span class="at">20CTG_vs_NT</span><span class="st">`</span> <span class="ot">=</span> treatment20CTG <span class="sc">-</span> treatmentNT,</span>
+<span id="cb32-12"><a href="edger.html#cb32-12" tabindex="-1"></a>  <span class="st">`</span><span class="at">20CTG_vs_3CTG</span><span class="st">`</span> <span class="ot">=</span> treatment20CTG <span class="sc">-</span> treatment3CTG,</span>
+<span id="cb32-13"><a href="edger.html#cb32-13" tabindex="-1"></a>  <span class="at">levels =</span> design</span>
+<span id="cb32-14"><a href="edger.html#cb32-14" tabindex="-1"></a>)</span>
+<span id="cb32-15"><a href="edger.html#cb32-15" tabindex="-1"></a></span>
+<span id="cb32-16"><a href="edger.html#cb32-16" tabindex="-1"></a><span class="co"># Estimate dispersion and fit QL model</span></span>
+<span id="cb32-17"><a href="edger.html#cb32-17" tabindex="-1"></a>edge <span class="ot">&lt;-</span> edgeR<span class="sc">::</span><span class="fu">estimateDisp</span>(dge_f, design)</span>
+<span id="cb32-18"><a href="edger.html#cb32-18" tabindex="-1"></a>fit <span class="ot">&lt;-</span> edgeR<span class="sc">::</span><span class="fu">glmQLFit</span>(edge, design)</span></code></pre></div>
+<div id="plot-biological-coefficient-of-variance-plot" class="section level2 hasAnchor" number="5.1">
+<h2><span class="header-section-number">5.1</span> Plot Biological coefficient of variance plot<a href="edger.html#plot-biological-coefficient-of-variance-plot" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="edger.html#cb33-1" tabindex="-1"></a><span class="fu">plotBCV</span>(edge)</span></code></pre></div>
+<p><img src="DE_tutorial_files/figure-html/unnamed-chunk-90-1.png" alt="" width="672" /></p>
+</div>
+<div id="test-3ctg-vs-nt-and-20ctg-vs-nt" class="section level2 hasAnchor" number="5.2">
+<h2><span class="header-section-number">5.2</span> Test: 3CTG vs NT and 20CTG vs NT<a href="edger.html#test-3ctg-vs-nt-and-20ctg-vs-nt" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>With this design, the coefficients <code>treatment3CTG</code> and <code>treatment20CTG</code> correspond to contrasts vs NT.</p>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="edger.html#cb34-1" tabindex="-1"></a>qlf_3_vs_nt <span class="ot">&lt;-</span> edgeR<span class="sc">::</span><span class="fu">glmQLFTest</span>(fit, <span class="at">contrast =</span> contr[, <span class="st">&quot;3CTG_vs_NT&quot;</span>])</span>
+<span id="cb34-2"><a href="edger.html#cb34-2" tabindex="-1"></a>qlf_20_vs_nt <span class="ot">&lt;-</span> edgeR<span class="sc">::</span><span class="fu">glmQLFTest</span>(fit, <span class="at">contrast =</span> contr[, <span class="st">&quot;20CTG_vs_NT&quot;</span>])</span>
+<span id="cb34-3"><a href="edger.html#cb34-3" tabindex="-1"></a></span>
+<span id="cb34-4"><a href="edger.html#cb34-4" tabindex="-1"></a>edgeR<span class="sc">::</span><span class="fu">topTags</span>(qlf_20_vs_nt)</span></code></pre></div>
+<pre><code>## Coefficient:  1*treatment20CTG -1*treatmentNT 
+##                    logFC   logCPM         F       PValue          FDR
+## ENSG00000134321 7.394417 4.870993 154.68256 1.329498e-07 0.0008950585
+## ENSG00000028277 5.415078 2.672833 115.06349 1.342554e-07 0.0008950585
+## ENSG00000130303 4.851522 4.759055 126.22056 2.336858e-07 0.0008950585
+## ENSG00000142627 3.506374 3.654145 136.69159 2.434871e-07 0.0008950585
+## ENSG00000138646 5.134338 3.601337 118.40507 3.291525e-07 0.0009679716
+## ENSG00000106785 2.887412 5.773032 116.76336 5.126668e-07 0.0012563753
+## ENSG00000173535 3.773864 2.895942 107.75445 6.975318e-07 0.0013657287
+## ENSG00000187608 4.541247 8.814995 108.12725 7.430515e-07 0.0013657287
+## ENSG00000135114 5.347384 2.941023  80.44935 9.846400e-07 0.0015619173
+## ENSG00000184979 3.086410 4.887186 100.50212 1.062240e-06 0.0015619173</code></pre>
+</div>
+<div id="test-20ctg-vs-3ctg" class="section level2 hasAnchor" number="5.3">
+<h2><span class="header-section-number">5.3</span> Test: 20CTG vs 3CTG<a href="edger.html#test-20ctg-vs-3ctg" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="edger.html#cb36-1" tabindex="-1"></a>qlf_20_vs_3 <span class="ot">&lt;-</span> edgeR<span class="sc">::</span><span class="fu">glmQLFTest</span>(fit, <span class="at">contrast =</span> contr[, <span class="st">&quot;20CTG_vs_3CTG&quot;</span>])</span>
+<span id="cb36-2"><a href="edger.html#cb36-2" tabindex="-1"></a></span>
+<span id="cb36-3"><a href="edger.html#cb36-3" tabindex="-1"></a>edgeR<span class="sc">::</span><span class="fu">topTags</span>(qlf_20_vs_3)</span></code></pre></div>
+<pre><code>## Coefficient:  1*treatment20CTG -1*treatment3CTG 
+##                     logFC      logCPM        F       PValue       FDR
+## ENSG00000223883 -3.221550 -0.29165168 23.13003 0.0007347709 0.9209883
+## ENSG00000280800  3.972084  3.13680001 14.61103 0.0021195502 0.9209883
+## ENSG00000187672 -1.503998  1.40149268 15.71926 0.0024475763 0.9209883
+## ENSG00000115266  1.654827  0.81019376 15.52729 0.0024905149 0.9209883
+## ENSG00000147586  1.290415  1.60657763 15.29760 0.0026685337 0.9209883
+## ENSG00000241781  3.766968  0.09488949 13.92006 0.0029691485 0.9209883
+## ENSG00000102003  1.980855  0.22390723 14.43907 0.0030659698 0.9209883
+## ENSG00000105357  1.886779  1.69377897 13.10103 0.0032984753 0.9209883
+## ENSG00000184524  1.631481  1.49875360 13.57196 0.0036287558 0.9209883
+## ENSG00000260630  0.986704  3.53676750 13.59760 0.0038688768 0.9209883</code></pre>
+</div>
+<div id="extract-full-results" class="section level2 hasAnchor" number="5.4">
+<h2><span class="header-section-number">5.4</span> Extract full results<a href="edger.html#extract-full-results" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="edger.html#cb38-1" tabindex="-1"></a>tab_3_vs_nt <span class="ot">&lt;-</span> edgeR<span class="sc">::</span><span class="fu">topTags</span>(qlf_3_vs_nt, <span class="at">n =</span> <span class="cn">Inf</span>)<span class="sc">$</span>table <span class="sc">%&gt;%</span> <span class="fu">rownames_to_column</span>(<span class="st">&quot;ensembl&quot;</span>)</span>
+<span id="cb38-2"><a href="edger.html#cb38-2" tabindex="-1"></a>tab_20_vs_nt <span class="ot">&lt;-</span> edgeR<span class="sc">::</span><span class="fu">topTags</span>(qlf_20_vs_nt, <span class="at">n =</span> <span class="cn">Inf</span>)<span class="sc">$</span>table <span class="sc">%&gt;%</span> <span class="fu">rownames_to_column</span>(<span class="st">&quot;ensembl&quot;</span>)</span>
+<span id="cb38-3"><a href="edger.html#cb38-3" tabindex="-1"></a>tab_20_vs_3 <span class="ot">&lt;-</span> edgeR<span class="sc">::</span><span class="fu">topTags</span>(qlf_20_vs_3, <span class="at">n =</span> <span class="cn">Inf</span>)<span class="sc">$</span>table <span class="sc">%&gt;%</span> <span class="fu">rownames_to_column</span>(<span class="st">&quot;ensembl&quot;</span>)</span>
+<span id="cb38-4"><a href="edger.html#cb38-4" tabindex="-1"></a></span>
+<span id="cb38-5"><a href="edger.html#cb38-5" tabindex="-1"></a><span class="fu">head</span>(tab_20_vs_nt)</span></code></pre></div>
+<pre><code>##           ensembl    logFC   logCPM        F       PValue          FDR
+## 1 ENSG00000134321 7.394417 4.870993 154.6826 1.329498e-07 0.0008950585
+## 2 ENSG00000028277 5.415078 2.672833 115.0635 1.342554e-07 0.0008950585
+## 3 ENSG00000130303 4.851522 4.759055 126.2206 2.336858e-07 0.0008950585
+## 4 ENSG00000142627 3.506374 3.654145 136.6916 2.434871e-07 0.0008950585
+## 5 ENSG00000138646 5.134338 3.601337 118.4051 3.291525e-07 0.0009679716
+## 6 ENSG00000106785 2.887412 5.773032 116.7634 5.126668e-07 0.0012563753</code></pre>
+</div>
+<div id="volcano-plot-of-edger-results" class="section level2 hasAnchor" number="5.5">
+<h2><span class="header-section-number">5.5</span> Volcano plot of EdgeR results<a href="edger.html#volcano-plot-of-edger-results" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="edger.html#cb40-1" tabindex="-1"></a>volcano_df <span class="ot">&lt;-</span> tab_20_vs_nt <span class="sc">%&gt;%</span></span>
+<span id="cb40-2"><a href="edger.html#cb40-2" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">sig =</span> FDR <span class="sc">&lt;</span> <span class="fl">0.05</span>)</span>
+<span id="cb40-3"><a href="edger.html#cb40-3" tabindex="-1"></a></span>
+<span id="cb40-4"><a href="edger.html#cb40-4" tabindex="-1"></a><span class="fu">ggplot</span>(volcano_df, <span class="fu">aes</span>(<span class="at">x =</span> logFC, <span class="at">y =</span> <span class="sc">-</span><span class="fu">log10</span>(PValue), <span class="at">color =</span> sig)) <span class="sc">+</span></span>
+<span id="cb40-5"><a href="edger.html#cb40-5" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.6</span>) <span class="sc">+</span></span>
+<span id="cb40-6"><a href="edger.html#cb40-6" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb40-7"><a href="edger.html#cb40-7" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb40-8"><a href="edger.html#cb40-8" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">&quot;EdgeR: 20CTG vs NT&quot;</span>,</span>
+<span id="cb40-9"><a href="edger.html#cb40-9" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">&quot;log2 fold-change&quot;</span>,</span>
+<span id="cb40-10"><a href="edger.html#cb40-10" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">&quot;-log10(p-value)&quot;</span></span>
+<span id="cb40-11"><a href="edger.html#cb40-11" tabindex="-1"></a>  )</span></code></pre></div>
+<p><img src="DE_tutorial_files/figure-html/unnamed-chunk-94-1.png" alt="" width="672" /></p>
+<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="edger.html#cb41-1" tabindex="-1"></a>tab <span class="ot">&lt;-</span> <span class="fu">topTags</span>(qlf_20_vs_nt, <span class="at">n =</span> <span class="cn">Inf</span>)<span class="sc">$</span>table <span class="sc">%&gt;%</span></span>
+<span id="cb41-2"><a href="edger.html#cb41-2" tabindex="-1"></a>  <span class="fu">rownames_to_column</span>(<span class="st">&quot;gene&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb41-3"><a href="edger.html#cb41-3" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb41-4"><a href="edger.html#cb41-4" tabindex="-1"></a>    <span class="at">neglog10P =</span> <span class="sc">-</span><span class="fu">log10</span>(PValue),</span>
+<span id="cb41-5"><a href="edger.html#cb41-5" tabindex="-1"></a>    <span class="at">direction =</span> <span class="fu">case_when</span>(</span>
+<span id="cb41-6"><a href="edger.html#cb41-6" tabindex="-1"></a>      FDR <span class="sc">&lt;</span> <span class="fl">0.05</span> <span class="sc">&amp;</span> logFC <span class="sc">&gt;</span> <span class="dv">0</span> <span class="sc">~</span> <span class="st">&quot;Up&quot;</span>,</span>
+<span id="cb41-7"><a href="edger.html#cb41-7" tabindex="-1"></a>      FDR <span class="sc">&lt;</span> <span class="fl">0.05</span> <span class="sc">&amp;</span> logFC <span class="sc">&lt;</span> <span class="dv">0</span> <span class="sc">~</span> <span class="st">&quot;Down&quot;</span>,</span>
+<span id="cb41-8"><a href="edger.html#cb41-8" tabindex="-1"></a>      <span class="cn">TRUE</span> <span class="sc">~</span> <span class="st">&quot;Not sig&quot;</span></span>
+<span id="cb41-9"><a href="edger.html#cb41-9" tabindex="-1"></a>    )</span>
+<span id="cb41-10"><a href="edger.html#cb41-10" tabindex="-1"></a>  )</span>
+<span id="cb41-11"><a href="edger.html#cb41-11" tabindex="-1"></a></span>
+<span id="cb41-12"><a href="edger.html#cb41-12" tabindex="-1"></a><span class="fu">ggplot</span>(tab, <span class="fu">aes</span>(<span class="at">x =</span> logFC, <span class="at">y =</span> neglog10P)) <span class="sc">+</span></span>
+<span id="cb41-13"><a href="edger.html#cb41-13" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">color =</span> direction), <span class="at">alpha =</span> <span class="fl">0.7</span>, <span class="at">size =</span> <span class="fl">1.2</span>) <span class="sc">+</span></span>
+<span id="cb41-14"><a href="edger.html#cb41-14" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(</span>
+<span id="cb41-15"><a href="edger.html#cb41-15" tabindex="-1"></a>    <span class="st">&quot;Up&quot;</span> <span class="ot">=</span> <span class="st">&quot;red&quot;</span>,</span>
+<span id="cb41-16"><a href="edger.html#cb41-16" tabindex="-1"></a>    <span class="st">&quot;Down&quot;</span> <span class="ot">=</span> <span class="st">&quot;blue&quot;</span>,</span>
+<span id="cb41-17"><a href="edger.html#cb41-17" tabindex="-1"></a>    <span class="st">&quot;Not sig&quot;</span> <span class="ot">=</span> <span class="st">&quot;grey70&quot;</span></span>
+<span id="cb41-18"><a href="edger.html#cb41-18" tabindex="-1"></a>  )) <span class="sc">+</span></span>
+<span id="cb41-19"><a href="edger.html#cb41-19" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="dv">1</span>), <span class="at">linetype =</span> <span class="st">&quot;dashed&quot;</span>, <span class="at">color =</span> <span class="st">&quot;steelblue&quot;</span>) <span class="sc">+</span></span>
+<span id="cb41-20"><a href="edger.html#cb41-20" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="sc">-</span><span class="fu">log10</span>(<span class="fl">0.05</span>), <span class="at">linetype =</span> <span class="st">&quot;dashed&quot;</span>, <span class="at">color =</span> <span class="st">&quot;steelblue&quot;</span>) <span class="sc">+</span></span>
+<span id="cb41-21"><a href="edger.html#cb41-21" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb41-22"><a href="edger.html#cb41-22" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb41-23"><a href="edger.html#cb41-23" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">&quot;edgeR volcano: 20CTG vs NT&quot;</span>,</span>
+<span id="cb41-24"><a href="edger.html#cb41-24" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">&quot;log2 fold change (logFC)&quot;</span>,</span>
+<span id="cb41-25"><a href="edger.html#cb41-25" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">&quot;-log10(p-value)&quot;</span>,</span>
+<span id="cb41-26"><a href="edger.html#cb41-26" tabindex="-1"></a>    <span class="at">color =</span> <span class="cn">NULL</span></span>
+<span id="cb41-27"><a href="edger.html#cb41-27" tabindex="-1"></a>  )</span></code></pre></div>
+<p><img src="DE_tutorial_files/figure-html/unnamed-chunk-95-1.png" alt="" width="672" /></p>
+</div>
+<div id="visualize-the-top-hits-as-a-heatmap" class="section level2 hasAnchor" number="5.6">
+<h2><span class="header-section-number">5.6</span> Visualize the top hits as a heatmap<a href="edger.html#visualize-the-top-hits-as-a-heatmap" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>first map the ensembl ids to gene ids</p>
+<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="edger.html#cb42-1" tabindex="-1"></a><span class="co"># Keep only the columns we need and ensure they are character</span></span>
+<span id="cb42-2"><a href="edger.html#cb42-2" tabindex="-1"></a>map_df <span class="ot">&lt;-</span> mappings <span class="sc">%&gt;%</span></span>
+<span id="cb42-3"><a href="edger.html#cb42-3" tabindex="-1"></a>  <span class="fu">transmute</span>(</span>
+<span id="cb42-4"><a href="edger.html#cb42-4" tabindex="-1"></a>    <span class="at">ensembl =</span> <span class="fu">as.character</span>(ensembl_gene_id),</span>
+<span id="cb42-5"><a href="edger.html#cb42-5" tabindex="-1"></a>    <span class="at">hgnc_symbol =</span> <span class="fu">as.character</span>(hgnc_symbol)</span>
+<span id="cb42-6"><a href="edger.html#cb42-6" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb42-7"><a href="edger.html#cb42-7" tabindex="-1"></a>  <span class="fu">distinct</span>(ensembl, <span class="at">.keep_all =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb42-8"><a href="edger.html#cb42-8" tabindex="-1"></a></span>
+<span id="cb42-9"><a href="edger.html#cb42-9" tabindex="-1"></a><span class="co"># Join mapping onto the edgeR results table (tab_20_vs_nt)</span></span>
+<span id="cb42-10"><a href="edger.html#cb42-10" tabindex="-1"></a>tab_20_vs_nt_annot <span class="ot">&lt;-</span> tab_20_vs_nt <span class="sc">%&gt;%</span></span>
+<span id="cb42-11"><a href="edger.html#cb42-11" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">ensembl =</span> <span class="fu">as.character</span>(ensembl)) <span class="sc">%&gt;%</span></span>
+<span id="cb42-12"><a href="edger.html#cb42-12" tabindex="-1"></a>  <span class="fu">left_join</span>(map_df, <span class="at">by =</span> <span class="st">&quot;ensembl&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb42-13"><a href="edger.html#cb42-13" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb42-14"><a href="edger.html#cb42-14" tabindex="-1"></a>    <span class="co"># Use HGNC when available, otherwise fall back to Ensembl</span></span>
+<span id="cb42-15"><a href="edger.html#cb42-15" tabindex="-1"></a>    <span class="at">display_name =</span> <span class="fu">ifelse</span>(<span class="sc">!</span><span class="fu">is.na</span>(hgnc_symbol) <span class="sc">&amp;</span> hgnc_symbol <span class="sc">!=</span> <span class="st">&quot;&quot;</span>,</span>
+<span id="cb42-16"><a href="edger.html#cb42-16" tabindex="-1"></a>                          hgnc_symbol,</span>
+<span id="cb42-17"><a href="edger.html#cb42-17" tabindex="-1"></a>                          ensembl)</span>
+<span id="cb42-18"><a href="edger.html#cb42-18" tabindex="-1"></a>  )</span>
+<span id="cb42-19"><a href="edger.html#cb42-19" tabindex="-1"></a></span>
+<span id="cb42-20"><a href="edger.html#cb42-20" tabindex="-1"></a><span class="co"># Quick check: how many mapped?</span></span>
+<span id="cb42-21"><a href="edger.html#cb42-21" tabindex="-1"></a><span class="fu">mean</span>(<span class="sc">!</span><span class="fu">is.na</span>(tab_20_vs_nt_annot<span class="sc">$</span>hgnc_symbol))</span></code></pre></div>
+<pre><code>## [1] 0.9876904</code></pre>
+<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="edger.html#cb44-1" tabindex="-1"></a><span class="fu">head</span>(tab_20_vs_nt_annot[, <span class="fu">c</span>(<span class="st">&quot;ensembl&quot;</span>,<span class="st">&quot;hgnc_symbol&quot;</span>,<span class="st">&quot;display_name&quot;</span>,<span class="st">&quot;logFC&quot;</span>,<span class="st">&quot;FDR&quot;</span>)])</span></code></pre></div>
+<pre><code>##           ensembl hgnc_symbol display_name    logFC          FDR
+## 1 ENSG00000134321       RSAD2        RSAD2 7.394417 0.0008950585
+## 2 ENSG00000028277      POU2F2       POU2F2 5.415078 0.0008950585
+## 3 ENSG00000130303        BST2         BST2 4.851522 0.0008950585
+## 4 ENSG00000142627       EPHA2        EPHA2 3.506374 0.0008950585
+## 5 ENSG00000138646       HERC5        HERC5 5.134338 0.0009679716
+## 6 ENSG00000106785      TRIM14       TRIM14 2.887412 0.0012563753</code></pre>
+</div>
+<div id="select-top-hits-from-tab_20_vs_nt_annot" class="section level2 hasAnchor" number="5.7">
+<h2><span class="header-section-number">5.7</span> Select top hits from <code>tab_20_vs_nt_annot</code><a href="edger.html#select-top-hits-from-tab_20_vs_nt_annot" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Pick either <strong>top N by FDR</strong> (good default for teaching) or <strong>all genes with FDR &lt; 0.05</strong>.</p>
+<div id="top-n-genes-by-fdr" class="section level3 hasAnchor" number="5.7.1">
+<h3><span class="header-section-number">5.7.1</span> top N genes by FDR<a href="edger.html#top-n-genes-by-fdr" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="edger.html#cb46-1" tabindex="-1"></a>top_n <span class="ot">&lt;-</span> <span class="dv">50</span>  <span class="co"># change to 25/100 as desired</span></span>
+<span id="cb46-2"><a href="edger.html#cb46-2" tabindex="-1"></a></span>
+<span id="cb46-3"><a href="edger.html#cb46-3" tabindex="-1"></a>top_hits_tbl <span class="ot">&lt;-</span> tab_20_vs_nt_annot <span class="sc">%&gt;%</span></span>
+<span id="cb46-4"><a href="edger.html#cb46-4" tabindex="-1"></a>  <span class="fu">arrange</span>(FDR, PValue) <span class="sc">%&gt;%</span></span>
+<span id="cb46-5"><a href="edger.html#cb46-5" tabindex="-1"></a>  <span class="fu">slice_head</span>(<span class="at">n =</span> top_n)</span>
+<span id="cb46-6"><a href="edger.html#cb46-6" tabindex="-1"></a></span>
+<span id="cb46-7"><a href="edger.html#cb46-7" tabindex="-1"></a><span class="co"># Ensembl IDs for subsetting the matrix</span></span>
+<span id="cb46-8"><a href="edger.html#cb46-8" tabindex="-1"></a>top_hits_ensembl <span class="ot">&lt;-</span> top_hits_tbl<span class="sc">$</span>ensembl</span>
+<span id="cb46-9"><a href="edger.html#cb46-9" tabindex="-1"></a></span>
+<span id="cb46-10"><a href="edger.html#cb46-10" tabindex="-1"></a><span class="co"># Row labels we want to show on the heatmap</span></span>
+<span id="cb46-11"><a href="edger.html#cb46-11" tabindex="-1"></a>top_hits_labels <span class="ot">&lt;-</span> top_hits_tbl<span class="sc">$</span>display_name</span>
+<span id="cb46-12"><a href="edger.html#cb46-12" tabindex="-1"></a></span>
+<span id="cb46-13"><a href="edger.html#cb46-13" tabindex="-1"></a><span class="fu">head</span>(top_hits_tbl[, <span class="fu">c</span>(<span class="st">&quot;ensembl&quot;</span>,<span class="st">&quot;display_name&quot;</span>,<span class="st">&quot;logFC&quot;</span>,<span class="st">&quot;FDR&quot;</span>)])</span></code></pre></div>
+<pre><code>##           ensembl display_name    logFC          FDR
+## 1 ENSG00000134321        RSAD2 7.394417 0.0008950585
+## 2 ENSG00000028277       POU2F2 5.415078 0.0008950585
+## 3 ENSG00000130303         BST2 4.851522 0.0008950585
+## 4 ENSG00000142627        EPHA2 3.506374 0.0008950585
+## 5 ENSG00000138646        HERC5 5.134338 0.0009679716
+## 6 ENSG00000106785       TRIM14 2.887412 0.0012563753</code></pre>
+</div>
+</div>
+<div id="make-the-expression-matrix-for-the-heatmap-logcpm-row-z-score" class="section level2 hasAnchor" number="5.8">
+<h2><span class="header-section-number">5.8</span> Make the expression matrix for the heatmap (logCPM + row z-score)<a href="edger.html#make-the-expression-matrix-for-the-heatmap-logcpm-row-z-score" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>We’ll compute <strong>logCPM</strong> from counts (recommended for visualization), then <strong>z-score per gene</strong>.</p>
+<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="edger.html#cb48-1" tabindex="-1"></a><span class="co"># logCPM from counts for visualization</span></span>
+<span id="cb48-2"><a href="edger.html#cb48-2" tabindex="-1"></a><span class="co"># logCPM for visualization</span></span>
+<span id="cb48-3"><a href="edger.html#cb48-3" tabindex="-1"></a>logcpm <span class="ot">&lt;-</span> edgeR<span class="sc">::</span><span class="fu">cpm</span>(counts, <span class="at">log =</span> <span class="cn">TRUE</span>, <span class="at">prior.count =</span> <span class="dv">1</span>)</span>
+<span id="cb48-4"><a href="edger.html#cb48-4" tabindex="-1"></a></span>
+<span id="cb48-5"><a href="edger.html#cb48-5" tabindex="-1"></a><span class="co"># Keep only genes present in the expression matrix</span></span>
+<span id="cb48-6"><a href="edger.html#cb48-6" tabindex="-1"></a>keep <span class="ot">&lt;-</span> top_hits_ensembl <span class="sc">%in%</span> <span class="fu">rownames</span>(logcpm)</span>
+<span id="cb48-7"><a href="edger.html#cb48-7" tabindex="-1"></a></span>
+<span id="cb48-8"><a href="edger.html#cb48-8" tabindex="-1"></a>hm_mat <span class="ot">&lt;-</span> logcpm[top_hits_ensembl[keep], , drop <span class="ot">=</span> <span class="cn">FALSE</span>]</span>
+<span id="cb48-9"><a href="edger.html#cb48-9" tabindex="-1"></a></span>
+<span id="cb48-10"><a href="edger.html#cb48-10" tabindex="-1"></a><span class="co"># Create labels aligned to hm_mat rows</span></span>
+<span id="cb48-11"><a href="edger.html#cb48-11" tabindex="-1"></a>hm_labels <span class="ot">&lt;-</span> top_hits_labels[keep]</span>
+<span id="cb48-12"><a href="edger.html#cb48-12" tabindex="-1"></a></span>
+<span id="cb48-13"><a href="edger.html#cb48-13" tabindex="-1"></a><span class="co"># IMPORTANT: avoid duplicate rownames (HGNC symbols can repeat)</span></span>
+<span id="cb48-14"><a href="edger.html#cb48-14" tabindex="-1"></a><span class="co"># Make labels unique while preserving readability</span></span>
+<span id="cb48-15"><a href="edger.html#cb48-15" tabindex="-1"></a><span class="fu">rownames</span>(hm_mat) <span class="ot">&lt;-</span> <span class="fu">make.unique</span>(hm_labels)</span>
+<span id="cb48-16"><a href="edger.html#cb48-16" tabindex="-1"></a></span>
+<span id="cb48-17"><a href="edger.html#cb48-17" tabindex="-1"></a><span class="co"># Z-score per gene across samples for pattern visibility</span></span>
+<span id="cb48-18"><a href="edger.html#cb48-18" tabindex="-1"></a>hm_z <span class="ot">&lt;-</span> <span class="fu">t</span>(<span class="fu">scale</span>(<span class="fu">t</span>(hm_mat)))</span>
+<span id="cb48-19"><a href="edger.html#cb48-19" tabindex="-1"></a></span>
+<span id="cb48-20"><a href="edger.html#cb48-20" tabindex="-1"></a><span class="fu">dim</span>(hm_z)</span></code></pre></div>
+<pre><code>## [1] 50  9</code></pre>
+<hr />
+</div>
+<div id="sample-annotation-treatment-cellline-using-set3" class="section level2 hasAnchor" number="5.9">
+<h2><span class="header-section-number">5.9</span> Sample annotation (treatment + cellline) using Set3<a href="edger.html#sample-annotation-treatment-cellline-using-set3" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="edger.html#cb50-1" tabindex="-1"></a>meta<span class="sc">$</span>cellline <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(meta<span class="sc">$</span>cellline)</span>
+<span id="cb50-2"><a href="edger.html#cb50-2" tabindex="-1"></a>meta<span class="sc">$</span>treatment <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(meta<span class="sc">$</span>treatment)</span>
+<span id="cb50-3"><a href="edger.html#cb50-3" tabindex="-1"></a></span>
+<span id="cb50-4"><a href="edger.html#cb50-4" tabindex="-1"></a><span class="co"># Set3 palettes (qualitative)</span></span>
+<span id="cb50-5"><a href="edger.html#cb50-5" tabindex="-1"></a>treat_levels <span class="ot">&lt;-</span> <span class="fu">levels</span>(meta<span class="sc">$</span>treatment)</span>
+<span id="cb50-6"><a href="edger.html#cb50-6" tabindex="-1"></a>cell_levels  <span class="ot">&lt;-</span> <span class="fu">levels</span>(meta<span class="sc">$</span>cellline)</span>
+<span id="cb50-7"><a href="edger.html#cb50-7" tabindex="-1"></a></span>
+<span id="cb50-8"><a href="edger.html#cb50-8" tabindex="-1"></a>treat_cols <span class="ot">&lt;-</span> <span class="fu">setNames</span>(</span>
+<span id="cb50-9"><a href="edger.html#cb50-9" tabindex="-1"></a>  <span class="fu">brewer.pal</span>(<span class="fu">max</span>(<span class="dv">3</span>, <span class="fu">length</span>(treat_levels)), <span class="st">&quot;Set3&quot;</span>)[<span class="fu">seq_along</span>(treat_levels)],</span>
+<span id="cb50-10"><a href="edger.html#cb50-10" tabindex="-1"></a>  treat_levels</span>
+<span id="cb50-11"><a href="edger.html#cb50-11" tabindex="-1"></a>)</span>
+<span id="cb50-12"><a href="edger.html#cb50-12" tabindex="-1"></a></span>
+<span id="cb50-13"><a href="edger.html#cb50-13" tabindex="-1"></a>cell_cols <span class="ot">&lt;-</span> <span class="fu">setNames</span>(</span>
+<span id="cb50-14"><a href="edger.html#cb50-14" tabindex="-1"></a>  <span class="fu">brewer.pal</span>(<span class="fu">max</span>(<span class="dv">3</span>, <span class="fu">length</span>(cell_levels)), <span class="st">&quot;Set2&quot;</span>)[<span class="fu">seq_along</span>(cell_levels)],</span>
+<span id="cb50-15"><a href="edger.html#cb50-15" tabindex="-1"></a>  cell_levels</span>
+<span id="cb50-16"><a href="edger.html#cb50-16" tabindex="-1"></a>)</span>
+<span id="cb50-17"><a href="edger.html#cb50-17" tabindex="-1"></a></span>
+<span id="cb50-18"><a href="edger.html#cb50-18" tabindex="-1"></a>ha <span class="ot">&lt;-</span> <span class="fu">HeatmapAnnotation</span>(</span>
+<span id="cb50-19"><a href="edger.html#cb50-19" tabindex="-1"></a>  <span class="at">treatment =</span> meta<span class="sc">$</span>treatment,</span>
+<span id="cb50-20"><a href="edger.html#cb50-20" tabindex="-1"></a>  <span class="at">cellline  =</span> meta<span class="sc">$</span>cellline,</span>
+<span id="cb50-21"><a href="edger.html#cb50-21" tabindex="-1"></a>  <span class="at">col =</span> <span class="fu">list</span>(</span>
+<span id="cb50-22"><a href="edger.html#cb50-22" tabindex="-1"></a>    <span class="at">treatment =</span> treat_cols,</span>
+<span id="cb50-23"><a href="edger.html#cb50-23" tabindex="-1"></a>    <span class="at">cellline  =</span> cell_cols</span>
+<span id="cb50-24"><a href="edger.html#cb50-24" tabindex="-1"></a>  ),</span>
+<span id="cb50-25"><a href="edger.html#cb50-25" tabindex="-1"></a>  <span class="at">annotation_legend_param =</span> <span class="fu">list</span>(</span>
+<span id="cb50-26"><a href="edger.html#cb50-26" tabindex="-1"></a>    <span class="at">treatment =</span> <span class="fu">list</span>(<span class="at">title =</span> <span class="st">&quot;Treatment&quot;</span>),</span>
+<span id="cb50-27"><a href="edger.html#cb50-27" tabindex="-1"></a>    <span class="at">cellline  =</span> <span class="fu">list</span>(<span class="at">title =</span> <span class="st">&quot;Cell line&quot;</span>)</span>
+<span id="cb50-28"><a href="edger.html#cb50-28" tabindex="-1"></a>  )</span>
+<span id="cb50-29"><a href="edger.html#cb50-29" tabindex="-1"></a>)</span></code></pre></div>
+<hr />
+</div>
+<div id="draw-the-complexheatmap-heatmap" class="section level2 hasAnchor" number="5.10">
+<h2><span class="header-section-number">5.10</span> 5) Draw the ComplexHeatmap heatmap<a href="edger.html#draw-the-complexheatmap-heatmap" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>This produces the actual figure. Since we z-scored the rows, use a diverging palette centered at 0.</p>
+<div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb51-1"><a href="edger.html#cb51-1" tabindex="-1"></a>col_fun <span class="ot">&lt;-</span> circlize<span class="sc">::</span><span class="fu">colorRamp2</span>(<span class="fu">c</span>(<span class="sc">-</span><span class="dv">2</span>, <span class="dv">0</span>, <span class="dv">2</span>), <span class="fu">c</span>(<span class="st">&quot;blue&quot;</span>, <span class="st">&quot;white&quot;</span>, <span class="st">&quot;red&quot;</span>))</span>
+<span id="cb51-2"><a href="edger.html#cb51-2" tabindex="-1"></a></span>
+<span id="cb51-3"><a href="edger.html#cb51-3" tabindex="-1"></a><span class="fu">Heatmap</span>(</span>
+<span id="cb51-4"><a href="edger.html#cb51-4" tabindex="-1"></a>  hm_z,</span>
+<span id="cb51-5"><a href="edger.html#cb51-5" tabindex="-1"></a>  <span class="at">col =</span> col_fun,</span>
+<span id="cb51-6"><a href="edger.html#cb51-6" tabindex="-1"></a>  <span class="at">top_annotation =</span> ha,</span>
+<span id="cb51-7"><a href="edger.html#cb51-7" tabindex="-1"></a>  <span class="at">show_row_names =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb51-8"><a href="edger.html#cb51-8" tabindex="-1"></a>  <span class="at">show_column_names =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb51-9"><a href="edger.html#cb51-9" tabindex="-1"></a>  <span class="at">cluster_rows =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb51-10"><a href="edger.html#cb51-10" tabindex="-1"></a>  <span class="at">cluster_columns =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb51-11"><a href="edger.html#cb51-11" tabindex="-1"></a>  <span class="at">row_title =</span> <span class="fu">paste0</span>(<span class="st">&quot;Top &quot;</span>, <span class="fu">nrow</span>(hm_z), <span class="st">&quot; genes (edgeR: 20CTG vs NT)&quot;</span>),</span>
+<span id="cb51-12"><a href="edger.html#cb51-12" tabindex="-1"></a>  <span class="at">column_title =</span> <span class="st">&quot;Samples&quot;</span></span>
+<span id="cb51-13"><a href="edger.html#cb51-13" tabindex="-1"></a>)</span></code></pre></div>
+<p><img src="DE_tutorial_files/figure-html/edger-heatmap-plot-1.png" alt="" width="768" /></p>
+<p>Add labels of the gene names - only include 25 of the top hit for easier visibility.</p>
+<p>Is this the correct way to add the top 25?</p>
+<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="edger.html#cb52-1" tabindex="-1"></a><span class="fu">Heatmap</span>(</span>
+<span id="cb52-2"><a href="edger.html#cb52-2" tabindex="-1"></a>  hm_z[<span class="dv">1</span><span class="sc">:</span><span class="dv">25</span>,],</span>
+<span id="cb52-3"><a href="edger.html#cb52-3" tabindex="-1"></a>  <span class="at">col =</span> col_fun,</span>
+<span id="cb52-4"><a href="edger.html#cb52-4" tabindex="-1"></a>  <span class="at">top_annotation =</span> ha,</span>
+<span id="cb52-5"><a href="edger.html#cb52-5" tabindex="-1"></a>  <span class="at">show_row_names =</span> <span class="cn">TRUE</span>,         <span class="co"># &lt;-- now shows HGNC symbols</span></span>
+<span id="cb52-6"><a href="edger.html#cb52-6" tabindex="-1"></a>  <span class="at">row_names_gp =</span> grid<span class="sc">::</span><span class="fu">gpar</span>(<span class="at">fontsize =</span> <span class="dv">8</span>),</span>
+<span id="cb52-7"><a href="edger.html#cb52-7" tabindex="-1"></a>  <span class="at">show_column_names =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb52-8"><a href="edger.html#cb52-8" tabindex="-1"></a>  <span class="at">cluster_rows =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb52-9"><a href="edger.html#cb52-9" tabindex="-1"></a>  <span class="at">cluster_columns =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb52-10"><a href="edger.html#cb52-10" tabindex="-1"></a>  <span class="at">row_title =</span> <span class="fu">paste0</span>(<span class="st">&quot;Top &quot;</span>, <span class="fu">nrow</span>(hm_z), <span class="st">&quot; genes (edgeR: 20CTG vs NT)&quot;</span>),</span>
+<span id="cb52-11"><a href="edger.html#cb52-11" tabindex="-1"></a>  <span class="at">column_title =</span> <span class="st">&quot;Samples&quot;</span></span>
+<span id="cb52-12"><a href="edger.html#cb52-12" tabindex="-1"></a>)</span></code></pre></div>
+<p><img src="DE_tutorial_files/figure-html/unnamed-chunk-97-1.png" alt="" width="672" /></p>
+</div>
+<div id="save-edger-results" class="section level2 hasAnchor" number="5.11">
+<h2><span class="header-section-number">5.11</span> Save edgeR results<a href="edger.html#save-edger-results" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb53-1"><a href="edger.html#cb53-1" tabindex="-1"></a><span class="fu">saveRDS</span>(</span>
+<span id="cb53-2"><a href="edger.html#cb53-2" tabindex="-1"></a>  <span class="fu">list</span>(</span>
+<span id="cb53-3"><a href="edger.html#cb53-3" tabindex="-1"></a>    <span class="at">meta =</span> meta,</span>
+<span id="cb53-4"><a href="edger.html#cb53-4" tabindex="-1"></a>    <span class="at">counts_mapped_filtered =</span> counts_mapped_filtered,</span>
+<span id="cb53-5"><a href="edger.html#cb53-5" tabindex="-1"></a>    <span class="at">fit =</span> fit,</span>
+<span id="cb53-6"><a href="edger.html#cb53-6" tabindex="-1"></a>    <span class="at">qlf_3_vs_nt =</span> qlf_3_vs_nt,</span>
+<span id="cb53-7"><a href="edger.html#cb53-7" tabindex="-1"></a>    <span class="at">qlf_20_vs_nt =</span> qlf_20_vs_nt,</span>
+<span id="cb53-8"><a href="edger.html#cb53-8" tabindex="-1"></a>    <span class="at">qlf_20_vs_3 =</span> qlf_20_vs_3,</span>
+<span id="cb53-9"><a href="edger.html#cb53-9" tabindex="-1"></a>    <span class="at">tab_3_vs_nt =</span> tab_3_vs_nt,</span>
+<span id="cb53-10"><a href="edger.html#cb53-10" tabindex="-1"></a>    <span class="at">tab_20_vs_nt =</span> tab_20_vs_nt,</span>
+<span id="cb53-11"><a href="edger.html#cb53-11" tabindex="-1"></a>    <span class="at">tab_20_vs_3 =</span> tab_20_vs_3</span>
+<span id="cb53-12"><a href="edger.html#cb53-12" tabindex="-1"></a>  ),</span>
+<span id="cb53-13"><a href="edger.html#cb53-13" tabindex="-1"></a>  <span class="at">file =</span> <span class="st">&quot;data/d1_edger_results.rds&quot;</span></span>
+<span id="cb53-14"><a href="edger.html#cb53-14" tabindex="-1"></a>)</span></code></pre></div>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="limma-voom.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="deseq2.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+  "sharing": {
+    "github": false,
+    "facebook": true,
+    "twitter": true,
+    "linkedin": false,
+    "weibo": false,
+    "instapaper": false,
+    "vk": false,
+    "whatsapp": false,
+    "all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+  },
+  "fontsettings": {
+    "theme": "white",
+    "family": "sans",
+    "size": 2
+  },
+  "edit": {
+    "link": null,
+    "text": null
+  },
+  "history": {
+    "link": null,
+    "text": null
+  },
+  "view": {
+    "link": null,
+    "text": null
+  },
+  "download": ["DE_tutorial.pdf", "DE_tutorial.epub"],
+  "search": {
+    "engine": "fuse",
+    "options": null
+  },
+  "toc": {
+    "collapse": "section"
+  }
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

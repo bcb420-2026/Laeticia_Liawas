@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 3 QC, filtering and identifier mapping | Differential Expression Tutorial</title>
+  <meta name="description" content="Chapter 3 QC, filtering and identifier mapping | Differential Expression Tutorial" />
+  <meta name="generator" content="bookdown 0.46 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 3 QC, filtering and identifier mapping | Differential Expression Tutorial" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 3 QC, filtering and identifier mapping | Differential Expression Tutorial" />
+  
+  
+  
+
+<meta name="author" content="BCB420 / Ruth Isserlin" />
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="get-data.html"/>
+<link rel="next" href="limma-voom.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+
+
+<style type="text/css">
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">BCB420 Lecture </a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Overview</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#packages"><i class="fa fa-check"></i><b>1.1</b> Packages</a></li>
+<li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#reproducibility"><i class="fa fa-check"></i><b>1.2</b> Reproducibility</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="get-data.html"><a href="get-data.html"><i class="fa fa-check"></i><b>2</b> Get the data</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="get-data.html"><a href="get-data.html#download-the-geo-supplementary-files"><i class="fa fa-check"></i><b>2.1</b> Download the GEO supplementary file(s)</a></li>
+<li class="chapter" data-level="2.2" data-path="get-data.html"><a href="get-data.html#read-the-featurecounts-matrix"><i class="fa fa-check"></i><b>2.2</b> Read the FeatureCounts matrix</a>
+<ul>
+<li class="chapter" data-level="2.2.1" data-path="get-data.html"><a href="get-data.html#build-a-counts-matrix-genes-samples"><i class="fa fa-check"></i><b>2.2.1</b> Build a counts matrix (genes × samples)</a></li>
+</ul></li>
+<li class="chapter" data-level="2.3" data-path="get-data.html"><a href="get-data.html#create-metadata-from-sample-names"><i class="fa fa-check"></i><b>2.3</b> Create metadata from sample names</a></li>
+<li class="chapter" data-level="2.4" data-path="get-data.html"><a href="get-data.html#identifier-mapping"><i class="fa fa-check"></i><b>2.4</b> Identifier mapping</a></li>
+<li class="chapter" data-level="2.5" data-path="get-data.html"><a href="get-data.html#save-intermediate-objects"><i class="fa fa-check"></i><b>2.5</b> Save intermediate objects</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="qc.html"><a href="qc.html"><i class="fa fa-check"></i><b>3</b> QC, filtering and identifier mapping</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="qc.html"><a href="qc.html#filter-lowly-expressed-genes"><i class="fa fa-check"></i><b>3.1</b> Filter lowly expressed genes</a></li>
+<li class="chapter" data-level="3.2" data-path="qc.html"><a href="qc.html#tmm-normalization"><i class="fa fa-check"></i><b>3.2</b> TMM normalization</a></li>
+<li class="chapter" data-level="3.3" data-path="qc.html"><a href="qc.html#exploratory-mds-plot"><i class="fa fa-check"></i><b>3.3</b> Exploratory MDS plot</a></li>
+<li class="chapter" data-level="3.4" data-path="qc.html"><a href="qc.html#exploratory-mds-plot---coloured-by-cellline"><i class="fa fa-check"></i><b>3.4</b> Exploratory MDS plot - coloured by cellline</a></li>
+<li class="chapter" data-level="3.5" data-path="qc.html"><a href="qc.html#log-cpm-for-visualization"><i class="fa fa-check"></i><b>3.5</b> log-CPM for visualization</a></li>
+<li class="chapter" data-level="3.6" data-path="qc.html"><a href="qc.html#save-for-downstream-chapters"><i class="fa fa-check"></i><b>3.6</b> Save for downstream chapters</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="limma-voom.html"><a href="limma-voom.html"><i class="fa fa-check"></i><b>4</b> Differential expression with limma-voom</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="limma-voom.html"><a href="limma-voom.html#results-tables"><i class="fa fa-check"></i><b>4.1</b> Results tables</a></li>
+<li class="chapter" data-level="4.2" data-path="limma-voom.html"><a href="limma-voom.html#volcano-plot-20ctg-vs-nt"><i class="fa fa-check"></i><b>4.2</b> Volcano plot (20CTG vs NT)</a></li>
+<li class="chapter" data-level="4.3" data-path="limma-voom.html"><a href="limma-voom.html#save-limma-results"><i class="fa fa-check"></i><b>4.3</b> Save limma results</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="edger.html"><a href="edger.html"><i class="fa fa-check"></i><b>5</b> Differential expression with edgeR (QLF)</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="edger.html"><a href="edger.html#plot-biological-coefficient-of-variance-plot"><i class="fa fa-check"></i><b>5.1</b> Plot Biological coefficient of variance plot</a></li>
+<li class="chapter" data-level="5.2" data-path="edger.html"><a href="edger.html#test-3ctg-vs-nt-and-20ctg-vs-nt"><i class="fa fa-check"></i><b>5.2</b> Test: 3CTG vs NT and 20CTG vs NT</a></li>
+<li class="chapter" data-level="5.3" data-path="edger.html"><a href="edger.html#test-20ctg-vs-3ctg"><i class="fa fa-check"></i><b>5.3</b> Test: 20CTG vs 3CTG</a></li>
+<li class="chapter" data-level="5.4" data-path="edger.html"><a href="edger.html#extract-full-results"><i class="fa fa-check"></i><b>5.4</b> Extract full results</a></li>
+<li class="chapter" data-level="5.5" data-path="edger.html"><a href="edger.html#volcano-plot-of-edger-results"><i class="fa fa-check"></i><b>5.5</b> Volcano plot of EdgeR results</a></li>
+<li class="chapter" data-level="5.6" data-path="edger.html"><a href="edger.html#visualize-the-top-hits-as-a-heatmap"><i class="fa fa-check"></i><b>5.6</b> Visualize the top hits as a heatmap</a></li>
+<li class="chapter" data-level="5.7" data-path="edger.html"><a href="edger.html#select-top-hits-from-tab_20_vs_nt_annot"><i class="fa fa-check"></i><b>5.7</b> Select top hits from <code>tab_20_vs_nt_annot</code></a>
+<ul>
+<li class="chapter" data-level="5.7.1" data-path="edger.html"><a href="edger.html#top-n-genes-by-fdr"><i class="fa fa-check"></i><b>5.7.1</b> top N genes by FDR</a></li>
+</ul></li>
+<li class="chapter" data-level="5.8" data-path="edger.html"><a href="edger.html#make-the-expression-matrix-for-the-heatmap-logcpm-row-z-score"><i class="fa fa-check"></i><b>5.8</b> Make the expression matrix for the heatmap (logCPM + row z-score)</a></li>
+<li class="chapter" data-level="5.9" data-path="edger.html"><a href="edger.html#sample-annotation-treatment-cellline-using-set3"><i class="fa fa-check"></i><b>5.9</b> Sample annotation (treatment + cellline) using Set3</a></li>
+<li class="chapter" data-level="5.10" data-path="edger.html"><a href="edger.html#draw-the-complexheatmap-heatmap"><i class="fa fa-check"></i><b>5.10</b> 5) Draw the ComplexHeatmap heatmap</a></li>
+<li class="chapter" data-level="5.11" data-path="edger.html"><a href="edger.html#save-edger-results"><i class="fa fa-check"></i><b>5.11</b> Save edgeR results</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="deseq2.html"><a href="deseq2.html"><i class="fa fa-check"></i><b>6</b> Differential expression with DESeq2</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="deseq2.html"><a href="deseq2.html#results"><i class="fa fa-check"></i><b>6.1</b> Results</a></li>
+<li class="chapter" data-level="6.2" data-path="deseq2.html"><a href="deseq2.html#volcano-redup-bluedown"><i class="fa fa-check"></i><b>6.2</b> Volcano (red=up, blue=down)</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="get-data_dataset2.html"><a href="get-data_dataset2.html"><i class="fa fa-check"></i><b>7</b> Get the data - Dataset 2</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="get-data_dataset2.html"><a href="get-data_dataset2.html#download-the-geo-supplementary-files-1"><i class="fa fa-check"></i><b>7.1</b> Download the GEO supplementary file(s)</a></li>
+<li class="chapter" data-level="7.2" data-path="get-data_dataset2.html"><a href="get-data_dataset2.html#read-the-featurecounts-matrix-1"><i class="fa fa-check"></i><b>7.2</b> Read the FeatureCounts matrix</a>
+<ul>
+<li class="chapter" data-level="7.2.1" data-path="get-data_dataset2.html"><a href="get-data_dataset2.html#build-a-counts-matrix-genes-samples-1"><i class="fa fa-check"></i><b>7.2.1</b> Build a counts matrix (genes × samples)</a></li>
+</ul></li>
+<li class="chapter" data-level="7.3" data-path="get-data_dataset2.html"><a href="get-data_dataset2.html#create-metadata-from-sample-names-1"><i class="fa fa-check"></i><b>7.3</b> Create metadata from sample names</a></li>
+<li class="chapter" data-level="7.4" data-path="get-data_dataset2.html"><a href="get-data_dataset2.html#identifier-mapping-1"><i class="fa fa-check"></i><b>7.4</b> Identifier mapping</a></li>
+<li class="chapter" data-level="7.5" data-path="get-data_dataset2.html"><a href="get-data_dataset2.html#save-intermediate-objects-1"><i class="fa fa-check"></i><b>7.5</b> Save intermediate objects</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="qc_dataset2.html"><a href="qc_dataset2.html"><i class="fa fa-check"></i><b>8</b> QC, filtering and identifier mapping - Dataset 2</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="qc_dataset2.html"><a href="qc_dataset2.html#load-in-the-data"><i class="fa fa-check"></i><b>8.1</b> Load in the data</a></li>
+<li class="chapter" data-level="8.2" data-path="qc_dataset2.html"><a href="qc_dataset2.html#simplify-this-model"><i class="fa fa-check"></i><b>8.2</b> Simplify this model</a></li>
+<li class="chapter" data-level="8.3" data-path="qc_dataset2.html"><a href="qc_dataset2.html#filter-lowly-expressed-genes-1"><i class="fa fa-check"></i><b>8.3</b> Filter lowly expressed genes</a></li>
+<li class="chapter" data-level="8.4" data-path="qc_dataset2.html"><a href="qc_dataset2.html#tmm-normalization-1"><i class="fa fa-check"></i><b>8.4</b> TMM normalization</a></li>
+<li class="chapter" data-level="8.5" data-path="qc_dataset2.html"><a href="qc_dataset2.html#exploratory-mds-plot-1"><i class="fa fa-check"></i><b>8.5</b> Exploratory MDS plot</a></li>
+<li class="chapter" data-level="8.6" data-path="qc_dataset2.html"><a href="qc_dataset2.html#exploratory-mds-plot---coloured-by-patient"><i class="fa fa-check"></i><b>8.6</b> Exploratory MDS plot - coloured by patient</a></li>
+<li class="chapter" data-level="8.7" data-path="qc_dataset2.html"><a href="qc_dataset2.html#log-cpm-for-visualization-1"><i class="fa fa-check"></i><b>8.7</b> log-CPM for visualization</a></li>
+<li class="chapter" data-level="8.8" data-path="qc_dataset2.html"><a href="qc_dataset2.html#save-for-downstream-chapters-1"><i class="fa fa-check"></i><b>8.8</b> Save for downstream chapters</a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="limma-voom_dataset2.html"><a href="limma-voom_dataset2.html"><i class="fa fa-check"></i><b>9</b> Differential expression with limma-voom - Dataset 2</a>
+<ul>
+<li class="chapter" data-level="9.1" data-path="limma-voom_dataset2.html"><a href="limma-voom_dataset2.html#results-tables-1"><i class="fa fa-check"></i><b>9.1</b> Results tables</a></li>
+<li class="chapter" data-level="9.2" data-path="limma-voom_dataset2.html"><a href="limma-voom_dataset2.html#volcano-plot-0-vs-rest"><i class="fa fa-check"></i><b>9.2</b> Volcano plot (0 vs rest)</a></li>
+<li class="chapter" data-level="9.3" data-path="limma-voom_dataset2.html"><a href="limma-voom_dataset2.html#save-limma-results-1"><i class="fa fa-check"></i><b>9.3</b> Save limma results</a></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="edger_dataset2.html"><a href="edger_dataset2.html"><i class="fa fa-check"></i><b>10</b> Differential expression with edgeR (QLF) - Dataset 2</a>
+<ul>
+<li class="chapter" data-level="10.1" data-path="edger_dataset2.html"><a href="edger_dataset2.html#plot-biological-coefficient-of-variance-plot-1"><i class="fa fa-check"></i><b>10.1</b> Plot Biological coefficient of variance plot</a></li>
+<li class="chapter" data-level="10.2" data-path="edger_dataset2.html"><a href="edger_dataset2.html#test-status-0-vs-status-1"><i class="fa fa-check"></i><b>10.2</b> Test: status 0 vs status 1</a></li>
+<li class="chapter" data-level="10.3" data-path="edger_dataset2.html"><a href="edger_dataset2.html#extract-full-results-1"><i class="fa fa-check"></i><b>10.3</b> Extract full results</a></li>
+<li class="chapter" data-level="10.4" data-path="edger_dataset2.html"><a href="edger_dataset2.html#volcano-plot-of-edger-results-1"><i class="fa fa-check"></i><b>10.4</b> Volcano plot of EdgeR results</a></li>
+<li class="chapter" data-level="10.5" data-path="edger_dataset2.html"><a href="edger_dataset2.html#try-and-run-glmfit"><i class="fa fa-check"></i><b>10.5</b> Try and run glmFit</a></li>
+<li class="chapter" data-level="10.6" data-path="edger_dataset2.html"><a href="edger_dataset2.html#test-status-0-vs-status-1-1"><i class="fa fa-check"></i><b>10.6</b> Test: status 0 vs status 1</a></li>
+<li class="chapter" data-level="10.7" data-path="edger_dataset2.html"><a href="edger_dataset2.html#save-edger-results-1"><i class="fa fa-check"></i><b>10.7</b> Save edgeR results</a></li>
+</ul></li>
+<li class="chapter" data-level="11" data-path="deseq2_dataset2.html"><a href="deseq2_dataset2.html"><i class="fa fa-check"></i><b>11</b> Differential expression with DESeq2 - Dataset 2</a>
+<ul>
+<li class="chapter" data-level="11.1" data-path="deseq2_dataset2.html"><a href="deseq2_dataset2.html#results-1"><i class="fa fa-check"></i><b>11.1</b> Results</a></li>
+<li class="chapter" data-level="11.2" data-path="deseq2_dataset2.html"><a href="deseq2_dataset2.html#volcano-redup-bluedown-1"><i class="fa fa-check"></i><b>11.2</b> Volcano (red=up, blue=down)</a></li>
+</ul></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Differential Expression Tutorial</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="qc" class="section level1 hasAnchor" number="3">
+<h1><span class="header-section-number">Chapter 3</span> QC, filtering and identifier mapping<a href="qc.html#qc" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>This chapter performs shared QC steps used by both <strong>limma-voom</strong> and <strong>edgeR</strong> and <strong>DEseq2</strong>.</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="qc.html#cb12-1" tabindex="-1"></a>obj <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">&quot;data/d1_counts_and_meta.rds&quot;</span>)</span>
+<span id="cb12-2"><a href="qc.html#cb12-2" tabindex="-1"></a>counts <span class="ot">&lt;-</span> obj<span class="sc">$</span>counts</span>
+<span id="cb12-3"><a href="qc.html#cb12-3" tabindex="-1"></a>meta <span class="ot">&lt;-</span> obj<span class="sc">$</span>meta</span>
+<span id="cb12-4"><a href="qc.html#cb12-4" tabindex="-1"></a>mappings <span class="ot">&lt;-</span> obj<span class="sc">$</span>mappings</span>
+<span id="cb12-5"><a href="qc.html#cb12-5" tabindex="-1"></a></span>
+<span id="cb12-6"><a href="qc.html#cb12-6" tabindex="-1"></a><span class="co"># Create a DGEList (edgeR data container)</span></span>
+<span id="cb12-7"><a href="qc.html#cb12-7" tabindex="-1"></a>dge <span class="ot">&lt;-</span> edgeR<span class="sc">::</span><span class="fu">DGEList</span>(<span class="at">counts =</span> counts)</span>
+<span id="cb12-8"><a href="qc.html#cb12-8" tabindex="-1"></a></span>
+<span id="cb12-9"><a href="qc.html#cb12-9" tabindex="-1"></a><span class="co"># Attach metadata</span></span>
+<span id="cb12-10"><a href="qc.html#cb12-10" tabindex="-1"></a><span class="co"># (not required, but helpful)</span></span>
+<span id="cb12-11"><a href="qc.html#cb12-11" tabindex="-1"></a>dge<span class="sc">$</span>samples <span class="ot">&lt;-</span> <span class="fu">cbind</span>(dge<span class="sc">$</span>samples, meta)</span>
+<span id="cb12-12"><a href="qc.html#cb12-12" tabindex="-1"></a></span>
+<span id="cb12-13"><a href="qc.html#cb12-13" tabindex="-1"></a>dge<span class="sc">$</span>samples</span></code></pre></div>
+<pre><code>##                     group lib.size norm.factors             samples cellline treatment
+## T8657_900CTG_NT         1  6630521            1     T8657_900CTG_NT   900CTG        NT
+## T8658_1150CTG_NT        1  6385596            1    T8658_1150CTG_NT  1150CTG        NT
+## T8659_1450CTG_NT        1  6736405            1    T8659_1450CTG_NT  1450CTG        NT
+## T8660_900CTG_20CTG      1 21407865            1  T8660_900CTG_20CTG   900CTG     20CTG
+## T8661_1150CTG_20CTG     1  7300059            1 T8661_1150CTG_20CTG  1150CTG     20CTG
+## T8662_1450CTG_20CTG     1  8906566            1 T8662_1450CTG_20CTG  1450CTG     20CTG
+## T8663_900CTG_3CTG       1 15363308            1   T8663_900CTG_3CTG   900CTG      3CTG
+## T8664_1150CTG_3CTG      1  5742524            1  T8664_1150CTG_3CTG  1150CTG      3CTG
+## T8665_1450CTG_3CTG      1  8150376            1  T8665_1450CTG_3CTG  1450CTG      3CTG</code></pre>
+<div id="filter-lowly-expressed-genes" class="section level2 hasAnchor" number="3.1">
+<h2><span class="header-section-number">3.1</span> Filter lowly expressed genes<a href="qc.html#filter-lowly-expressed-genes" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>We use <code>filterByExpr</code> with the intended design to remove genes with insufficient counts.</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="qc.html#cb14-1" tabindex="-1"></a>design <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(<span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span>  treatment<span class="sc">+</span> cellline, <span class="at">data =</span> meta)</span>
+<span id="cb14-2"><a href="qc.html#cb14-2" tabindex="-1"></a></span>
+<span id="cb14-3"><a href="qc.html#cb14-3" tabindex="-1"></a>keep <span class="ot">&lt;-</span> edgeR<span class="sc">::</span><span class="fu">filterByExpr</span>(dge, design)</span>
+<span id="cb14-4"><a href="qc.html#cb14-4" tabindex="-1"></a>dge_f <span class="ot">&lt;-</span> dge[keep, , keep.lib.sizes <span class="ot">=</span> <span class="cn">FALSE</span>]</span>
+<span id="cb14-5"><a href="qc.html#cb14-5" tabindex="-1"></a></span>
+<span id="cb14-6"><a href="qc.html#cb14-6" tabindex="-1"></a><span class="fu">dim</span>(dge)</span></code></pre></div>
+<pre><code>## [1] 62248     9</code></pre>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="qc.html#cb16-1" tabindex="-1"></a><span class="fu">dim</span>(dge_f)</span></code></pre></div>
+<pre><code>## [1] 14704     9</code></pre>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="qc.html#cb18-1" tabindex="-1"></a><span class="co">#create a subset of the gene mappings</span></span>
+<span id="cb18-2"><a href="qc.html#cb18-2" tabindex="-1"></a>counts_mapped_filtered <span class="ot">&lt;-</span> counts_mapped[counts_mapped<span class="sc">$</span>ensembl_gene_id <span class="sc">%in%</span> <span class="fu">rownames</span>(dge_f<span class="sc">$</span>counts),] </span></code></pre></div>
+</div>
+<div id="tmm-normalization" class="section level2 hasAnchor" number="3.2">
+<h2><span class="header-section-number">3.2</span> TMM normalization<a href="qc.html#tmm-normalization" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="qc.html#cb19-1" tabindex="-1"></a>dge_f <span class="ot">&lt;-</span> edgeR<span class="sc">::</span><span class="fu">calcNormFactors</span>(dge_f, <span class="at">method =</span> <span class="st">&quot;TMM&quot;</span>)</span>
+<span id="cb19-2"><a href="qc.html#cb19-2" tabindex="-1"></a>dge_f<span class="sc">$</span>samples</span></code></pre></div>
+<pre><code>##                     group lib.size norm.factors             samples cellline treatment
+## T8657_900CTG_NT         1  6613352    0.9864614     T8657_900CTG_NT   900CTG        NT
+## T8658_1150CTG_NT        1  6367769    0.9803205    T8658_1150CTG_NT  1150CTG        NT
+## T8659_1450CTG_NT        1  6717956    0.9780540    T8659_1450CTG_NT  1450CTG        NT
+## T8660_900CTG_20CTG      1 21352764    0.7819891  T8660_900CTG_20CTG   900CTG     20CTG
+## T8661_1150CTG_20CTG     1  7281383    1.0270153 T8661_1150CTG_20CTG  1150CTG     20CTG
+## T8662_1450CTG_20CTG     1  8881365    1.0925886 T8662_1450CTG_20CTG  1450CTG     20CTG
+## T8663_900CTG_3CTG       1 15312842    1.1129527   T8663_900CTG_3CTG   900CTG      3CTG
+## T8664_1150CTG_3CTG      1  5727579    1.0131443  T8664_1150CTG_3CTG  1150CTG      3CTG
+## T8665_1450CTG_3CTG      1  8127572    1.0685791  T8665_1450CTG_3CTG  1450CTG      3CTG</code></pre>
+</div>
+<div id="exploratory-mds-plot" class="section level2 hasAnchor" number="3.3">
+<h2><span class="header-section-number">3.3</span> Exploratory MDS plot<a href="qc.html#exploratory-mds-plot" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="qc.html#cb21-1" tabindex="-1"></a>current_colors <span class="ot">&lt;-</span> RColorBrewer<span class="sc">::</span><span class="fu">brewer.pal</span>(<span class="at">n =</span> <span class="fu">length</span>(<span class="fu">unique</span>(meta<span class="sc">$</span>treatment)), <span class="st">&quot;Set2&quot;</span>)</span>
+<span id="cb21-2"><a href="qc.html#cb21-2" tabindex="-1"></a><span class="fu">names</span>(current_colors) <span class="ot">&lt;-</span> <span class="fu">levels</span>(<span class="fu">factor</span>(meta<span class="sc">$</span>treatment))</span>
+<span id="cb21-3"><a href="qc.html#cb21-3" tabindex="-1"></a></span>
+<span id="cb21-4"><a href="qc.html#cb21-4" tabindex="-1"></a><span class="fu">plotMDS</span>(dge_f,</span>
+<span id="cb21-5"><a href="qc.html#cb21-5" tabindex="-1"></a>  <span class="at">labels =</span> meta<span class="sc">$</span>treatment,</span>
+<span id="cb21-6"><a href="qc.html#cb21-6" tabindex="-1"></a>  <span class="at">col =</span> current_colors[meta<span class="sc">$</span>treatment],</span>
+<span id="cb21-7"><a href="qc.html#cb21-7" tabindex="-1"></a>  <span class="at">main =</span> <span class="st">&quot;MDS plot (colored by treatment)&quot;</span></span>
+<span id="cb21-8"><a href="qc.html#cb21-8" tabindex="-1"></a>)</span>
+<span id="cb21-9"><a href="qc.html#cb21-9" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">&quot;topright&quot;</span>,</span>
+<span id="cb21-10"><a href="qc.html#cb21-10" tabindex="-1"></a>  <span class="at">legend =</span> <span class="fu">names</span>(current_colors),</span>
+<span id="cb21-11"><a href="qc.html#cb21-11" tabindex="-1"></a>  <span class="at">col =</span> current_colors,</span>
+<span id="cb21-12"><a href="qc.html#cb21-12" tabindex="-1"></a>  <span class="at">pch =</span> <span class="dv">16</span>,</span>
+<span id="cb21-13"><a href="qc.html#cb21-13" tabindex="-1"></a>  <span class="at">bty =</span> <span class="st">&quot;n&quot;</span></span>
+<span id="cb21-14"><a href="qc.html#cb21-14" tabindex="-1"></a>)</span></code></pre></div>
+<p><img src="DE_tutorial_files/figure-html/unnamed-chunk-81-1.png" alt="" width="672" /></p>
+</div>
+<div id="exploratory-mds-plot---coloured-by-cellline" class="section level2 hasAnchor" number="3.4">
+<h2><span class="header-section-number">3.4</span> Exploratory MDS plot - coloured by cellline<a href="qc.html#exploratory-mds-plot---coloured-by-cellline" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="qc.html#cb22-1" tabindex="-1"></a>current_colors_cellline <span class="ot">&lt;-</span> RColorBrewer<span class="sc">::</span><span class="fu">brewer.pal</span>(<span class="at">n =</span> <span class="fu">length</span>(<span class="fu">unique</span>(meta<span class="sc">$</span>cellline)), <span class="st">&quot;Set1&quot;</span>)</span>
+<span id="cb22-2"><a href="qc.html#cb22-2" tabindex="-1"></a><span class="fu">names</span>(current_colors_cellline) <span class="ot">&lt;-</span> <span class="fu">levels</span>(<span class="fu">factor</span>(meta<span class="sc">$</span>cellline))</span>
+<span id="cb22-3"><a href="qc.html#cb22-3" tabindex="-1"></a></span>
+<span id="cb22-4"><a href="qc.html#cb22-4" tabindex="-1"></a><span class="fu">plotMDS</span>(dge_f,</span>
+<span id="cb22-5"><a href="qc.html#cb22-5" tabindex="-1"></a>  <span class="at">labels =</span> meta<span class="sc">$</span>cellline,</span>
+<span id="cb22-6"><a href="qc.html#cb22-6" tabindex="-1"></a>  <span class="at">col =</span> current_colors_cellline[meta<span class="sc">$</span>cellline],</span>
+<span id="cb22-7"><a href="qc.html#cb22-7" tabindex="-1"></a>  <span class="at">main =</span> <span class="st">&quot;MDS plot (colored by cellline)&quot;</span></span>
+<span id="cb22-8"><a href="qc.html#cb22-8" tabindex="-1"></a>)</span>
+<span id="cb22-9"><a href="qc.html#cb22-9" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">&quot;topright&quot;</span>,</span>
+<span id="cb22-10"><a href="qc.html#cb22-10" tabindex="-1"></a>  <span class="at">legend =</span> <span class="fu">names</span>(current_colors_cellline),</span>
+<span id="cb22-11"><a href="qc.html#cb22-11" tabindex="-1"></a>  <span class="at">col =</span> current_colors_cellline,</span>
+<span id="cb22-12"><a href="qc.html#cb22-12" tabindex="-1"></a>  <span class="at">pch =</span> <span class="dv">16</span>,</span>
+<span id="cb22-13"><a href="qc.html#cb22-13" tabindex="-1"></a>  <span class="at">bty =</span> <span class="st">&quot;n&quot;</span></span>
+<span id="cb22-14"><a href="qc.html#cb22-14" tabindex="-1"></a>)</span></code></pre></div>
+<p><img src="DE_tutorial_files/figure-html/unnamed-chunk-82-1.png" alt="" width="672" /></p>
+</div>
+<div id="log-cpm-for-visualization" class="section level2 hasAnchor" number="3.5">
+<h2><span class="header-section-number">3.5</span> log-CPM for visualization<a href="qc.html#log-cpm-for-visualization" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="qc.html#cb23-1" tabindex="-1"></a>lcpm <span class="ot">&lt;-</span> edgeR<span class="sc">::</span><span class="fu">cpm</span>(dge_f, <span class="at">log =</span> <span class="cn">TRUE</span>, <span class="at">prior.count =</span> <span class="dv">1</span>)</span>
+<span id="cb23-2"><a href="qc.html#cb23-2" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">as.vector</span>(lcpm))</span></code></pre></div>
+<pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##  -3.235   2.148   3.998   3.847   5.480  16.879</code></pre>
+</div>
+<div id="save-for-downstream-chapters" class="section level2 hasAnchor" number="3.6">
+<h2><span class="header-section-number">3.6</span> Save for downstream chapters<a href="qc.html#save-for-downstream-chapters" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="qc.html#cb25-1" tabindex="-1"></a><span class="fu">saveRDS</span>(<span class="fu">list</span>(<span class="at">dge_f =</span> dge_f, </span>
+<span id="cb25-2"><a href="qc.html#cb25-2" tabindex="-1"></a>             <span class="at">meta =</span> meta, </span>
+<span id="cb25-3"><a href="qc.html#cb25-3" tabindex="-1"></a>             <span class="at">design =</span> design, </span>
+<span id="cb25-4"><a href="qc.html#cb25-4" tabindex="-1"></a>             <span class="at">lcpm =</span> lcpm, </span>
+<span id="cb25-5"><a href="qc.html#cb25-5" tabindex="-1"></a>             <span class="at">mappings =</span> mappings),</span>
+<span id="cb25-6"><a href="qc.html#cb25-6" tabindex="-1"></a>        <span class="at">file =</span> <span class="st">&quot;data/d1_qc_objects.rds&quot;</span>)</span></code></pre></div>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="get-data.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="limma-voom.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+  "sharing": {
+    "github": false,
+    "facebook": true,
+    "twitter": true,
+    "linkedin": false,
+    "weibo": false,
+    "instapaper": false,
+    "vk": false,
+    "whatsapp": false,
+    "all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+  },
+  "fontsettings": {
+    "theme": "white",
+    "family": "sans",
+    "size": 2
+  },
+  "edit": {
+    "link": null,
+    "text": null
+  },
+  "history": {
+    "link": null,
+    "text": null
+  },
+  "view": {
+    "link": null,
+    "text": null
+  },
+  "download": ["DE_tutorial.pdf", "DE_tutorial.epub"],
+  "search": {
+    "engine": "fuse",
+    "options": null
+  },
+  "toc": {
+    "collapse": "section"
+  }
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

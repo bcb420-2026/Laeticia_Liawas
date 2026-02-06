@@ -6,8 +6,67 @@ These are intended to be done **after** completing the worked examples.
 Using **GSE119732**, 
 
   1. Map the distribution of the samples as a box plot and a density plot using only the raw data.
+  
+First, load required libraries, and load the data.
+```{r}
+library(GEOquery)
+library(knitr)
+library(dplyr)
+library(tibble)
+if(!require(tidyverse)){
+  install.packages("tidyverse",dependencies = TRUE)
+}
+library(tidyverse)
+
+gse1 <- "GSE119732"
+
+source("./supp_functions.R")
+fetch_geo_supp(gse = gse1)
+
+path1 <- file.path("data", gse1)
+files1 <- list.files(path1, pattern = "\\.txt.gz$|\\.tsv.gz$|\\.csv.gz$", 
+                    full.names = TRUE, recursive = TRUE)
+
+files1
+
+```
+
+The file is a .txt file. Using the raw data, we can map the distributions of the samples as a box plot.
+```{r}
+gse1_data <- read_table(files1)
+plot_box(gse1_data[,2:ncol(gse1_data)])
+```
+
+Secondly, we can also map the distributions of the samples as a density plot. 
+```{r}
+plot_density(gse1_data[,2:ncol(gse1_data)])
+```
+
+  
   2.  Add colours to the plot separating the different variables in the model
+
+The density plot already has colours (?).
+
   3.  Filter out lowly expressed genes and re plot the distributions.
+  
+First, we convert the counts to Counts Per Million (CPM). Then, we filter out lowly expressed genes.
+```{r}
+library(edgeR)
+
+# convert to CPM
+gse1_cpm <- cpm(y = gse1_data[,2:ncol(gse1_data)])
+
+# remove lowly expressed genes
+to_remove <- edgeR::filterByExpr(gse1_cpm,min.count = 3)
+gse1_cpm_filtered <- gse1_cpm[to_remove,]
+```
+
+
+Now, we replot the samples' distribution.
+```{r}
+plot_box(gse1_cpm_filtered,main = "CPM filtered out lowly expressed - \nNO design matrix")
+plot_density(gse1_cpm_filtered,main = "CPM filtered out lowly expressed - \n - NO design matrix")
+```
 
 
 
@@ -15,10 +74,104 @@ Using **GSE119732**,
 
 Using **GSE122380**, confirm whether the ID column contains Ensembl IDs with version suffixes.
 
- 1. Map the distribution of the samples as a box plot and a density plot using only the raw data.
+  1. Map the distribution of the samples as a box plot and a density plot using only the raw data.
+
+First, load the data. 
+```{r}
+library(GEOquery)
+library(knitr)
+library(dplyr)
+library(tibble)
+if(!require(tidyverse)){
+  install.packages("tidyverse",dependencies = TRUE)
+}
+library(tidyverse)
+
+gse2 <- "GSE122380"
+
+source("./supp_functions.R")
+fetch_geo_supp(gse = gse2)
+
+path2 <- file.path("data", gse2)
+files2 <- list.files(path2, pattern = "\\.txt.gz$|\\.tsv.gz$|\\.csv.gz$", 
+                    full.names = TRUE, recursive = TRUE)
+
+files2
+
+```
+
+First we preview the data:
+```{r}
+gse2_data <- read_table(files2)
+rmarkdown::paged_table(gse2_data)
+```
+
+Let us also look if there are any Gene_ids with version suffixes:
+```{r}
+length(grep("\\.", gse2_data$Gene_id))
+length(gse2_data$Gene_id)
+```
+
+So there are no Gene_ids with version suffixes. Next, let us plot the distributions.
+
+```{r}
+plot_box(gse2_data[,2:ncol(gse2_data)])
+plot_density(gse2_data[,2:ncol(gse2_data)])
+```
+There are a lot of samples, and this would definitely benefit from a design matrix.
+
+```{r}
+colnames(gse2_data)[1:20]
+```
+
+Next, we form a design matrix based on what would be the best likely grouping.
+```{r}
+#design matrix - 
+samples <- colnames(gse2_data)[2:ncol(gse2_data)]
+patient_no  <- unlist(lapply(samples,FUN = function(x){unlist(strsplit(x,split = "_"))[2]}))       
+sample_no <- unlist(lapply(samples,FUN = function(x){unlist(strsplit(x,split = "_"))[1]}))     
+sample_data <- data.frame(samples, patient_no, sample_no)
+
+
+design_gse2 <- model.matrix(~ 0 + sample_no, data = sample_data)
+rownames(design_gse2) <- sample_data$samples
+colnames(design_gse2) <- paste0("sample_", levels(factor(sample_no)))
+head(design_gse2)
+```
+
   2.  Add colours to the plot separating the different variables in the model
+  
+The plot is already coloured. (?)
+
   3.  Filter out lowly expressed genes and re plot the distributions.
+  
+First, we convert to CPM.
+```{r}
+library(edgeR)
+
+# convert to CPM
+gse2_cpm <- cpm(y = gse2_data[,2:ncol(gse2_data)])
+```
+
+
+Then, we filter for lowly-expressed genes using the design matrix.  
+```{r}
+to_remove_withdesign_gse2 <- edgeR::filterByExpr(gse2_cpm,
+                                            min.count = 3,
+                                            design = design_gse2)
+gse2_cpm_filtered_withdesign <- gse2_cpm[to_remove_withdesign_gse2,]
+
+colnames(gse2_cpm_filtered_withdesign) <- paste(sample_data$sample_no,
+                                              1:nrow(sample_data),sep = "_")
+
+plot_box(gse2_cpm_filtered_withdesign,
+         main = "CPM filtered out lowly expressed - \n - with design matrix")
+plot_density(gse2_cpm_filtered_withdesign,main = "CPM filtered out lowly expressed - \n - with design matrix")
+```
 
 ## Exercise 3 - 
  
 Can you use the worked example to process the above two GEO records?  How?
+
+Yes, you can. While some steps may be different, e.g. need to change the code for creating the design matrix and reading in the data itself, the general process is the same. As such, one could use the worked example with some tweaks to process the above GEO records.
+
