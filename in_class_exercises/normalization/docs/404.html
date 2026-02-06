@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Page not found | Normalization (BCB420 Lecture)</title>
+  <meta name="description" content="A short bookdown module introducing normalization for expression data (bulk and single-cell)." />
+  <meta name="generator" content="bookdown 0.46 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Page not found | Normalization (BCB420 Lecture)" />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:description" content="A short bookdown module introducing normalization for expression data (bulk and single-cell)." />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Page not found | Normalization (BCB420 Lecture)" />
+  
+  <meta name="twitter:description" content="A short bookdown module introducing normalization for expression data (bulk and single-cell)." />
+  
+
+<meta name="author" content="Ruth Isserlin" />
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+
+
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+<link href="libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
+<script src="libs/pagedtable-1.1/js/pagedtable.js"></script>
+
+
+<style type="text/css">
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">BCB420 Lecture 5</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Welcome</a>
+<ul>
+<li class="chapter" data-level="0.1" data-path="index.html"><a href="index.html#learning-goals"><i class="fa fa-check"></i><b>0.1</b> Learning goals</a></li>
+<li class="chapter" data-level="0.2" data-path="index.html"><a href="index.html#example-datasets"><i class="fa fa-check"></i><b>0.2</b> Example datasets</a></li>
+</ul></li>
+<li class="chapter" data-level="1" data-path="what-is-normalization.html"><a href="what-is-normalization.html"><i class="fa fa-check"></i><b>1</b> What is normalization?</a></li>
+<li class="chapter" data-level="2" data-path="technical-vs-biological-variation.html"><a href="technical-vs-biological-variation.html"><i class="fa fa-check"></i><b>2</b> Technical vs biological variation</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="technical-vs-biological-variation.html"><a href="technical-vs-biological-variation.html#technical-variation"><i class="fa fa-check"></i><b>2.1</b> Technical variation</a></li>
+<li class="chapter" data-level="2.2" data-path="technical-vs-biological-variation.html"><a href="technical-vs-biological-variation.html#biological-variation"><i class="fa fa-check"></i><b>2.2</b> Biological variation</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="visualizing-distributions.html"><a href="visualizing-distributions.html"><i class="fa fa-check"></i><b>3</b> Visualizing distributions</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="visualizing-distributions.html"><a href="visualizing-distributions.html#load-some-data"><i class="fa fa-check"></i><b>3.1</b> load Some data</a></li>
+<li class="chapter" data-level="3.2" data-path="visualizing-distributions.html"><a href="visualizing-distributions.html#boxplots"><i class="fa fa-check"></i><b>3.2</b> Boxplots</a></li>
+<li class="chapter" data-level="3.3" data-path="visualizing-distributions.html"><a href="visualizing-distributions.html#density-plots"><i class="fa fa-check"></i><b>3.3</b> Density plots</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="normalization-methods.html"><a href="normalization-methods.html"><i class="fa fa-check"></i><b>4</b> Normalization methods</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="normalization-methods.html"><a href="normalization-methods.html#library-size-scaling"><i class="fa fa-check"></i><b>4.1</b> Library-size scaling</a>
+<ul>
+<li class="chapter" data-level="4.1.1" data-path="normalization-methods.html"><a href="normalization-methods.html#counts-per-million-cpm"><i class="fa fa-check"></i><b>4.1.1</b> Counts-per-million (CPM)</a></li>
+</ul></li>
+<li class="chapter" data-level="4.2" data-path="normalization-methods.html"><a href="normalization-methods.html#distribution-based-normalization"><i class="fa fa-check"></i><b>4.2</b> Distribution-based normalization</a></li>
+<li class="chapter" data-level="4.3" data-path="normalization-methods.html"><a href="normalization-methods.html#rna-seq-composition-aware-methods"><i class="fa fa-check"></i><b>4.3</b> RNA-seq composition-aware methods</a>
+<ul>
+<li class="chapter" data-level="4.3.1" data-path="normalization-methods.html"><a href="normalization-methods.html#edger-tmm"><i class="fa fa-check"></i><b>4.3.1</b> edgeR: TMM</a></li>
+<li class="chapter" data-level="4.3.2" data-path="normalization-methods.html"><a href="normalization-methods.html#deseq2-size-factors"><i class="fa fa-check"></i><b>4.3.2</b> DESeq2: size factors</a></li>
+</ul></li>
+<li class="chapter" data-level="4.4" data-path="normalization-methods.html"><a href="normalization-methods.html#single-cell-note"><i class="fa fa-check"></i><b>4.4</b> Single-cell note</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="worked-normalization-examples.html"><a href="worked-normalization-examples.html"><i class="fa fa-check"></i><b>5</b> Worked normalization examples</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="worked-normalization-examples.html"><a href="worked-normalization-examples.html#setup-download-supplementary-files"><i class="fa fa-check"></i><b>5.1</b> Setup: download supplementary files</a></li>
+<li class="chapter" data-level="5.2" data-path="worked-normalization-examples.html"><a href="worked-normalization-examples.html#load-some-data-1"><i class="fa fa-check"></i><b>5.2</b> load Some data</a></li>
+<li class="chapter" data-level="5.3" data-path="worked-normalization-examples.html"><a href="worked-normalization-examples.html#example-1-gse119732"><i class="fa fa-check"></i><b>5.3</b> Example 1: GSE119732</a></li>
+<li class="chapter" data-level="5.4" data-path="worked-normalization-examples.html"><a href="worked-normalization-examples.html#convert-the-raw-counts-to-counts-per-million-cpm"><i class="fa fa-check"></i><b>5.4</b> Convert the raw counts to Counts per million (CPM)</a></li>
+<li class="chapter" data-level="5.5" data-path="worked-normalization-examples.html"><a href="worked-normalization-examples.html#filter-out-lowly-expressed-genes"><i class="fa fa-check"></i><b>5.5</b> filter out lowly expressed genes</a></li>
+<li class="chapter" data-level="5.6" data-path="worked-normalization-examples.html"><a href="worked-normalization-examples.html#incorporate-a-design-matrix---description-of-the-samples."><i class="fa fa-check"></i><b>5.6</b> Incorporate a design matrix - description of the samples.</a></li>
+<li class="chapter" data-level="5.7" data-path="worked-normalization-examples.html"><a href="worked-normalization-examples.html#normalize-dataset-using-tmm"><i class="fa fa-check"></i><b>5.7</b> Normalize Dataset using TMM</a></li>
+<li class="chapter" data-level="5.8" data-path="worked-normalization-examples.html"><a href="worked-normalization-examples.html#look-at-the-distribution-of-our-samples-in-2d-space"><i class="fa fa-check"></i><b>5.8</b> Look at the distribution of our samples in 2D space</a></li>
+<li class="chapter" data-level="5.9" data-path="worked-normalization-examples.html"><a href="worked-normalization-examples.html#normalize-the-dataset-using-rle"><i class="fa fa-check"></i><b>5.9</b> Normalize the Dataset using RLE</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="exercises.html"><a href="exercises.html"><i class="fa fa-check"></i><b>6</b> Exercises</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="exercises.html"><a href="exercises.html#exercise-1-httpswww.ncbi.nlm.nih.govgeoqueryacc.cgiaccgse119732"><i class="fa fa-check"></i><b>6.1</b> Exercise 1 — https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE119732</a></li>
+<li class="chapter" data-level="6.2" data-path="exercises.html"><a href="exercises.html#exercise-2-httpswww.ncbi.nlm.nih.govgeoqueryacc.cgiaccgse122380"><i class="fa fa-check"></i><b>6.2</b> Exercise 2 — https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE122380</a></li>
+<li class="chapter" data-level="6.3" data-path="exercises.html"><a href="exercises.html#exercise-3--"><i class="fa fa-check"></i><b>6.3</b> Exercise 3 -</a></li>
+</ul></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Normalization (BCB420 Lecture)</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="page-not-found" class="section level1">
+<h1>Page not found</h1>
+<p>The page you requested cannot be found (perhaps it was moved or renamed).</p>
+<p>You may want to try searching to find the page's new location, or use
+the table of contents to find the page you are looking for.</p>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+
+
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+  "sharing": {
+    "github": false,
+    "facebook": true,
+    "twitter": true,
+    "linkedin": false,
+    "weibo": false,
+    "instapaper": false,
+    "vk": false,
+    "whatsapp": false,
+    "all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+  },
+  "fontsettings": {
+    "theme": "white",
+    "family": "sans",
+    "size": 2
+  },
+  "edit": {
+    "link": null,
+    "text": null
+  },
+  "history": {
+    "link": null,
+    "text": null
+  },
+  "view": {
+    "link": null,
+    "text": null
+  },
+  "download": ["bcb420_normalization.pdf", "bcb420_normalization.epub"],
+  "search": {
+    "engine": "fuse",
+    "options": null
+  },
+  "toc": {
+    "collapse": "section"
+  }
+});
+});
+</script>
+
+</body>
+
+</html>

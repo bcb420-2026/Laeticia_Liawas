@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 3 Visualizing distributions | Normalization (BCB420 Lecture)</title>
+  <meta name="description" content="A short bookdown module introducing normalization for expression data (bulk and single-cell)." />
+  <meta name="generator" content="bookdown 0.46 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 3 Visualizing distributions | Normalization (BCB420 Lecture)" />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:description" content="A short bookdown module introducing normalization for expression data (bulk and single-cell)." />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 3 Visualizing distributions | Normalization (BCB420 Lecture)" />
+  
+  <meta name="twitter:description" content="A short bookdown module introducing normalization for expression data (bulk and single-cell)." />
+  
+
+<meta name="author" content="Ruth Isserlin" />
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="technical-vs-biological-variation.html"/>
+<link rel="next" href="normalization-methods.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+<link href="libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
+<script src="libs/pagedtable-1.1/js/pagedtable.js"></script>
+
+
+<style type="text/css">
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">BCB420 Lecture 5</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Welcome</a>
+<ul>
+<li class="chapter" data-level="0.1" data-path="index.html"><a href="index.html#learning-goals"><i class="fa fa-check"></i><b>0.1</b> Learning goals</a></li>
+<li class="chapter" data-level="0.2" data-path="index.html"><a href="index.html#example-datasets"><i class="fa fa-check"></i><b>0.2</b> Example datasets</a></li>
+</ul></li>
+<li class="chapter" data-level="1" data-path="what-is-normalization.html"><a href="what-is-normalization.html"><i class="fa fa-check"></i><b>1</b> What is normalization?</a></li>
+<li class="chapter" data-level="2" data-path="technical-vs-biological-variation.html"><a href="technical-vs-biological-variation.html"><i class="fa fa-check"></i><b>2</b> Technical vs biological variation</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="technical-vs-biological-variation.html"><a href="technical-vs-biological-variation.html#technical-variation"><i class="fa fa-check"></i><b>2.1</b> Technical variation</a></li>
+<li class="chapter" data-level="2.2" data-path="technical-vs-biological-variation.html"><a href="technical-vs-biological-variation.html#biological-variation"><i class="fa fa-check"></i><b>2.2</b> Biological variation</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="visualizing-distributions.html"><a href="visualizing-distributions.html"><i class="fa fa-check"></i><b>3</b> Visualizing distributions</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="visualizing-distributions.html"><a href="visualizing-distributions.html#load-some-data"><i class="fa fa-check"></i><b>3.1</b> load Some data</a></li>
+<li class="chapter" data-level="3.2" data-path="visualizing-distributions.html"><a href="visualizing-distributions.html#boxplots"><i class="fa fa-check"></i><b>3.2</b> Boxplots</a></li>
+<li class="chapter" data-level="3.3" data-path="visualizing-distributions.html"><a href="visualizing-distributions.html#density-plots"><i class="fa fa-check"></i><b>3.3</b> Density plots</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="normalization-methods.html"><a href="normalization-methods.html"><i class="fa fa-check"></i><b>4</b> Normalization methods</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="normalization-methods.html"><a href="normalization-methods.html#library-size-scaling"><i class="fa fa-check"></i><b>4.1</b> Library-size scaling</a>
+<ul>
+<li class="chapter" data-level="4.1.1" data-path="normalization-methods.html"><a href="normalization-methods.html#counts-per-million-cpm"><i class="fa fa-check"></i><b>4.1.1</b> Counts-per-million (CPM)</a></li>
+</ul></li>
+<li class="chapter" data-level="4.2" data-path="normalization-methods.html"><a href="normalization-methods.html#distribution-based-normalization"><i class="fa fa-check"></i><b>4.2</b> Distribution-based normalization</a></li>
+<li class="chapter" data-level="4.3" data-path="normalization-methods.html"><a href="normalization-methods.html#rna-seq-composition-aware-methods"><i class="fa fa-check"></i><b>4.3</b> RNA-seq composition-aware methods</a>
+<ul>
+<li class="chapter" data-level="4.3.1" data-path="normalization-methods.html"><a href="normalization-methods.html#edger-tmm"><i class="fa fa-check"></i><b>4.3.1</b> edgeR: TMM</a></li>
+<li class="chapter" data-level="4.3.2" data-path="normalization-methods.html"><a href="normalization-methods.html#deseq2-size-factors"><i class="fa fa-check"></i><b>4.3.2</b> DESeq2: size factors</a></li>
+</ul></li>
+<li class="chapter" data-level="4.4" data-path="normalization-methods.html"><a href="normalization-methods.html#single-cell-note"><i class="fa fa-check"></i><b>4.4</b> Single-cell note</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="worked-normalization-examples.html"><a href="worked-normalization-examples.html"><i class="fa fa-check"></i><b>5</b> Worked normalization examples</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="worked-normalization-examples.html"><a href="worked-normalization-examples.html#setup-download-supplementary-files"><i class="fa fa-check"></i><b>5.1</b> Setup: download supplementary files</a></li>
+<li class="chapter" data-level="5.2" data-path="worked-normalization-examples.html"><a href="worked-normalization-examples.html#load-some-data-1"><i class="fa fa-check"></i><b>5.2</b> load Some data</a></li>
+<li class="chapter" data-level="5.3" data-path="worked-normalization-examples.html"><a href="worked-normalization-examples.html#example-1-gse119732"><i class="fa fa-check"></i><b>5.3</b> Example 1: GSE119732</a></li>
+<li class="chapter" data-level="5.4" data-path="worked-normalization-examples.html"><a href="worked-normalization-examples.html#convert-the-raw-counts-to-counts-per-million-cpm"><i class="fa fa-check"></i><b>5.4</b> Convert the raw counts to Counts per million (CPM)</a></li>
+<li class="chapter" data-level="5.5" data-path="worked-normalization-examples.html"><a href="worked-normalization-examples.html#filter-out-lowly-expressed-genes"><i class="fa fa-check"></i><b>5.5</b> filter out lowly expressed genes</a></li>
+<li class="chapter" data-level="5.6" data-path="worked-normalization-examples.html"><a href="worked-normalization-examples.html#incorporate-a-design-matrix---description-of-the-samples."><i class="fa fa-check"></i><b>5.6</b> Incorporate a design matrix - description of the samples.</a></li>
+<li class="chapter" data-level="5.7" data-path="worked-normalization-examples.html"><a href="worked-normalization-examples.html#normalize-dataset-using-tmm"><i class="fa fa-check"></i><b>5.7</b> Normalize Dataset using TMM</a></li>
+<li class="chapter" data-level="5.8" data-path="worked-normalization-examples.html"><a href="worked-normalization-examples.html#look-at-the-distribution-of-our-samples-in-2d-space"><i class="fa fa-check"></i><b>5.8</b> Look at the distribution of our samples in 2D space</a></li>
+<li class="chapter" data-level="5.9" data-path="worked-normalization-examples.html"><a href="worked-normalization-examples.html#normalize-the-dataset-using-rle"><i class="fa fa-check"></i><b>5.9</b> Normalize the Dataset using RLE</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="exercises.html"><a href="exercises.html"><i class="fa fa-check"></i><b>6</b> Exercises</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="exercises.html"><a href="exercises.html#exercise-1-httpswww.ncbi.nlm.nih.govgeoqueryacc.cgiaccgse119732"><i class="fa fa-check"></i><b>6.1</b> Exercise 1 — https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE119732</a></li>
+<li class="chapter" data-level="6.2" data-path="exercises.html"><a href="exercises.html#exercise-2-httpswww.ncbi.nlm.nih.govgeoqueryacc.cgiaccgse122380"><i class="fa fa-check"></i><b>6.2</b> Exercise 2 — https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE122380</a></li>
+<li class="chapter" data-level="6.3" data-path="exercises.html"><a href="exercises.html#exercise-3--"><i class="fa fa-check"></i><b>6.3</b> Exercise 3 -</a></li>
+</ul></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Normalization (BCB420 Lecture)</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="visualizing-distributions" class="section level1 hasAnchor" number="3">
+<h1><span class="header-section-number">Chapter 3</span> Visualizing distributions<a href="visualizing-distributions.html#visualizing-distributions" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>Before choosing a normalization method, inspect data distributions.</p>
+<div id="load-some-data" class="section level2 hasAnchor" number="3.1">
+<h2><span class="header-section-number">3.1</span> load Some data<a href="visualizing-distributions.html#load-some-data" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="visualizing-distributions.html#cb1-1" tabindex="-1"></a><span class="fu">library</span>(GEOquery)</span></code></pre></div>
+<pre><code>## Loading required package: Biobase</code></pre>
+<pre><code>## Loading required package: BiocGenerics</code></pre>
+<pre><code>## Loading required package: generics</code></pre>
+<pre><code>## 
+## Attaching package: &#39;generics&#39;</code></pre>
+<pre><code>## The following objects are masked from &#39;package:base&#39;:
+## 
+##     as.difftime, as.factor, as.ordered, intersect, is.element, setdiff,
+##     setequal, union</code></pre>
+<pre><code>## 
+## Attaching package: &#39;BiocGenerics&#39;</code></pre>
+<pre><code>## The following objects are masked from &#39;package:stats&#39;:
+## 
+##     IQR, mad, sd, var, xtabs</code></pre>
+<pre><code>## The following objects are masked from &#39;package:base&#39;:
+## 
+##     anyDuplicated, aperm, append, as.data.frame, basename, cbind,
+##     colnames, dirname, do.call, duplicated, eval, evalq, Filter, Find,
+##     get, grep, grepl, is.unsorted, lapply, Map, mapply, match, mget,
+##     order, paste, pmax, pmax.int, pmin, pmin.int, Position, rank,
+##     rbind, Reduce, rownames, sapply, saveRDS, table, tapply, unique,
+##     unsplit, which.max, which.min</code></pre>
+<pre><code>## Welcome to Bioconductor
+## 
+##     Vignettes contain introductory material; view with
+##     &#39;browseVignettes()&#39;. To cite Bioconductor, see
+##     &#39;citation(&quot;Biobase&quot;)&#39;, and for packages &#39;citation(&quot;pkgname&quot;)&#39;.</code></pre>
+<pre><code>## Setting options(&#39;download.file.method.GEOquery&#39;=&#39;auto&#39;)</code></pre>
+<pre><code>## Setting options(&#39;GEOquery.inmemory.gpl&#39;=FALSE)</code></pre>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="visualizing-distributions.html#cb13-1" tabindex="-1"></a><span class="fu">library</span>(knitr)</span>
+<span id="cb13-2"><a href="visualizing-distributions.html#cb13-2" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code></pre></div>
+<pre><code>## 
+## Attaching package: &#39;dplyr&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:Biobase&#39;:
+## 
+##     combine</code></pre>
+<pre><code>## The following objects are masked from &#39;package:BiocGenerics&#39;:
+## 
+##     combine, intersect, setdiff, setequal, union</code></pre>
+<pre><code>## The following object is masked from &#39;package:generics&#39;:
+## 
+##     explain</code></pre>
+<pre><code>## The following objects are masked from &#39;package:stats&#39;:
+## 
+##     filter, lag</code></pre>
+<pre><code>## The following objects are masked from &#39;package:base&#39;:
+## 
+##     intersect, setdiff, setequal, union</code></pre>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="visualizing-distributions.html#cb20-1" tabindex="-1"></a><span class="fu">library</span>(tibble)</span>
+<span id="cb20-2"><a href="visualizing-distributions.html#cb20-2" tabindex="-1"></a><span class="cf">if</span>(<span class="sc">!</span><span class="fu">require</span>(tidyverse)){</span>
+<span id="cb20-3"><a href="visualizing-distributions.html#cb20-3" tabindex="-1"></a>  <span class="fu">install.packages</span>(<span class="st">&quot;tidyvers&quot;</span>,<span class="at">dependencies =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb20-4"><a href="visualizing-distributions.html#cb20-4" tabindex="-1"></a>}</span></code></pre></div>
+<pre><code>## Loading required package: tidyverse</code></pre>
+<pre><code>## ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+## ✔ forcats   1.0.1     ✔ readr     2.1.6
+## ✔ ggplot2   4.0.1     ✔ stringr   1.6.0
+## ✔ lubridate 1.9.5     ✔ tidyr     1.3.2
+## ✔ purrr     1.2.0     
+## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+## ✖ dplyr::combine()    masks Biobase::combine(), BiocGenerics::combine()
+## ✖ dplyr::filter()     masks stats::filter()
+## ✖ dplyr::lag()        masks stats::lag()
+## ✖ ggplot2::Position() masks BiocGenerics::Position(), base::Position()
+## ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="visualizing-distributions.html#cb23-1" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb23-2"><a href="visualizing-distributions.html#cb23-2" tabindex="-1"></a></span>
+<span id="cb23-3"><a href="visualizing-distributions.html#cb23-3" tabindex="-1"></a>gse <span class="ot">&lt;-</span> <span class="st">&quot;GSE119732&quot;</span></span>
+<span id="cb23-4"><a href="visualizing-distributions.html#cb23-4" tabindex="-1"></a></span>
+<span id="cb23-5"><a href="visualizing-distributions.html#cb23-5" tabindex="-1"></a><span class="fu">source</span>(<span class="st">&quot;./supp_functions.R&quot;</span>)</span>
+<span id="cb23-6"><a href="visualizing-distributions.html#cb23-6" tabindex="-1"></a><span class="fu">fetch_geo_supp</span>(<span class="at">gse =</span> gse)</span></code></pre></div>
+<pre><code>## Using locally cached version of supplementary file(s) GSE119732 found here:
+## data/GSE119732/GSE119732_count_table_RNA_seq.txt.gz</code></pre>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="visualizing-distributions.html#cb25-1" tabindex="-1"></a>path <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="st">&quot;data&quot;</span>, gse)</span>
+<span id="cb25-2"><a href="visualizing-distributions.html#cb25-2" tabindex="-1"></a>files <span class="ot">&lt;-</span> <span class="fu">list.files</span>(path, <span class="at">pattern =</span> <span class="st">&quot;</span><span class="sc">\\</span><span class="st">.txt.gz$|</span><span class="sc">\\</span><span class="st">.tsv.gz$|</span><span class="sc">\\</span><span class="st">.csv.gz$&quot;</span>, </span>
+<span id="cb25-3"><a href="visualizing-distributions.html#cb25-3" tabindex="-1"></a>                    <span class="at">full.names =</span> <span class="cn">TRUE</span>, <span class="at">recursive =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<p>Raw table preview</p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="visualizing-distributions.html#cb26-1" tabindex="-1"></a><span class="fu">library</span>(readr)</span>
+<span id="cb26-2"><a href="visualizing-distributions.html#cb26-2" tabindex="-1"></a></span>
+<span id="cb26-3"><a href="visualizing-distributions.html#cb26-3" tabindex="-1"></a>safe_read <span class="ot">&lt;-</span> <span class="cf">function</span>(file) {</span>
+<span id="cb26-4"><a href="visualizing-distributions.html#cb26-4" tabindex="-1"></a>  <span class="co"># First attempt: read as TSV</span></span>
+<span id="cb26-5"><a href="visualizing-distributions.html#cb26-5" tabindex="-1"></a>  df <span class="ot">&lt;-</span> <span class="fu">tryCatch</span>(</span>
+<span id="cb26-6"><a href="visualizing-distributions.html#cb26-6" tabindex="-1"></a>    readr<span class="sc">::</span><span class="fu">read_tsv</span>(file, <span class="at">show_col_types =</span> <span class="cn">FALSE</span>),</span>
+<span id="cb26-7"><a href="visualizing-distributions.html#cb26-7" tabindex="-1"></a>    <span class="at">error =</span> <span class="cf">function</span>(e) <span class="cn">NULL</span>   <span class="co"># catch fatal errors</span></span>
+<span id="cb26-8"><a href="visualizing-distributions.html#cb26-8" tabindex="-1"></a>  )</span>
+<span id="cb26-9"><a href="visualizing-distributions.html#cb26-9" tabindex="-1"></a>  </span>
+<span id="cb26-10"><a href="visualizing-distributions.html#cb26-10" tabindex="-1"></a>  <span class="co"># If read_tsv failed entirely:</span></span>
+<span id="cb26-11"><a href="visualizing-distributions.html#cb26-11" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">is.null</span>(df)) {</span>
+<span id="cb26-12"><a href="visualizing-distributions.html#cb26-12" tabindex="-1"></a>    <span class="fu">message</span>(<span class="st">&quot;TSV read failed — reading as space-delimited file instead.&quot;</span>)</span>
+<span id="cb26-13"><a href="visualizing-distributions.html#cb26-13" tabindex="-1"></a>    <span class="fu">return</span>(readr<span class="sc">::</span><span class="fu">read_table</span>(file, <span class="at">show_col_types =</span> <span class="cn">FALSE</span>))</span>
+<span id="cb26-14"><a href="visualizing-distributions.html#cb26-14" tabindex="-1"></a>  }</span>
+<span id="cb26-15"><a href="visualizing-distributions.html#cb26-15" tabindex="-1"></a>  </span>
+<span id="cb26-16"><a href="visualizing-distributions.html#cb26-16" tabindex="-1"></a>  <span class="co"># If read_tsv returned but with parsing issues:</span></span>
+<span id="cb26-17"><a href="visualizing-distributions.html#cb26-17" tabindex="-1"></a>  probs <span class="ot">&lt;-</span> <span class="fu">problems</span>(df)</span>
+<span id="cb26-18"><a href="visualizing-distributions.html#cb26-18" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">nrow</span>(probs) <span class="sc">&gt;</span> <span class="dv">0</span>) {</span>
+<span id="cb26-19"><a href="visualizing-distributions.html#cb26-19" tabindex="-1"></a>    <span class="fu">message</span>(<span class="st">&quot;Parsing issues detected in TSV — reading as space-delimited file instead.&quot;</span>)</span>
+<span id="cb26-20"><a href="visualizing-distributions.html#cb26-20" tabindex="-1"></a>    <span class="fu">return</span>(readr<span class="sc">::</span><span class="fu">read_table</span>(file, <span class="at">show_col_types =</span> <span class="cn">FALSE</span>))</span>
+<span id="cb26-21"><a href="visualizing-distributions.html#cb26-21" tabindex="-1"></a>  }</span>
+<span id="cb26-22"><a href="visualizing-distributions.html#cb26-22" tabindex="-1"></a>  </span>
+<span id="cb26-23"><a href="visualizing-distributions.html#cb26-23" tabindex="-1"></a>  <span class="co"># If everything was fine:</span></span>
+<span id="cb26-24"><a href="visualizing-distributions.html#cb26-24" tabindex="-1"></a>  <span class="fu">return</span>(df)</span>
+<span id="cb26-25"><a href="visualizing-distributions.html#cb26-25" tabindex="-1"></a>}</span>
+<span id="cb26-26"><a href="visualizing-distributions.html#cb26-26" tabindex="-1"></a></span>
+<span id="cb26-27"><a href="visualizing-distributions.html#cb26-27" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">safe_read</span>(files[<span class="dv">1</span>])</span>
+<span id="cb26-28"><a href="visualizing-distributions.html#cb26-28" tabindex="-1"></a></span>
+<span id="cb26-29"><a href="visualizing-distributions.html#cb26-29" tabindex="-1"></a></span>
+<span id="cb26-30"><a href="visualizing-distributions.html#cb26-30" tabindex="-1"></a><span class="fu">kable_head</span>(x[, <span class="dv">1</span><span class="sc">:</span><span class="fu">min</span>(<span class="dv">6</span>, <span class="fu">ncol</span>(x))], <span class="dv">5</span>, <span class="fu">paste</span>(gse,<span class="st">&quot;: raw table preview&quot;</span>))</span></code></pre></div>
+<table>
+<caption>(#tab:preview_raw)GSE119732 : raw table preview</caption>
+<thead>
+<tr class="header">
+<th align="left">gene_id</th>
+<th align="right">A1</th>
+<th align="right">A2</th>
+<th align="right">A3</th>
+<th align="right">A4</th>
+<th align="right">B1</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">ENSG00000223972.5</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">ENSG00000227232.5</td>
+<td align="right">79</td>
+<td align="right">119</td>
+<td align="right">84</td>
+<td align="right">50</td>
+<td align="right">80</td>
+</tr>
+<tr class="odd">
+<td align="left">ENSG00000278267.1</td>
+<td align="right">17</td>
+<td align="right">10</td>
+<td align="right">22</td>
+<td align="right">19</td>
+<td align="right">19</td>
+</tr>
+<tr class="even">
+<td align="left">ENSG00000243485.4</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">ENSG00000237613.2</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="boxplots" class="section level2 hasAnchor" number="3.2">
+<h2><span class="header-section-number">3.2</span> Boxplots<a href="visualizing-distributions.html#boxplots" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="visualizing-distributions.html#cb27-1" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb27-2"><a href="visualizing-distributions.html#cb27-2" tabindex="-1"></a></span>
+<span id="cb27-3"><a href="visualizing-distributions.html#cb27-3" tabindex="-1"></a><span class="co"># suppose &#39;mat&#39; is a gene x sample matrix (numeric)</span></span>
+<span id="cb27-4"><a href="visualizing-distributions.html#cb27-4" tabindex="-1"></a>plot_box <span class="ot">&lt;-</span> <span class="cf">function</span>(mat, <span class="at">main =</span> <span class="st">&quot;&quot;</span>, <span class="at">ylab =</span> <span class="st">&quot;log2(counts+1)&quot;</span>) {</span>
+<span id="cb27-5"><a href="visualizing-distributions.html#cb27-5" tabindex="-1"></a>  df <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(mat)</span>
+<span id="cb27-6"><a href="visualizing-distributions.html#cb27-6" tabindex="-1"></a>  df_long <span class="ot">&lt;-</span> df <span class="sc">|&gt;</span></span>
+<span id="cb27-7"><a href="visualizing-distributions.html#cb27-7" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">gene =</span> <span class="fu">rownames</span>(df)) <span class="sc">|&gt;</span></span>
+<span id="cb27-8"><a href="visualizing-distributions.html#cb27-8" tabindex="-1"></a>    <span class="fu">pivot_longer</span>(<span class="sc">-</span>gene, <span class="at">names_to =</span> <span class="st">&quot;sample&quot;</span>, <span class="at">values_to =</span> <span class="st">&quot;value&quot;</span>) <span class="sc">|&gt;</span></span>
+<span id="cb27-9"><a href="visualizing-distributions.html#cb27-9" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">value =</span> <span class="fu">log2</span>(value <span class="sc">+</span> <span class="dv">1</span>))</span>
+<span id="cb27-10"><a href="visualizing-distributions.html#cb27-10" tabindex="-1"></a></span>
+<span id="cb27-11"><a href="visualizing-distributions.html#cb27-11" tabindex="-1"></a>  <span class="fu">ggplot</span>(df_long, <span class="fu">aes</span>(<span class="at">x =</span> sample, <span class="at">y =</span> value)) <span class="sc">+</span></span>
+<span id="cb27-12"><a href="visualizing-distributions.html#cb27-12" tabindex="-1"></a>    <span class="fu">geom_boxplot</span>(<span class="at">outlier.size =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
+<span id="cb27-13"><a href="visualizing-distributions.html#cb27-13" tabindex="-1"></a>    <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb27-14"><a href="visualizing-distributions.html#cb27-14" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">90</span>, <span class="at">vjust =</span> <span class="fl">0.5</span>, <span class="at">hjust =</span> <span class="dv">1</span>)) <span class="sc">+</span></span>
+<span id="cb27-15"><a href="visualizing-distributions.html#cb27-15" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title =</span> main, <span class="at">x =</span> <span class="st">&quot;Sample&quot;</span>, <span class="at">y =</span> ylab)</span>
+<span id="cb27-16"><a href="visualizing-distributions.html#cb27-16" tabindex="-1"></a>}</span>
+<span id="cb27-17"><a href="visualizing-distributions.html#cb27-17" tabindex="-1"></a></span>
+<span id="cb27-18"><a href="visualizing-distributions.html#cb27-18" tabindex="-1"></a><span class="fu">plot_box</span>(x[,<span class="dv">2</span><span class="sc">:</span><span class="fu">ncol</span>(x)])</span></code></pre></div>
+<p><img src="03-visualizing-distributions_files/figure-html/unnamed-chunk-1-1.png" alt="" width="672" /></p>
+</div>
+<div id="density-plots" class="section level2 hasAnchor" number="3.3">
+<h2><span class="header-section-number">3.3</span> Density plots<a href="visualizing-distributions.html#density-plots" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="visualizing-distributions.html#cb28-1" tabindex="-1"></a>plot_density <span class="ot">&lt;-</span> <span class="cf">function</span>(mat, <span class="at">main =</span> <span class="st">&quot;&quot;</span>) {</span>
+<span id="cb28-2"><a href="visualizing-distributions.html#cb28-2" tabindex="-1"></a>  df <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(mat)</span>
+<span id="cb28-3"><a href="visualizing-distributions.html#cb28-3" tabindex="-1"></a>  df_long <span class="ot">&lt;-</span> df <span class="sc">|&gt;</span></span>
+<span id="cb28-4"><a href="visualizing-distributions.html#cb28-4" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">gene =</span> <span class="fu">rownames</span>(df)) <span class="sc">|&gt;</span></span>
+<span id="cb28-5"><a href="visualizing-distributions.html#cb28-5" tabindex="-1"></a>    <span class="fu">pivot_longer</span>(<span class="sc">-</span>gene, <span class="at">names_to =</span> <span class="st">&quot;sample&quot;</span>, <span class="at">values_to =</span> <span class="st">&quot;value&quot;</span>) <span class="sc">|&gt;</span></span>
+<span id="cb28-6"><a href="visualizing-distributions.html#cb28-6" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">value =</span> <span class="fu">log2</span>(value <span class="sc">+</span> <span class="dv">1</span>))</span>
+<span id="cb28-7"><a href="visualizing-distributions.html#cb28-7" tabindex="-1"></a></span>
+<span id="cb28-8"><a href="visualizing-distributions.html#cb28-8" tabindex="-1"></a>  <span class="fu">ggplot</span>(df_long, <span class="fu">aes</span>(<span class="at">x =</span> value, <span class="at">colour =</span> sample)) <span class="sc">+</span></span>
+<span id="cb28-9"><a href="visualizing-distributions.html#cb28-9" tabindex="-1"></a>    <span class="fu">geom_density</span>() <span class="sc">+</span></span>
+<span id="cb28-10"><a href="visualizing-distributions.html#cb28-10" tabindex="-1"></a>    <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb28-11"><a href="visualizing-distributions.html#cb28-11" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title =</span> main, <span class="at">x =</span> <span class="st">&quot;log2(counts+1)&quot;</span>, <span class="at">y =</span> <span class="st">&quot;Density&quot;</span>) <span class="sc">+</span></span>
+<span id="cb28-12"><a href="visualizing-distributions.html#cb28-12" tabindex="-1"></a>    <span class="fu">guides</span>(<span class="at">colour =</span> <span class="st">&quot;none&quot;</span>)</span>
+<span id="cb28-13"><a href="visualizing-distributions.html#cb28-13" tabindex="-1"></a>}</span>
+<span id="cb28-14"><a href="visualizing-distributions.html#cb28-14" tabindex="-1"></a></span>
+<span id="cb28-15"><a href="visualizing-distributions.html#cb28-15" tabindex="-1"></a><span class="fu">plot_density</span>(x[,<span class="dv">2</span><span class="sc">:</span><span class="fu">ncol</span>(x)])</span></code></pre></div>
+<p><img src="03-visualizing-distributions_files/figure-html/unnamed-chunk-2-1.png" alt="" width="672" /></p>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="technical-vs-biological-variation.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="normalization-methods.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+  "sharing": {
+    "github": false,
+    "facebook": true,
+    "twitter": true,
+    "linkedin": false,
+    "weibo": false,
+    "instapaper": false,
+    "vk": false,
+    "whatsapp": false,
+    "all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+  },
+  "fontsettings": {
+    "theme": "white",
+    "family": "sans",
+    "size": 2
+  },
+  "edit": {
+    "link": null,
+    "text": null
+  },
+  "history": {
+    "link": null,
+    "text": null
+  },
+  "view": {
+    "link": null,
+    "text": null
+  },
+  "download": ["bcb420_normalization.pdf", "bcb420_normalization.epub"],
+  "search": {
+    "engine": "fuse",
+    "options": null
+  },
+  "toc": {
+    "collapse": "section"
+  }
+});
+});
+</script>
+
+</body>
+
+</html>
