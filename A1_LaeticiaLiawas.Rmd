@@ -1,0 +1,628 @@
+---
+title: "BCB420 Assignment 1"
+author: "Laeticia Liawas"
+date: "`r Sys.Date()`"
+output:
+  bookdown::html_document2:
+    code_folding: hide  
+    theme: journal
+    fig.caption: true
+    toc: true                  
+    toc_depth: 3                
+    toc_float: true             
+bibliography: bcb420-assignment/references.bib
+csl: bcb420-assignment/apa.csl
+link-citations: true            
+nocite: '@*' # cite all, even if not present as an in-text citation
+---
+<style>
+body {
+  font-size: 18px;
+}
+
+caption {
+  font-size: 16px;
+  font-style: italic;
+}
+</style>
+
+```{r setup, include=FALSE, echo=FALSE}
+knitr::opts_chunk$set(
+                      warning = FALSE, # suppressing warning messages
+                      message = FALSE,
+                      knitr.kable.max_rows = 5)
+
+# attach packages
+if(!require(dplyr)){
+  install.packages(c("dplyr"))
+}
+if(!require(tidyr)){
+  install.packages(c("tidyr"))
+}
+
+library("GEOquery")
+library("rmarkdown")
+library("dplyr")
+library("tidyr")
+library("kableExtra")
+library("biomaRt")
+library("edgeR")
+library("limma")
+library("RColorBrewer")
+library("ggplot2")
+library("ComplexHeatmap")
+
+```
+
+# Introduction {#introduction}
+
+Dengue virus (DENV) is a persistent threat, most prevalent in tropical and subtropical areas, to human health [@Poonpanichakul2021; @Bhatt2013]. Clinical manifestations of DENV infection range from asymptomatic to potentially fatal. On the one hand, cases could be asymptomatic or with mild dengue fever (DF). On the other hand, infection could lead to severe illness such as in cases of dengue haemorrhagic syndrome, in which there is unusually high vascular permeability, and dengue shock syndrome (DSS), where hypoglycemia occurs often as a result of the increased vascular permeability [@Bhatt2013; @Kok2023]. DENV infections typically have 2 or 3 phases. The first phase, known as the febrile phase, involves symptoms such as fever and vomiting and commonly lasts for a week. More severe infections may go into a critical phase, where symptoms such as increased vascular permeabilisation start to manifest. The recovery, or convalescent phase is the last phase, in which the patient starts to recover and symptoms start to subside [@Poonpanichakul2021; @Kok2023].
+
+The various ways DENV infection manifests in different individuals arises from interactions between the virus and the host immune system. For example, there is a higher chance of developing a severe disease associated to secondary heterotypic infection, i.e. when DENV infection occurs after treatment of a different infection [@Screaton2015]. This effect has then been attributed to deleterious effects of the adaptive immune response towards the host during the second infection, after this response was used to defend against the first [@Screaton2015; @Rothman2011]. As a result, while the adaptive immune response has often been the focus of studies on DENV infection, the role of innate immunity should not be neglected, especially since the innate immune response is the first line of defense against infection, and influences the subsequent adaptive response [@King2020].
+
+One such cell type involved in the innate immune response is the helper innate lymphoid cell (hILC), which is itself a subtype of innate lymphoid cells [@Guia2020]. These cells have been found to play critical roles in the host immune response to various viruses, however many of these findings have only been demonstrated in mouse models and in human systems, there are limited studies on natural infection responses [@Poonpanichakul2021]. This research gap has thus motivated @Poonpanichakul2021 to investigate the role of hILCs in DENV infection response, and it has motivated me to leverage the provided RNA sequencing data from hILCs in patients in different infection phases and with different disease severities to conduct my own analysis. In this report, I will detail my findings in trying to investigate whether there is a difference in hILC gene expression **during the febrile phase of DF and DHF**.
+
+# Selecting an expression dataset {#selecting-data-set}
+
+In this section, I will detail my own rationale behind my choice of dataset. In this section, I will also go through steps I followed to find and download the data.
+
+## How the dataset was chosen {#ds-choice}
+
+Being from a tropical country myself, the dangers of dengue fever is one not completely unknown to me. For a disease which has led to countless warning infomercials being broadcasted on TV since I was a kid, I was surprised to know that we still don't know everything about this disease, and thus I wanted to use a dataset relating to DENV for this assignment.
+
+I decided to search the GEO website directly instead of using `GEOmetadb`, for two reasons. Firstly, while I like the feature of being able to query the database with `SQL` queries (because I have some familiarity with it and for its readability), I did not want to download the database locally as it takes some time, and a lot of storage. Secondly, I find that the locally downloaded database is not completely up-to-date, and some datasets, platforms, etc. were missing when I last used it. As such, I decided to directly search through GEO.
+
+In GEO, I used the following query [@Edgar2002; @Barrett2012]:
+
+`"Homo sapiens"[Organism] AND ("dengue"[MeSH Terms] OR dengue[All Fields])`
+
+`AND 2020/01[PDAT] : 2026/01[PDAT] AND "expression profiling by high-throughput sequencing"[GTYP]NOT`
+
+`scRNAseq[All Fields]\`
+
+This query searches for RNA-seq human datasets, relating to dengue, within the last \~5 years. Because it was recommended to use bulk RNA-seq data, I filtered out datasets mentioning scRNA-seq. However, if I wanted to conduct more stringent filtering, I could also add more terms to filter out single cell data, e.g. `NOT "single-cell"[All Fields]`.
+
+After the search, I looked for datasets that interested me and fulfilled the criteria of having count data available, had an associated publication, and had at least 2 conditions and 3 samples per condition to enable differential expression analysis. This led me to choose the dataset "Innate Lymphoid Cells Activation and Transcriptomic Changes in Response to Human Dengue Infection" (@Poonpanichakul2021, GEO accession `GSE155672`). After the dataset was approved by the course instructor, I proceeded with the assignment.
+
+## Downloading the dataset {#ds-download}
+
+Next, I had to download the dataset, without downloading manually from GEO. For this, I used the `GEOquery` R package which is available through `Bioconductor` [@geoquery]. The command used, which is `getGEOSuppFiles` will download the supplemental files from GEO based on the accession given, and if there are existing files from this accession, it will use those files instead. This dataset has 2 supplemental files, and both are `.txt` files:
+
+```{r downloading-data}
+
+gse <- "GSE155672"
+dir.create("data", showWarnings = FALSE)
+
+files <- GEOquery::getGEOSuppFiles(GEO = gse, baseDir = "./data")
+
+rownames(files)
+```
+
+For this analysis, we will use the count matrix. Let us then read the data table, and display a small subset of it:
+
+```{r count-matrix, tab.cap="Table showing the Ensembl ID (ENSG), gene name (gene), and raw counts of each gene for each sample, for a subset of the dataset. Each row represents one gene. For sample names, disease is indicated as: DHF = dengue haemorrhagic fever, DF = dengue fever; phase is indicated as: F = febrile phase, C = convalescent phase. Numbers in sample names denote the patient, where each sample with same number and same disease was taken from the same patient, at different timepoints. "}
+
+
+dengue_df <- read.table(rownames(files)[1])
+
+head(dengue_df, 5) %>%
+  kableExtra::kable(row.names = FALSE, format = "html") %>%
+  kableExtra::kable_styling() %>%
+  kableExtra::scroll_box(height = "100%", width = "100%")
+```
+
+As mentioned in the [Introduction](#introduction), I am planning to only investigate samples from the febrile phase, not the convalescent phase. Thus, I will subset the data to only contain data on samples from patients during the febrile phase, using `select` from `dplyr` [@dplyr]. This subset will be the data we will work on.
+
+```{r subset-count-matrix, tab.cap="Table showing the Ensembl ID (ENSG), gene name (gene), and raw counts of each gene for each sample for a subset of the whole dataset. The dataset was subsetted to only include samples from the febrile phase, and this represents the working data from this point on. Each row represents one gene. For sample names, disease is indicated as: DHF = dengue haemorrhagic fever, DF = dengue fever; phase is indicated as: F = febrile phase. Numbers in sample names denote the patient, where each sample with same number and same disease was taken from the same patient, at different timepoints. "}
+
+
+# filter out convalescent phase
+dengue_df <- dengue_df %>% 
+  dplyr::select(!ends_with("_C"))
+
+# to answer final question on final coverage
+original_size <- colSums(dengue_df[,-c(1,2)])
+
+head(dengue_df, 5) %>%
+  kableExtra::kable(row.names = FALSE, format = "html") %>%
+  kableExtra::kable_styling()
+```
+
+We also create a dataframe for metadata for this dataset. Though all of the samples are of the same phase of disease, I decided to add a column for that anyway. From the metadata, it is evident that we have 3 samples for each condition.
+
+```{r metadata, tab.cap="Table showing the sample name, and the corresponding disease and phase for the febrile phase samples. For sample names, disease is indicated as: DHF = dengue haemorrhagic fever, DF = dengue fever; phase is indicated as: F = febrile phase. Numbers in sample names denote the patient, where each sample with the same number and same disease was taken from the same patient, at different timepoints. "}
+
+
+# define a helper for convenience, splits the colnames at the underscore
+split_sample_name <- function(x) {
+  gsub(pattern = "[0-9]", replacement = "",
+       x = unlist(strsplit(x = x, split = "_"))[1])
+}
+
+sample_names <- colnames(dengue_df)[-c(1,2)]
+disease <- unlist(lapply(X = sample_names, 
+                         FUN = split_sample_name))
+
+metadata <- data.frame(sample_names, disease, phase = "F")
+
+metadata %>% 
+  kable(row.names = FALSE, format = "html") %>%
+  kableExtra::kable_styling()
+```
+
+After this, I decided to carry on to the next step.
+
+# Cleaning the data and mapping to HUGO symbols {#cleaning-n-mapping}
+
+This section pertains to showing overview statistics for the dataset, discussing outliers, filtering and normalisation.
+
+## Overview statistics {#overview-stats}
+
+Firstly, we should look at the library size (read depth), especially for each sample. We assume that each sample should have similar read depths if they come from similar experimental design and conditions [@norm_lect; @norm_note]. So, we count the total number of reads for each sample, and report statistics for it.
+
+```{r lib-size, tab.cap="Table showing the library size, or read depths for each sample. Column names denote the sample name, and in the table, the total number of reads for each sample is shown. DHF = dengue haemorrhagic fever, DF = dengue fever; phase is indicated as: F = febrile phase. Numbers in sample names denote the patient, where each sample with the same number and same disease was taken from the same patient, at different timepoints. "}
+
+
+library_size <- colSums(dengue_df[,-c(1,2)])
+
+t(library_size) %>% 
+  kableExtra::kable(format = "html") %>%
+  kableExtra::kable_styling()
+
+```
+
+The expectation that each sample within conditions is not perfectly fulfilled here, as there still are differences in library size. For example, among DHF samples, `DHF2_F` has a higher library size than the others. Thus, normalisation is a good step to be done before any analysis.
+
+Lastly, we can use boxplots and density plots to illustrate the distribution of each sample before and after data cleaning and normalisation.
+
+```{r preprocessed-boxplots, fig.cap="Boxplots showing the distribution of reads for each gene, for each sample before normalisation and cleaning. Read counts were log2-transformed before plotting. For sample names, DHF = dengue haemorrhagic fever, DF = dengue fever; phase is indicated as: F = febrile phase. Numbers in sample names denote the patient, where each sample with the same number and same disease was taken from the same patient, at different timepoints. "}
+
+# create 'long' dataframe with sample names and expression values
+dengue_df_long <- dengue_df %>%
+  pivot_longer(-c(1,2), names_to = "sample", values_to = "expression")
+
+# log2 transform, and add 1 to avoid log2(0)
+dengue_df_long$expression <- log2(dengue_df_long$expression + 1) 
+
+ggplot2::ggplot(data = dengue_df_long,
+                mapping = aes(x = sample, y = expression)) +
+        ggplot2::geom_boxplot() +
+        ggplot2::labs(title = "Boxplot showing the distribution of gene expression values for each sample", x = "Sample", y = "log2 expression (reads)")
+```
+
+```{r preprocessed-densityplots, fig.cap="Density plots showing the distribution of reads for each gene, for each sample before normalisation and cleaning. Read counts were log2-transformed before plotting. For sample names, DHF = dengue haemorrhagic fever, DF = dengue fever; phase is indicated as: F = febrile phase. Numbers in sample names denote the patient, where each sample with the same number and same disease was taken from the same patient, at different timepoints. "}
+
+ggplot2::ggplot(data = dengue_df_long,
+                mapping = aes(x = expression, colour = sample)) +
+        ggplot2::geom_density() +
+        ggplot2::labs(title = "Density plot showing the distribution of gene expression values\nfor each sample", x = "log2 expression (reads)", y = "Density")
+
+```
+
+From the two plots in \@ref(fig:preprocessed-boxplots) and \@ref(fig:preprocessed-densityplots), the data seems to be extremely right-skewed. This is especially visible in the density plot in \@ref(fig:preprocessed-densityplots), where one can notice the long "tail" on the right. This is most likely due to the data set having many lowly expressed genes. It would be a good idea to apply normalisation and filtering.
+
+## Outliers {#outliers}
+
+In @Poonpanichakul2021, no mention of any details regarding any instrument errors that may lead to outliers was made, and they did not remove any data points on this basis. Thus, other than lowly-expressed genes, I decided against removing outliers as I did not find any reason to believe there were technical outliers.
+
+## Identity mapping {#identity-mapping}
+
+We map Ensembl IDs to the HUGO gene symbols. Even though the count matrix already has gene names, it might be useful to do so if there were any updates in either database (Ensembl or HUGO). We will use the `biomaRt` package for this [@biomart1; @biomart2].
+
+Firstly, we strip the version number off of the Ensembl IDs. Then, we print the first 5 rows of the data as a sanity check.
+
+```{r ensembl-preprocessing, tab.cap="Table showing the unversioned Ensembl ID (ENSG), gene name (gene), and raw counts of the first 5 genes for each sample for a subset of the whole dataset. Each row represents one gene. For sample names, disease is indicated as: DHF = dengue haemorrhagic fever, DF = dengue fever; phase is indicated as: F = febrile phase. Numbers in sample names denote the patient, where each sample with same number and same disease was taken from the same patient, at different timepoints. "}
+
+
+# If there is a period in the ID, strip it and any numbers following it.
+# Otherwise, keep it constant.
+
+dengue_df <- dengue_df %>%
+  dplyr::mutate(ENSG = gsub("\\..*", "", ENSG))
+
+rownames(dengue_df) <- dengue_df$ENSG
+
+# sanity check to see how it looks now.
+
+head(dengue_df, 5) %>%
+  kableExtra::kable(row.names = FALSE, format = "html") %>%
+  kableExtra::kable_styling()
+  
+```
+
+The fact that the count matrix already has gene names is helpful--it serves as another check that we did not mess up any step in identifier mapping. Either way, we continue to set up the BioMart connection, based on the steps from lecture [@Dyer2024; @identity_lect; @identity_note].
+
+```{r biomart-con, tab.cap="Table showing the unversioned Ensembl ID (ENSG), gene name (gene), gene symbol from HUGO, and raw counts of the first 5 genes for each sample for a subset of the whole dataset. Each row represents one gene. For sample names, disease is indicated as: DHF = dengue haemorrhagic fever, DF = dengue fever; phase is indicated as: F = febrile phase. Numbers in sample names denote the patient, where each sample with same number and same disease was taken from the same patient, at different timepoints. "}
+
+
+# connection
+ensembl <- useEnsembl(biomart = "genes", 
+                      dataset = "hsapiens_gene_ensembl", 
+                      mirror = "useast")
+
+# set up mapping of Ensembl ids to hgnc symbols
+mapping <- biomaRt::getBM(
+    attributes = c("ensembl_gene_id", "hgnc_symbol"),
+    filters = "ensembl_gene_id",
+    values = dengue_df$ENSG,
+    mart = ensembl
+)
+
+# map to the data
+dengue_df <- dengue_df %>%
+  dplyr::left_join(mapping, 
+                   by = join_by(ENSG == ensembl_gene_id)) %>%
+  dplyr::relocate(colnames(.)[ncol(.)], .after = 2)
+
+# preview
+head(dengue_df, 5) %>%
+  kableExtra::kable(row.names = FALSE, format = "html") %>%
+  kableExtra::kable_styling() %>%
+  kableExtra::scroll_box(height = "100%", width = "100%")
+```
+
+From these results we can see that some of the symbols are not exact matches to the gene names from the dataset, but there are matches too. For this analysis I will use the names from mapping from HUGO, as presumably this reflects the newest/most up-to-date gene symbol for the Ensembl IDs.
+
+To set the HUGO symbols as row names, each row needs to have a unique value. But it seems that there are quite a few duplicates. There is a chance these might get filtered out after filtering for lowly-expressed genes, so keep it as is for now.
+
+```{r duplicate-hgnc-prefilter}
+cat(sprintf("No. of duplicates: %s", length(dengue_df$hgnc_symbol[duplicated(dengue_df$hgnc_symbol)])))
+```
+
+I have also decided to remove rows where the Ensembl ID does not map to any HUGO symbol, as there is an expectation for the row names to be HUGO symbols. Additionally, if a row does not map to a HUGO symbol, it might not be a gene.
+
+```{r remove-missing}
+
+with_missing <- nrow(dengue_df)
+
+dengue_df <- dengue_df %>%
+  dplyr::filter(!is.na(hgnc_symbol) & hgnc_symbol != "")
+
+without_missing <- nrow(dengue_df)
+
+cat(sprintf("No. of non-mapped genes: %s", with_missing - without_missing))
+```
+
+## Filtering lowly-expressed genes {#filtering}
+
+Next, I filtered out lowly expressed genes, using the `filterByExpr` function from `edgeR`. First, create a `DGEList` from the data. Then, filter lowly expressed genes using the `filterByExpr` function [@edger].
+
+```{r filtering}
+
+# set up DGEList 
+dge <- edgeR::DGEList(counts = dengue_df,
+               group = metadata$disease)
+before <- dim(dge)[1]
+
+# do initial normalisation, then filter lowly expressed genes
+dge <- edgeR::calcNormFactors(dge, method = "TMM")
+keep <- edgeR::filterByExpr(dge, min.count = 50, min.total.count = 75)
+
+# remake dge, recalculate library size
+dge <- dge[keep, ,keep.lib.sizes = FALSE]
+after <- dim(dge)[1]
+
+cat(sprintf("No. of genes before filtering: %s\nNo. of genes after filtering: %s", before, after))
+
+cat(sprintf("\nNo. of duplicates: %s\n", 
+            length(dge$genes$hgnc_symbol[duplicated(dge$genes$hgnc_symbol)])))
+```
+
+Lastly, we set the row names of the count matrix in `dge$counts` to be HUGO gene symbols.
+
+```{r set-rowname, tab.cap="Table showing the HUGO gene symbol and raw counts of the first 5 genes for each sample for a subset of the whole dataset. Each row represents the number of reads in each sample for a single gene, and row names represent the HUGO symbol for that gene. For sample names, disease is indicated as: DHF = dengue haemorrhagic fever, DF = dengue fever; phase is indicated as: F = febrile phase. Numbers in sample names denote the patient, where each sample with same number and same disease was taken from the same patient, at different timepoints. "}
+
+rownames(dge$counts) <- dge$genes$hgnc_symbol
+
+# save the dge object for future reference
+saveRDS(dge, file = "./data/dge.RDS")
+
+
+head(dge$counts, 5) %>%
+  kableExtra::kable(head(dge$counts, 5), format = "html") %>%
+  kableExtra::kable_styling()
+```
+
+## Normalisation {#normalisation}
+
+As the last step before differential gene analysis, we normalise the data. I used TMM normalisation, using `calcNormFactors` from `edgeR` [@edger]. This allows for the normalisation to be done in such a way that highly expressed genes that may not be "biologically interesting" (e.g. the gene normally has a high expression anyway) do not 'inflate' the counts and drown out signal from genes that were differentially expressed but have lower reads than those highly expressed genes.
+
+```{r normalisation}
+dge <- edgeR::calcNormFactors(dge, method = "TMM")
+```
+
+Lastly, we can plot boxplots and density plots again to see how the data looks now.
+
+```{r processed-boxplots, fig.cap="Boxplots showing the distribution of reads for each gene, for each sample after normalisation and cleaning. Read counts were log2-transformed before plotting. For sample names, DHF = dengue haemorrhagic fever, DF = dengue fever; phase is indicated as: F = febrile phase. Numbers in sample names denote the patient, where each sample with the same number and same disease was taken from the same patient, at different timepoints. "}
+
+# create 'long' dataframe with sample names and expression values
+dengue_df_processed_long <- as.data.frame(dge$counts) %>%
+  tidyr::pivot_longer(everything(), names_to = "sample", values_to = "expression")
+
+# log2 transform, and add 1 to avoid log2(0)
+dengue_df_processed_long$expression <- log2(dengue_df_processed_long$expression + 1) 
+
+ggplot2::ggplot(data = dengue_df_processed_long,
+                mapping = aes(x = sample, y = expression)) +
+        ggplot2::geom_boxplot() +
+        ggplot2::labs(title = "Boxplot showing the distribution of gene expression values for each sample,\nafter normalisation and cleaning", x = "Sample", y = "log2 expression (reads)")
+```
+
+```{r processed-densityplots, fig.cap="Density plots showing the distribution of reads for each gene, for each sample after normalisation and cleaning. Read counts were log2-transformed before plotting. For sample names, DHF = dengue haemorrhagic fever, DF = dengue fever; phase is indicated as: F = febrile phase. Numbers in sample names denote the patient, where each sample with the same number and same disease was taken from the same patient, at different timepoints. "}
+
+ggplot2::ggplot(data = dengue_df_processed_long,
+                mapping = aes(x = expression, colour = sample)) +
+        ggplot2::geom_density() +
+        ggplot2::labs(title = "Density plot showing the distribution of gene expression values\nfor each sample, after normalisation and cleaning", x = "log2 expression (reads)", y = "Density")
+
+```
+
+We can see from \@ref(fig:processed-boxplots) and \@ref(fig:processed-densityplots) that the data is less right-skewed compared to before. We can also see the overlap in medians much clearer in these plots than before.
+
+Now we can continue on to exploratory analysis and differential expression analysis.
+
+# Exploratory analysis {#exploratory}
+
+Firstly we will conduct some exploratory analyses to be able to understand how the data we have looks and is distributed.
+
+## MDS plot {#mds-plot}
+
+MDS plots can illustrate how different or similar the samples are in relation to each other, as a 2D representation i.e. with dimensionality reduction. To generate this plot, we will use the `plotMDS` function from `limma` [@limma].
+
+```{r mds-plot, fig.cap="MDS plot showing the samples in the data, plotted as a 2-dimensional scatterplot. Distances between points represent the approximate the log2 fold changes between any 2 samples. MDS plot was generated by the plotMDS function from the limma R package."}
+
+# Define colour palette
+palette <- RColorBrewer::brewer.pal(n = 1, name = "Set1")[c(1,2)]
+names(palette) <- levels(factor(metadata$disease))
+
+# Plot MDS
+limma::plotMDS(dge,
+  labels = metadata$samples,
+  col = palette[metadata$disease],
+  main = "MDS plot of samples, coloured by disease")
+
+legend("topright",
+  legend = names(palette),
+  col = palette,
+  pch = 16)
+
+```
+
+Interestingly, `DHF2_F` is much "further away" from the other samples than any other pairwise distance between the samples other than `DHF2_F`. Regardless, it also appears that DF samples and DHF samples tend to cluster, or be closer to each other, which is an outcome we would hope for.
+
+## log-CPM {#log-cpm}
+
+We could also inspect some statistics for the log-CPM read counts for each sample.
+
+```{r logcpm}
+lcpm <- edgeR::cpm(dge, log = TRUE, prior.count = 1)
+summary(as.vector(lcpm))
+```
+
+From looking at these values, we can see that there may be genes in the dataset that are downregulated and others that are upregulated (based on the min and the max values), as well as genes that have 'average' expression relative to all read counts in the dataset (based on the mean and median). This shows that there is variation in gene expression in the dataset, which has the potential to be biologically interesting. To investigate this variation further, we can continue to carry out differential gene expression analysis.
+
+# Differential gene expression {#deg}
+
+For this assignment, I decided to use the `edgeR` package for differential analysis. I will be following the quasi-likelihood pipeline described in the class exercise [@deg_lect; @deg_note].
+
+## Fitting the QL model {#fit-ql}
+
+First, we fit the quasi-likelihood model onto our data. To do this, we set up a design matrix, which describes the experimental design, set up the contrasts (i.e. the condition comparisons we will do), and finally fit the model onto our data, guided by the design matrix we created. Model fitting itself takes 2 steps. Firstly, we find how the gene expression values are dispersed. Then, we use that information to fit a negative-binomial log-linear model for our data. This model will then be used to find significant log-fold changes in gene expression, between the two conditions.
+
+```{r ql-model}
+
+# set up a design matrix for the experiment
+design <- model.matrix(~ 0 + disease, data = metadata)
+
+# set up contrasts -- compare NHF to NF
+contr <- limma::makeContrasts(
+  `DHF_vs_DF` = diseaseDHF - diseaseDF,
+  levels = design)
+
+# fit model
+dispersal <- edgeR::estimateDisp(dge, design)
+ql_model <- edgeR::glmQLFit(dispersal, design)
+```
+
+## Biological Coefficient of Variance (BCV) plot {#bcv-plot}
+
+Biological Coefficient of Variance (BCV) plots provide us a way to visualise the biological variability between replicates. We can produce such plots with `plotBCV` from `edgeR` [@edger]:
+
+```{r bcv, fig.cap="Biological Coefficient of Variance (BCV) plot showing BCV values for each gene, representing the biological variability between replicates in gene expression for each gene. Each dot represents a gene. The red line denotes the average BCV for all genes, while the blue line is a fitted line to describe the trend of how the BCV values vary with increasing average log CPM (i.e. higher expression)."}
+
+plotBCV(dispersal, main = "BCV plot")
+```
+
+Firstly, we can observe in Figure \@ref(fig:bcv) that the trend line (blue) is decreasing. This means that as expression increases, there is less variability between the replicates. We can also observe that the common line (red), denoting the average BCV value for all genes, is rather high (\>1). This shows that there is high overall biological variability across replicates. This may be due to many lowly-expressed genes, which we can infer from there being a "smear" towards the left side of the plot, which may introduce noise in the dataset. The high amount of variance may also owe to the fact that the number of replicates for each condition is small (3 for each condition, DF and DHF). With this dispersal in mind, let us see how differential expression analysis goes.
+
+## Test the contrast {#dhf-vs-df}
+
+Now we can finally test the hypothesis that there is a significant difference in gene expression between helper innate lymphoid cells (hILCs) in patients with dengue fever (DF), and the more devere dengue haemorrhagic fever (DHF). Because we fit the Quasi-Likelihood model onto our data, we can use `glmQLTest` to test the contrast that we have [@edger]. p-values are automatically computed for each gene by the function. For this analysis, I did not specify a numerical limit to the number of genes that can be returned, however I set an adjusted p-value cutoff for 0.05, which is a commonly accepted cutoff.
+
+p-values were adjusted by multiple hypothesis testing, and the adjusted p-values in the output can be seen in the false discovery rate (as the multiple hypothesis testing method used was the Benjamini-Hochberg (BH) test or false discovery rate--FDR). By filtering uncorrected p-values and then also conduction multiple hypothesis testing, we can be more confident that our findings are significant. FDR testing was used to balance statistical power and some leniency against false positives [@Benjamini1995].
+
+```{r ql-test, tab.cap="Table shows the top 10 differentially expressed genes between DF (dengue fever) and DHF (dengue haemorrhagic fever) disease conditions, based on the quasi-likelihood model. Table shows the log-fold change between conditions, average expression (log CPM), quasi-likelihood F value (where a larger value indicates a stronger evidence against the null hypothesis, p-value and the adjusted p-values by Benjamini-Hochberg correction, i.e. the false discovery rate. Values were rounded to 3 decimal places."}
+
+
+dhf_vs_df <- edgeR::glmQLFTest(ql_model, contrast = contr[, "DHF_vs_DF"])
+
+top_degs <- edgeR::topTags(dhf_vs_df,
+                        n = Inf, p.value = 0.05)$table[,-c(1,2,3)]
+top_degs %>% 
+  kableExtra::kable(digits = 3) %>%
+  kableExtra::kable_styling()
+```
+
+We can see that after selecting for genes that passed the adjusted p-value cutoff of 0.05, we have 3 differentially expressed genes: PTEN, IGHG1, and SEC13.
+
+## Visualisation {#deg-plots}
+
+We can visualise the results from [the previous section](#dhf-vs-df) using various plots.
+
+### Volcano plot {#volcano-plot}
+
+Volcano plots can help us visualise the top differentially expressed genes, based on whether they are upregulated or downregulated, and whether the adjusted p-value passes the cutoff of 0.05.
+
+```{r volcano-plot, fig.cap="Volcano plot of log fold change of all genes between DF and DHF disease conditions. Pink, or '+' denotes upregulation, blue or '-' denotes downregulation, and grey denotes 'not significant', i.e. that the adjusted p-value => 0.05. Conversely, genes labelled in pink or blue had an adjusted p-value < 0.05. DF = dengue fever, DHF = dengue haemorrhagic fever. All samples used were taken from patients in the same phase of disease. p-value adjustment done using Benjamini-Hochberg correction. "}
+
+
+degs <- edgeR::topTags(dhf_vs_df, n = Inf)$table[,-c(1,2,3)]
+
+volcano_df <- degs %>%
+  dplyr::mutate(Direction = case_when(
+              FDR < 0.05 & logFC > 0 ~ "+",
+              FDR < 0.05 & logFC < 0 ~ "-",
+              TRUE ~ "Not\nsignificant")
+         )
+
+ggplot2::ggplot(volcano_df, aes(x = logFC, y = -log10(PValue), color = Direction)) +
+  ggplot2::geom_point(alpha = 5) +
+  ggplot2::scale_color_manual(values = c(
+    "+" = "hotpink",
+    "-" = "deepskyblue",
+    "Not\nsignificant" = "azure2"
+  )) +
+  ggplot2::theme_minimal() +
+  ggplot2::labs(
+    title = "Volcano plot of gene expression between DHF and DF",
+    x = "log2 fold-change",
+    y = "-log10(p-value)"
+  )
+
+```
+
+From this plot, we can see that the 3 differentially expressed genes have much smaller p-values (after adjustment by BH correction) compared to the vast majority of the genes. While we have a small number of genes that were differentially expressed, it is interesting to see that they are highly so. Additionally, we can see that there are other genes that appear to be differentially expressed, but they did not pass the p-value cutoff. It is possible that these could be attributed to noise, and this result would also be expected, based on the [MDS plots](#mds-plot) and the [BCV plot](#bcv-plot), which let us expect that there would be noise in the dataset.
+
+### Heatmap {#heatmap}
+
+Another way to visualise our data would be to plot a heatmap of the differentially expressed genes. This can let us see in finer detail, how the expression of these genes differ between samples, and how the genes and samples cluster.
+
+We will first convert the raw counts to log CPM, pick the genes we want to plot (i.e. the differentially expressed genes), Z-score them for standardisation (to make them more visible), then finally plot the heatmap.
+
+```{r heatmap, fig.cap="Heatmap comparing the relative gene expression between samples, as well as between disease conditions. Bottom column names denote the sample labels; DHF = dengue haemorrhagic fever, DF = dengue fever; phase is indicated as: F = febrile phase. Numbers in sample names denote the patient, where each sample with the same number and same disease was taken from the same patient, at different timepoints. Row names indicate the differentially expressed genes. Only genes with an adjusted p-value < 0.05 were included in the plot. p-value adjustment done using Benjamini-Hochberg correction. "}
+
+# Keep only the DEGs
+keep <- rownames(top_degs)
+
+hm_mat <- lcpm[keep, , drop = FALSE]
+
+# Create labels aligned to hm_mat rows
+hm_labels <- rownames(hm_mat)
+
+# Z-score per gene across samples for pattern visibility
+hm_z <- t(scale(t(hm_mat)))
+
+# colour palette
+col_fun <- circlize::colorRamp2(c(-2, 0, 2), c("blue", "white", "red"))
+
+# add annotations for disease
+metadata$disease <- as.factor(metadata$disease)
+disease_hm_levels <- levels(metadata$disease)
+
+set.seed(620)
+disease_cols <- setNames(
+  brewer.pal(max(2, length(disease_hm_levels)), "Set3")[seq_along(disease_hm_levels)],
+  disease_hm_levels
+)
+
+annot <- ComplexHeatmap::HeatmapAnnotation(
+  Disease = metadata$disease,
+  col = list(disease = disease_cols),
+  annotation_legend_param = list(
+    Disease = list(title = "Disease"))
+)
+
+ComplexHeatmap::Heatmap(
+  hm_z,
+  col = col_fun,
+  name = "Relative gene expression for differentially\nexpressed genes between DF and DHF",
+  top_annotation = annot,
+  show_row_names = TRUE,
+  column_names_rot = 45,
+  column_names_centered = TRUE,
+  show_column_names = TRUE,
+  cluster_rows = TRUE,
+  cluster_columns = TRUE,
+  row_title = paste0("Top ", nrow(hm_z), " genes for DF vs DHF"),
+  column_title = "Samples",
+  heatmap_legend_param = list(title = "Relative\ngene\nexpression")
+)
+
+```
+
+From the heatmap we can see that the samples cluster by disease condition, as expected. We can also see from the heatmap why they would cluster--in DHF patients, SEC13 is downregulated, while IGHG1 and PTEN are upregulated, and vice versa for DHF patients.
+
+# Conclusions {#conclusions}
+
+In the [Introduction](#introduction), I conducted this analysis to explore the hypothesis that there is a difference in gene expression between patients of dengue fever (DF), and dengue haemorrhagic fever (DHF) in helper innate lymphoid cells (hILCs). From the results, the conclusions I have made are as follows:
+
+-   In hILCs, there are minimal differences in gene expression between patients of DF and the more severe DHF.
+-   However, three genes were significantly differentially expressed, which were SEC13, IGHG1, and PTEN.
+-   Even after filtering and normalisation, the data still had large variability. This could reflect the fact that DENV (dengue virus) infections illicit a wide range of responses in hosts. That is, the heterogeneity in response to DENV infection possibly goes down to the molecular level.
+
+# Questions {#questions}
+
+In this section I will answer the questions detailed in the assignment handout.
+
+## Overall questions {#overall-q}
+
+1.  What are the control and test conditions of the dataset?
+
+Reference sections: [Downloading the data](#ds-download)
+
+The original dataset had 2 groups of conditions, which were the phase of disease (febrile or convalescent), and the disease severity (dengue fever, DF or dengue haemorrhagic fever, DHF). As such, there were no obvious 'controls' or 'test' conditions. However, for my own purposes and interests, I chose to analyse the differential expression between DF and DHF samples. Because DF is the less severe conditions, one could designate that as the control.
+
+2.  Why is the dataset of interest to you?
+
+Reference sections: [How the dataset was chosen](#ds-choice)
+
+I chose this dataset based on the fact that I was interested in looking into datasets relating to dengue virus infections, and wanted to adhere to the criteria for datasets for the assignment. Detailed explanation of my rationale can be found in the linked section.
+
+3.  Were there expression values that were not unique for specific genes? How did you handle these?
+
+Reference sections: [Downloading the data](#ds-download) and [Filtering lowly-expressed genes](#filtering)
+
+While I did not compute the number of such genes, upon inspecting the data there were multiple genes with 0 counts across all samples. These genes were filtered out, along with other lowly-expressed genes. Otherwise, they were kept in.
+
+4.  Were there expression values that could not be mapped to current HUGO symbols?
+
+Reference sections: [Identity mapping](#identity-mapping)
+
+Yes, there were. These were removed so that I could map row names to HUGO symbols.
+
+5.  How many outliers were removed?
+
+Reference sections: [Outliers](#outliers), [Filtering lowly-expressed genes](#filtering)
+
+In the technical sense, I did not remove outliers. I decided not to because the original paper did not remove any outliers other than zero-count genes, so I wanted to follow what they did in that regard [@Poonpanichakul2021]. However, along with zero-count genes, I also removed lowly-expressed genes, with a slightly higher threshold for stricter filtering.
+
+6.  How did you handle replicates?
+
+Reference sections: [Downloading the data](#ds-download)
+
+I grouped them based on the condition, i.e. the disease severity (DF, DHF). Each condition had 3 replicates. I decided to mask the other condition, which is the disease phase, to focus on the hypothesis I set to guide the analysis.
+
+7.  What is the final coverage of your dataset?
+
+By calculating the proportion of the final number of counts in the dataset used for analysis and the original number of counts in the dataset before any cleaning, based on number of genes:
+
+```{r final-cov-estimate}
+final_size <- colSums(dge$counts)
+final_cov <- final_size / original_size 
+
+cat(sprintf("Final coverage for sample %s: %s\n", colnames(dge$counts), final_cov))
+```
+
+## Differential expression questions {#deg-q}
+
+1.  Calculate p-values for each of the genes in your expression set. How many genes were significantly differentially expressed? What thresholds did you use and why?
+
+2.  Multiple hypothesis testing - correct your p-values using a multiple hypothesis correction method. Which method did you use? And Why? How many genes passed correction?
+
+3.  Show the amount of differentially expressed genes using an MA Plot or a Volcano plot. Highlight genes of interest.
+
+4.  Visualize your top hits using a heatmap. Do you conditions cluster together? Explain why or why not.
+
+For these questions, please refer to the [Differential gene expression](#deg) section, particularly the sections beginning from [Test the contrast](#dhf-vs-df), because the material asked by the questions are answered in order.
+
+# References {#references}
