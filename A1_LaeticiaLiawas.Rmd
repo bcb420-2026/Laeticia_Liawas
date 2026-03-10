@@ -10,8 +10,8 @@ output:
     toc: true                  
     toc_depth: 3                
     toc_float: true             
-bibliography: bcb420-assignment/references.bib
-csl: bcb420-assignment/apa.csl
+bibliography: bcb420-assignment1/references.bib
+csl: bcb420-assignment1/apa.csl
 link-citations: true            
 nocite: '@*' # cite all, even if not present as an in-text citation
 ---
@@ -437,7 +437,7 @@ Firstly, we can observe in Figure \@ref(fig:bcv) that the trend line (blue) is d
 
 ## Test the contrast {#dhf-vs-df}
 
-Now we can finally test the hypothesis that there is a significant difference in gene expression between helper innate lymphoid cells (hILCs) in patients with dengue fever (DF), and the more devere dengue haemorrhagic fever (DHF). Because we fit the Quasi-Likelihood model onto our data, we can use `glmQLTest` to test the contrast that we have [@edger]. p-values are automatically computed for each gene by the function. For this analysis, I did not specify a numerical limit to the number of genes that can be returned, however I set an adjusted p-value cutoff for 0.05, which is a commonly accepted cutoff.
+Now we can finally test the hypothesis that there is a significant difference in gene expression between helper innate lymphoid cells (hILCs) in patients with dengue fever (DF), and the more severe dengue haemorrhagic fever (DHF). Because we fit the Quasi-Likelihood model onto our data, we can use `glmQLTest` to test the contrast that we have [@edger]. p-values are automatically computed for each gene by the function. For this analysis, I did not specify a numerical limit to the number of genes that can be returned, however I set an adjusted p-value cutoff for 0.05, which is a commonly accepted cutoff.
 
 p-values were adjusted by multiple hypothesis testing, and the adjusted p-values in the output can be seen in the false discovery rate (as the multiple hypothesis testing method used was the Benjamini-Hochberg (BH) test or false discovery rate--FDR). By filtering uncorrected p-values and then also conduction multiple hypothesis testing, we can be more confident that our findings are significant. FDR testing was used to balance statistical power and some leniency against false positives [@Benjamini1995].
 
@@ -550,7 +550,7 @@ ComplexHeatmap::Heatmap(
 
 ```
 
-From the heatmap we can see that the samples cluster by disease condition, as expected. We can also see from the heatmap why they would cluster--in DHF patients, SEC13 is downregulated, while IGHG1 and PTEN are upregulated, and vice versa for DHF patients.
+From the heatmap we can see that the samples cluster by disease condition, as expected. We can also see from the heatmap why they would cluster--in DHF patients, SEC13 is downregulated, while IGHG1 and PTEN are upregulated, and vice versa for DF patients.
 
 # Conclusions {#conclusions}
 
